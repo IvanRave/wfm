@@ -1,0 +1,18 @@
+{
+  "name": "wfm",
+  "version": "0.1.0",
+  "homepage": "https://github.com/IvanRave/wfm",
+  "description": "Well file manager",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "2.0.3",
+    "bootstrap": "3.0.0"
+  }
+}
