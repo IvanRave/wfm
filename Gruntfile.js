@@ -1,43 +1,40 @@
 module.exports = function (grunt) {
     'use strict';
-    // dev or dst
-    var target = grunt.option('trg') || 'dev';
+
+    // These plugins provide necessary tasks.
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('assemble');
+    grunt.loadNpmTasks('grunt-requirejs');
+
+    // dst folder
+    var trg = grunt.option('trg') || 'dst',
+        requrl = grunt.option('requrl') || 'http://wfm.azurewebsites.net';
     // Project configuration
-    grunt.initConfig({
+    grunt.config.init({
         // Metadata
         pkg: grunt.file.readJSON('package.json'),
-        target: target, // Use for <% template in JSON keys
+        target: trg, // Use for <% template in JSON keys
         banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-          '<%= grunt.template.today("yyyy-mm-dd") %>\n' +          
+          '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
           '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
           ' Licensed <%= pkg.license %> */\n',
         uniqueString: '<%= pkg.version %>',
         folder: {
-            src: 'src', // Source
-            dev: 'dev', // Development
-            dst: 'dst' // Distributive
+            src: 'src' // Source
         },
-        env: {
-            options: {
-                // Shared options hash
-            },
-            all: {
-                NODE_ENV: target
+        connect: {
+            main: {
+                options: {
+                    open: true, // Or need url string
+                    keepalive: true,
+                    port: 12345,
+                    base: '<%= target %>'
+                }
             }
-        },
-        preprocess: {
-            all: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= target %>/',
-                    src: '**/index.html',
-                    dest: '<%= target %>'
-                }]
-            }
-        },
-        // Task configuration
-        clean: {
-            all: [target]
         },
         jshint: {
             gruntfile: {
@@ -46,220 +43,180 @@ module.exports = function (grunt) {
                 },
                 src: 'Gruntfile.js'
             },
-            appScripts: {
+            app: {
                 options: {
-                    jshintrc: '<%= folder.src %>' + '/js/.jshintrc'
+                    jshintrc: '<%= folder.src %>/scripts/app/.jshintrc'
                 },
                 // all js files in js folder
-                src: ['<%= folder.src %>/js/**/*.js']
+                src: ['<%= folder.src %>/scripts/app/**/*.js']
             }
         },
-        // js files concat and minify in Uglify
-        // Concat other file types
-        concat: {
-            options: {
-                separator: ';',
-                banner: '<%= banner %>'
-                //// process: function(src, filepath) {
-                //// return '// Source: ' + filepath + '\n' +
-                //// src.replace(/(^|\n)[ \t]*('use strict'|"use strict");?\s*/g, '$1');
-                //// },
-                //// stripBanners: true
-            },
-            dst: {
-                // // src: ['<%= folder.src %>/js/menu/controllers.js', '<%= folder.src %>/js/app.js'],
-                // // dest: '<%= folder.dst %>/js/bundle-<%= uniqueString %>.js',
-                // // nonull: true
-            },
-            dev: {}
-        },
-        uglify: {
-            script_main_dst: {
-                options: {
-                    // // banner: '<%= banner %>',
-                    // sourceMap: '<%= folder.dst %>/js/bundle-<%= uniqueString %>.min.js.map',
-                    // sourceMappingURL: 'bundle-<%= uniqueString %>.min.js.map',
-                    // sourceMapPrefix: 2
-                },
-                files: {
-                    '<%= folder.dst %>/js/bundle-<%= uniqueString %>.min.js': ['<%= folder.dst %>/js/menu/controllers.js', '<%= folder.dst %>/js/app.js']
-                }
-            },
-            script_main_dev: {},
-            google_search_tool_dst: {
-                options: {
-                    // sourceMap: '<%= folder.dst %>/js/google-search-tool.min.js.map',
-                    // sourceMappingUrl: 'google-search-tool.min.js'
-                },
-                files: {
-                    '<%= folder.dst %>/js/google-search-tool.min.js': '<%= folder.dst %>/js/google-search-tool.js'
-                }
-            },
-            google_search_tool_dev: {}
+        clean: {
+            main: ['<%= target %>']
         },
         copy: {
-            all: {
+            main: {
                 files: [{
                     expand: true,
                     dot: true,
                     cwd: '<%= folder.src %>/',
-                    dest: target,
-                    src: [
-                      '*.{ico,png,txt,xml}',
-                      'CNAME',
-                      'google*.html',
-                      '.htaccess',
-                      // copy all LESS, SASS and CSS to use Source maps
-                      'css/**/*.*',
-                      // copy all source js files to use Source map
-                      'js/**/*.js',
-                      // copy all html templates
-                      'js/**/*.html',
-                      // images 
-                      'img/**/*.*',
-                      // fonts
-                      'fonts/**/*.*'
-                    ]
+                    dest: '<%= target %>/',
+                    // Copy all files besides templates
+                    src: ['**/*', '!tpl/**/*', '!scripts/app/**/*']
                 }]
-            }
-        },
-        htmlmin: {
-            index_dst: {
-                options: {
-                    removeComments: true,
-                    collapseWhitespace: true
-                    // // process: function(src, filepath) {},
-                },
-                files: [{
-                    expand: true,
-                    cwd: '<%= target %>/',
-                    src: '**/index.html',
-                    dest: '<%= target %>/'
-                }]
-            },
-            index_dev: {}
-        },
-        less: {
-            dst: {
-                options: {
-                    yuicompress: true
-                },
-                files: {
-                    '<%= folder.dst %>/css/site.min.css': '<%= folder.dst %>/css/site.less',
-                    '<%= folder.dst %>/css/bootstrap.min.css': '<%= folder.dst %>/css/bootstrap.less'
-                }
-            },
-            dev: {
-                options: {
-                    yuicompress: false
-                },
-                files: {
-                    '<%= folder.dev %>/css/site.css': '<%= folder.dev %>/css/site.less',
-                    '<%= folder.dev %>/css/bootstrap.css': '<%= folder.dev %>/css/bootstrap.less'
-                }
             }
         },
         assemble: {
             options: {
-                data: 'src/tpl/data.json',
-                layout: 'src/tpl/layouts/default.hbs',
-                partials: ['src/tpl/partials/*.hbs']
-                ////flatten: true
+                engine: 'handlebars',
+                // Main properties
+                data: ['assemble_store/data/*.json', 'package.json'],
+                // Build configuration properties
+                conf: {
+                    // Request url (begin of the path)
+                    // if exists - other domain (CORS requests - for local testing and side programs)
+                    // if empty - the same domain (simple requests)
+                    // Example {{requrl}}/api/values
+                    requrl: requrl
+                }
             },
-            all: {
+            html: {
+                options: {
+                    layout: '<%= folder.src %>/tpl/layouts/default.hbs',
+                    partials: ['<%= folder.src %>/tpl/partials/*.hbs']
+                },
                 files: [{
                     expand: true,
-                    cwd: 'src/tpl/pages/',
+                    cwd: '<%= folder.src %>/tpl/pages/',
                     src: '**/*.hbs',
                     dest: '<%= target %>'
                 }]
-            }
-        },
-        bower: {
-            dev: {
+            },
+            readme: {
                 options: {
-                    targetDir: 'dev/js/'
+                    ext: '.md'
+                },
+                files: {
+                    './README': 'assemble_store/tpl/README.md.hbs'
                 }
             },
-            dst: {
+            // Assemble js files after copy in dest directory
+            js: {
                 options: {
-                    targetDir: 'dst/js/'
+                    ext: '.js'
+                },
+                files: [{
+                    expand: true,
+                    cwd: '<%= folder.src %>/scripts/app/',
+                    src: '**/*.js',
+                    dest: '<%= target %>/scripts/app/'
+                }]
+            }
+        },
+        requirejs: {
+            workspace: {
+                options: {
+                    baseUrl: '<%= target %>/scripts/',
+                    name: 'app/workspace/project',
+                    out: '<%= target %>/scripts/app/workspace/project-bundle-<%= pkg.version %>.min.js',
+                    mainConfigFile: '<%= target %>/scripts/require-config.js',
+                    optimize: 'uglify2',
+                    // http://requirejs.org/docs/optimization.html#sourcemaps
+                    generateSourceMaps: true,
+                    preserveLicenseComments: false,
+                    ////useSourceUrl: true,
+                    //  wrap: true, // wrap in closure
+                    // jQuery automatically excluded if it's loaded from CDN
+                    exclude: ['jquery']
                 }
             }
         },
-        // // watch: {
-        // // files: ['**.*.js'],
-        // // tasks: ['jshint']
-        // // },
-        qunit: {
-            all: {
-                options: {
-                    urls: [
-                      'test/test.html'
-                      // http://localhost:9001/
-                    ]
-                }
-            }
-        },
-        connect: {
-            all: {
-                options: {
-                    open: true,
-                    keepalive: true,
-                    port: 9001,
-                    base: target
-                }
-            }
-        },
-        'gh-pages': {
-            options: {
-                base: '<%= folder.dst %>'
+        watch: {
+            jshint_gruntfile: {
+                files: ['<%= jshint.gruntfile.src %>'],
+                tasks: ['jshint:gruntfile']
             },
-            src: ['**']
+            copy_main: {
+                options: {
+                    cwd: '<%= folder.src %>/',
+                    spawn: false
+                },
+                files: ['!tpl/', '!scripts/app/', '**/*'],
+                tasks: ['copy:main']
+            },
+            assemble_html: {
+                files: ['assemble_store/**/*', 'package.json', '<%= folder.src %>/tpl/**/*.hbs'],
+                tasks: ['assemble:html']
+            },
+            assemble_readme: {
+                files: ['assemble_store/**/*', 'package.json'],
+                tasks: ['assemble:readme']
+            },
+            assemble_js: {
+                options: {
+                    spawn: false
+                },
+                files: ['assemble_store/**/*', 'package.json', '<%= folder.src %>/scripts/app/**/*.js'],
+                tasks: ['assemble:js']
+            }
+
+
+            // livereload server: http://127.0.0.1:35729/livereload.js
+            ////livereload: {
+            ////    options: { livereload: true },
+            ////    files: ['<%= target %>/**/*']
+            ////}
         }
     });
 
-    // grunt.event.on('watch', function(action, filepath, target) {
-    // grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
-    // });
-
-    // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-htmlmin');
-    grunt.loadNpmTasks('grunt-contrib-less');
-    //// grunt.loadNpmTasks('grunt-contrib-handlebars');
-    //// grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('assemble');
-    grunt.loadNpmTasks('grunt-bower-task');
-    grunt.loadNpmTasks('grunt-env');
-    grunt.loadNpmTasks('grunt-preprocess');
-    // for dev
-    grunt.loadNpmTasks('grunt-contrib-qunit');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    // for dst
-    grunt.loadNpmTasks('grunt-gh-pages');
-
     // Default task
     grunt.registerTask('default',
-    ['jshint',
-     'qunit',
-     'clean:all',
-     'copy:all',
-     'bower:' + target,
-     'uglify:script_main_' + target,
-     'uglify:google_search_tool_' + target,
-     'less:' + target,
-     'assemble:all',
-     'env',
-     'preprocess',
-     'htmlmin:index_' + target
+    [
+      // 1. Check and test
+     'jshint:gruntfile',
+      ////'jshint: app', // TODO: fix jshint errors
+
+      // 2. Clean
+     'clean:main',
+
+      // 3. Copy plain and assembled files
+     'copy:main', // Copy main files
+     'assemble:html', // Copy other files: Assemble and copy templates files
+     'assemble:readme', // Use main data to build readme for project description
+     'assemble:js', // After copy all files to destination - replace all {{value}} - rewrite the same files
+
+      // 4. Bundle and minify
+     'requirejs:workspace', // Bundle with r.js app/workspace/project.js
     ]);
 
-    ////grunt.registerTask('test', ['connect', 'qunit']);
+    ////grunt.event.on('watch', function (action, filepath, target) {
+    ////    grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+    ////});
 
-    // grunt gh-pages run separately
+
+    // Change file src in dynamic file view
+    // <param>fileArrPath: path to files object: http://gruntjs.com/api/grunt.config
+    // <param>filepath: watched file (currently changed)
+    function changeFileSrc(fileArrPath, filepath) {
+        var changedFileArr = grunt.config.get(fileArrPath).map(function (file) {
+            file.src = filepath.replace(file.cwd.replace(/\//g, '\\'), '');
+            grunt.log.writeln('SRSRSRSRS: ' + file.src);
+            return file;
+        });
+
+        grunt.config.set(fileArrPath, changedFileArr);
+    }
+
+    grunt.event.on('watch', function (action, filepath, target) {
+        // Copy only changed file
+        if (target === 'copy_main') {
+            changeFileSrc(['copy', 'main', 'files'], filepath);
+        }
+        else if (target === 'assemble_js') {
+            changeFileSrc(['assemble', 'js', 'files'], filepath);
+        }
+    });
+
+    // Clean entire target directory
+    // 'clean:main',
 };

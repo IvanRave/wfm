@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Test</title>
+    <script src="scripts/jquery-2.0.3.js"></script>
+    <script src="scripts/jquery.x-domain-request.js"></script>
+</head>
+<body>
+    <button type="button" onclick="sendAuth()">Send auth</button>
+    <div id="req_status">no req</div>
+    <script>
+        function sendAuth() {
+            var authUrl = "http://wfm.azurewebsites.net/api/account/";
+            $.ajax({
+                url: authUrl,
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                data: $.param({
+                    email: "wfm@example.com",
+                    password: "123321"
+                })
+                ////xhrFields: {
+                ////    withCredentials: true
+                ////}
+            }).done(function (res) {
+                $('#req_status').html('success');
+            }).fail(function (err) {
+                $('#req_status').html('error: ' + JSON.stringify(err));
+            });
+        }
+
+        $(function () {
+
+        });
+    </script>
+</body>
+</html>

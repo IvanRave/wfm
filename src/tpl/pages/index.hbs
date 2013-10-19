@@ -1,0 +1,72 @@
+﻿---
+page_title: <%= package.description %>
+---
+<div class="wfm-content-pad">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="clearfix">
+                <h3 class="pull-left">{{page_title}}</h3>
+                <h3 class="pull-right wfm-icon-home-list">
+                    <i title="Well summary" class="wfmicon wfmicon-summary"></i>
+                    <i title="Well sketch and volume" class="wfmicon wfmicon-sketch"></i>
+                    <i title="Well history" class="wfmicon wfmicon-history"></i>
+                    <i title="Well map" class="wfmicon wfmicon-map"></i>
+                    <i title="Well log" class="wfmicon wfmicon-log"></i>
+                    <i title="Well perfomance" class="wfmicon wfmicon-pd"></i>
+                    <i title="Well test" class="wfmicon wfmicon-test"></i>
+                    <i title="Well integrity" class="wfmicon wfmicon-integrity"></i>
+                    <i title="Nodal analysis" class="wfmicon wfmicon-nodalanalysis"></i>
+                    <i title="Well report" class="wfmicon wfmicon-report"></i>
+                </h3>
+            </div>
+            <div>
+                <!-- Carousel with interval in ms-->
+                <div id="carousel-wfm" class="carousel slide" data-interval="5000">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-wfm" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-wfm" data-slide-to="1"></li>
+                        <li data-target="#carousel-wfm" data-slide-to="2"></li>
+                    </ol>
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="/img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
+                        </div>
+                        <div class="item">
+                            <img src="/img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
+                        </div>
+                        <div class="item">
+                            <img src="/img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
+                        </div>
+                    </div>
+                    <!-- Controls -->
+                    <a class="left carousel-control" href="#carousel-wfm" data-slide="prev">
+                        <span class="icon-prev"></span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-wfm" data-slide="next">
+                        <span class="icon-next"></span>
+                    </a>
+                </div>
+            </div>
+            <div style="margin-top:8px" class="row">
+                <div class="col-md-4">
+                    <p>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="/logon/">Log on to my company</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <p>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="/account/register">Register a company</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <p>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="/testinfo/">Test WFM</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+﻿<div class="row">
+    <div class="col-sm-3">
+        <ul data-bind="foreach: sectionList" class="nav">
+            <!-- ko if: formatList.length > 0 -->
+            <li data-bind="css: { 'open': $parent.selectedFmgSectionId() === $data.id }">
+                <a href="#" data-bind="click: $parent.selectFmgSection">
+                    <span data-bind="text: $data.name"></span>
+                </a>
+            </li>
+            <!-- /ko -->
+        </ul>
+    </div>
+    <div class="col-sm-9">
+        <!-- ko foreach: sectionList -->
+        <!-- ko if: formatList.length > 0 -->
+        <div data-bind="visible: $parent.selectedFmgSectionId() === $data.id" class="btn-group">
+            <span class="btn btn-default btn-sm fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span data-bind="text: 'Add ' + $data.name.toLowerCase() + ' file...'"></span>
+                <input data-bind="attr: { id: $data.id + '_file_upload', name: $data.id + '_files[]' }" type="file">
+            </span>
+        </div>
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if: (selectedFmgSectionId() !== null) -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Size, KB</th>
+                    <th>Last modified (UTC)</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach: filteredWellFileList -->
+                <tr>
+                    <td>
+                        <label class="checkbox">
+                            <input type="checkbox" data-bind="checked: isChecked" />
+                        </label>
+                    </td>
+                    <td>
+                        <span data-bind="text: displayedName"></span>
+                    </td>
+                    <td><span data-bind="text: Math.round(Size / 1024), attr: { title: Size + ' bytes' }"></span></td>
+                    <td><span data-bind="text: LastModified"></span></td>
+                    <td>
+                        <!-- ko if:  ((Purpose === 'log') || (Purpose === 'pd')) -->
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-bind="drpdwn: {}">
+                                Action <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <!-- ko if:  (Purpose === 'log') -->
+                                <li data-bind="visible: getExt() === 'las'"><a href="#" data-bind="    click: importWellFileToLog">Import to log image</a></li>
+                                <li data-bind="visible: getExt() === 'png'"><a href="#" data-bind="    click: function (data, event) { downloadAsExt('jpeg') }">Download as JPEG</a></li>
+                                <li data-bind="visible: getExt() === 'png'"><a href="#" data-bind="    click: function (data, event) { downloadAsExt('tiff') }">Download as TIFF</a></li>
+                                <!-- /ko -->
+                                <!-- ko if: (Purpose === 'pd') -->
+                                <li><a href="#" data-bind="click: importToProductionData">Import to PD</a></li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
+                        <!-- /ko -->
+                    </td>
+                    <td><i class="glyphicon glyphicon-download-alt link-icon" title="Download file" data-bind="click: downloadWellFile "></i></td>
+                    <td><i class="glyphicon glyphicon-remove link-icon" title="Delete file" data-bind="click: $parent.deleteWellFile "></i></td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
+        <!-- /ko -->
+        <!-- ko if: (selectedFmgSectionId() === null) -->
+        <div>choose directory...</div>
+        <!-- /ko -->
+    </div>
+</div>

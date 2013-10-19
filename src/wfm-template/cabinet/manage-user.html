@@ -1,0 +1,41 @@
+﻿<div class="row">
+    <div class="col-sm-8">
+        <h4>Company users:</h4>
+    </div>
+    <div class="col-sm-4">
+        <form name="postedCompanyUserForm">
+            <div class="input-group">
+                <input name="companyUserEmail" placeholder="E-mail" type="email" required ng-model="companyUserNew.UserProfileDto.Email" class="form-control" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" ng-click="postCompanyUser()" ng-disabled="postedCompanyUserForm.$invalid">Add new user</button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>N</th>
+            <th>Email</th>
+            <th title="Is user's email confirmed? This user can activate account using confirmation link from email (send by adding)">Is confirmed</th>
+            <th>Access levels</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody ng-repeat="companyUser in companyUserList" ng-animate="'animate'">
+        <tr>
+            <td>{{$index + 1}}</td>
+            <td>{{companyUser.UserProfileDto.Email}}</td>
+            <td>{{companyUser.UserProfileDto.IsConfirmed}}</td>
+            <td>
+                <label class="checkbox-inline" ng-repeat="accessLevelItem in accessLevelDict">
+                    <input type="checkbox" ng-checked="companyUser.AccessLevel | bitwiseand : accessLevelItem.AccessCode" />
+                    {{accessLevelItem.Description}}
+                </label>
+            </td>
+            <td>Edit/Delete</td>
+        </tr>
+    </tbody>
+</table>

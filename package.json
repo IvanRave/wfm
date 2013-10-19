@@ -1,5 +1,5 @@
 {
-  "name": "wfm",
+  "name": "WFM",
   "version": "0.1.0",
   "description": "Well file manager",
   "author": {
@@ -27,6 +27,8 @@
     "grunt-contrib-qunit": "~0.3.0",
     "grunt-contrib-handlebars": "~0.5.11",
     "assemble": "~0.4.12",
-    "grunt-bower-task": "~0.3.2"
+    "grunt-bower-task": "~0.3.2",
+    "requirejs": "~2.1.9",
+    "grunt-requirejs": "~0.4.0"
   }
 }

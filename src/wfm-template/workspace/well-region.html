@@ -1,0 +1,11 @@
+﻿<h4>
+    <span data-bind="text: Name"></span>
+    <small data-bind="if: $root.isEditable">
+        <button type="button" class="btn btn-xs btn-default" data-bind="click: editWellRegion">
+            <i class="glyphicon glyphicon-edit"></i>
+        </button>
+        <button type="button" class="btn btn-xs btn-default" data-bind="click: $parent.deleteWellRegion">
+            <i class="glyphicon glyphicon-remove"></i>
+        </button>
+    </small>
+</h4>

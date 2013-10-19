@@ -1,4 +1,4 @@
-wfm
+WFM
 ===
 
 Well file manager

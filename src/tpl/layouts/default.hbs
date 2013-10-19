@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{ package.name }}: {{ page_title }}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/content/bootstrap/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/content/bootstrap/bootstrap-theme.css" rel="stylesheet" media="screen">
+    <link href="/content/lightbox.css" rel="stylesheet" />
+    <link href="/content/main.css" rel="stylesheet" />
+    {{#head_styles }}<link href="{{.}}" rel="stylesheet" />{{/head_styles}}
+    <!-- Flash-of-unstyled-content (FOUC) is a convicing argument not to render the HTML before Modernizr itself is loaded -->
+    <script src="/scripts/modernizr-2.6.2.min.js"></script>
+    <!-- A fast & lightweight polyfill for min/max-width CSS3 Media Queries (for IE 6-8, and more)-->
+    <script src="/scripts/respond.min.js"></script>
+	{{#head_scripts }}<script src="{{.}}"></script>{{/head_scripts}}
+</head>
+<body>
+    <!--[if lt IE 9]><p class="chromeframe">You are using an <strong>outdated</strong> browser. Please upgrade your browser.</p><![endif]-->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">{{package.name}}</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/pricing/calculator">Pricing</a></li>
+                <li><a href="/about/">About</a></li>
+                <li><a href="/contacts/">Contacts</a></li>
+            </ul>
+            {{> auth-logon-block }}
+			{{> auth-logoff-block }}
+        </div>
+    </nav>
+    <div class="wfm-content-wrap">
+        <div>
+            {{> body }}
+            {{> modal-standard }}
+        </div>
+    </div>
+    <footer class="navbar-fixed-bottom navbar-inverse">
+        <p class="text-muted credit" style="padding:12px">
+            <img style="height:24px" src="/images/logo_footer.png" alt="petrohelp" />
+        </p>
+    </footer>
+    <div class="spinner"></div>
+    <script data-main="/scripts/app/require-main" src="/scripts/require.js"></script>
+    {{#footer_scripts }}<script src="{{.}}"></script>{{/footer_scripts}}
+</body>
+</html>

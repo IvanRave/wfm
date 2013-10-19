@@ -1,0 +1,184 @@
+﻿<div data-bind="ifnot: isLoadedHstProductionData">loading...</div>
+
+<div data-bind="if: isLoadedHstProductionData">
+    <div data-bind="if: hstProductionDataSet().length === 0">No data. Import files from "File manager" to view production data.</div>
+    <div data-bind="if: hstProductionDataSet().length > 0">
+        <!-- hide forecast panel by default -->
+        <div data-bind="if: requiredForecastParamListNaNString" class="text-right">
+            <small>Forecast inaccessible: required parameters:<span data-bind="text: requiredForecastParamListNaNString"></span></small>
+        </div>
+        <div data-bind="ifnot: requiredForecastParamListNaNString">
+            <div data-bind="with: forecastEvolution">
+                <div data-bind="if: requiredForecastEvoListNaNString" class="text-right">
+                    <small>Forecast inaccessible: required evolutions:<span data-bind="text: requiredForecastEvoListNaNString"></span></small>
+                </div>
+            </div>
+            <div class="text-right">
+                <label class="checkbox-inline">
+                    <input type="checkbox" data-bind="checked: isVisibleForecastPanel" />Show forecast evolutions
+                </label>
+                <!-- ko if: isForecastPossible -->
+                <label class="checkbox-inline">
+                    <input type="checkbox" data-bind="checked: isVisibleForecastData" />Show forecast graph and data
+                </label>
+                <!-- /ko -->
+
+            </div>
+            <div data-bind="if: isVisibleForecastPanel">
+                <div data-bind="with: forecastEvolution" class="text-right">
+                    <button type="button" class="btn btn-default btn-sm" data-bind="click: save, enable: $parent.isForecastPossible">Save evolution</button>
+                </div>
+                <div>
+                    <div class="evo-scope-wrap">
+                        <span class="evo-wrap">
+                            <b>Liquid</b> = <input type="text" class="input-narrow" data-bind="value: forecastEvolution.Dict().LiquidEvolutionA" />
+                            * EXP (<input type="text" class="input-narrow" data-bind="value: forecastEvolution.Dict().LiquidEvolutionB" /> * X)
+                        </span>
+                        <span class="evo-wrap" title="Corrections to last value = Evolution1 * EXP(Evolution2 * LastPd.LiquidCum)">
+                            Diff = <span data-bind="text: DZADiffLiquid"></span>
+                        </span>
+                        <span class="evo-wrap" title="Corrections to last value = Diff - LastPd.LiquidRate">
+                            Result = <span data-bind="text: DZADiffLiquidResult"></span>
+                        </span>
+                    </div>
+                    <div class="evo-scope-wrap">
+                        <span class="evo-wrap">
+                            <b>Water cut</b> = <input type="text" class="input-narrow" data-bind="value: forecastEvolution.Dict().WctEvolutionC" />
+                            * Ln(X) - <input type="text" class="input-narrow" data-bind="value: forecastEvolution.Dict().WctEvolutionD" />
+                        </span>
+                        <span class="evo-wrap" title="Corrections to last value = Evolution1 * Ln(LastPd.OilCum) - Evolution2">
+                            Diff = <span data-bind="text: DZADiffWCT"></span>
+                        </span>
+                        <span class="evo-wrap" title="Corrections to last value = Diff - LastPd.WaterCut">
+                            Result = <span data-bind="text: DZADiffWCTResult"></span>
+                        </span>
+                    </div>
+                    <div class="evo-scope-wrap">
+                        <span class="evo-wrap">
+                            <b>GOR</b> = <input type="text" class="input-narrow" data-bind="value: forecastEvolution.Dict().GorEvolutionF" />
+                            * Ln(X) + <input type="text" class="input-narrow" data-bind="value: forecastEvolution.Dict().GorEvolutionG" />
+                        </span>
+                        <span class="evo-wrap" title="Corrections to last value = Evolution1 * Ln(LastPd.OilCum) + Evolution2">
+                            Diff = <span data-bind="text: DZADiffGOR"></span>
+                        </span>
+                        <span class="evo-wrap" title="Corrections to last value = Diff - LastPd.GOR">
+                            Result = <span data-bind="text: DZADiffGORResult"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-bind="ifnot: selectedAttrGroup">
+            Please choose perfomance group:
+            <ul data-bind="foreach: $root.wfmParamSquadList">
+                <li>
+                    <a href="#" data-bind="click: function() { $parent.selectSection('pd', $data); return true; }, text: id, attr: {href: $parent.getHashPath()  + '/section/pd'}"></a>
+                </li>
+            </ul>
+            <div>
+                <button class="btn btn-default btn-xs" data-bind="click: deleteWellProductionData">Delete production data</button>
+            </div>
+        </div>
+        <div data-bind="if: selectedAttrGroup">
+            <div>
+                <div style="line-height:0;" class="clearfix">
+                    <div class="pull-right" style="width:60px">
+                        <svg version="1.1" width="60px" data-bind="svgAxisValue: {valueBorder: filteredByDateProductionDataSetValueBorder}, attr:{ height: prfGraphHeight }">
+                            <g class="axis"></g>
+                        </svg>
+                    </div>
+                    <div style="margin-right: 60px">
+                        <div>
+                            <svg version="1.1" width="100%" data-bind="attr: { height: prfGraphHeight }, svgResponsive: { ratio: prfGraph.viewBox.ratio, tmpPrfGraphHeight: prfGraphHeight }" viewbox="0 0 1200 400">
+                                <g class="svg-prf-graph-g">
+                                    <!-- ko foreach: {data: selectedWellGroupWfmParameterList, as: 'groupParam'} -->
+                                    <!-- ko if: $parent.productionDataSetSvgPath()[groupParam.wfmParameterId] -->
+                                    <path d="M0 0" data-bind="attr:{d: $parent.productionDataSetSvgPath()[groupParam.wfmParameterId], stroke: groupParam.color }" style="stroke-width:1; fill: none"></path>
+                                    <!-- /ko -->
+                                    <!-- /ko -->
+                                </g>
+                            </svg>
+                        </div>
+                        <div>
+                            <!--svg-path-line-->
+                            <svg version="1.1" width="100%" height="20px" data-bind="svgAxisTime: {timeBorder: filteredByDateProductionDataSetTimeBorder, windowSize: $root.windowWidth }">
+                                <g class="axis"></g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <!--<div style="border:1px solid #000; height:40px">
+                    <div>
+                        <span style="width:5%; color:#ff0000; height:40px;" data-bind="date: $data"></span>
+                    </div>
+                </div>-->
+                <div class="clearfix" style="margin-top:4px">
+                    <div class="text-center">
+                        <select data-bind="options: joinedYearList, value: WPDDateStartYear" class="input-sm"></select>
+                        <select data-bind="options: monthList, value: WPDDateStartMonth" class="input-sm"></select>
+                        <span>&nbsp;-&nbsp;</span>
+                        <select data-bind="options: joinedYearList, value: WPDDateEndYear" class="input-sm"></select>
+                        <select data-bind="options: monthList, value: WPDDateEndMonth" class="input-sm"></select>
+                    </div>
+                </div>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <!-- ko foreach: {data: selectedWellGroupWfmParameterList, as: 'groupParam'} -->
+                            <th>
+                                <div>
+                                    <small>                                    <i class="glyphicon glyphicon-bookmark" data-bind="style: { color: color }"></i></small>
+                                    <span data-bind="text: wfmParameterId"></span>
+                                </div>
+                                <div>
+                                    <label class="checkbox-inline"><input type="checkbox" title="show/hide" data-bind="checked: isVisible" />Show</label>
+                                    <label class="checkbox-inline"><input type="checkbox" title="usual/calc" data-bind="checked: isCalc" />Calc</label>
+                                </div>
+                                <div data-bind="foreach: { data: groupParam.wfmParameter().uomMatrix(), as: 'mtrx' }" class="clearfix">
+                                    <div data-bind="foreach: {data: mtrx, as: 'uomItem' }" class="pull-left">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+                                                <span data-bind="text: uomItem"></span> <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu" data-bind="foreach: {data: groupParam.wfmParameter().getPossibleUomListForSelectedUom(uomItem), as: 'possibleUom'}">
+                                                <li>
+                                                    <a href="#" data-bind="text: possibleUom, click: function(){ groupParam.wfmParameter().changeSelectedUom(possibleUom, $parentContext.$parentContext.$index(), $parentContext.$index()); }"></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <!-- /ko -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- ko foreach: { data: filteredByDateProductionDataSet, as: 'wpd' } -->
+                        <!-- ko if: isSelectedPrfYear -->
+                        <tr>
+                            <td>
+                                (<span title="Production days" data-bind="text: wpd.ProdDays"></span>)&nbsp;<span data-bind="text: wpd.prfYear + '-' + wpd.prfMonthStr"></span>
+                            </td>
+                            <!-- ko foreach: {data: $parent.selectedWellGroupWfmParameterList, as: 'groupParam'} -->
+                            <td>
+                                <span data-bind="visible: isVisible, prec: {value: wpd[groupParam.wfmParameterId], coef: groupParam.wfmParameter().uomCoef}"></span>
+                            </td>
+                            <!-- /ko -->
+                        </tr>
+                        <!-- /ko -->
+                        <!-- /ko -->
+                    </tbody>
+                </table>
+                <!-- paging -->
+                <div class="text-center">
+                    <ul class="pagination pagination-sm" data-bind="foreach: {data: joinedYearList, as: 'joinedYear'}">
+                        <li data-bind="visible: joinedYear >= $parent.WPDDateStartYear() && joinedYear <= $parent.WPDDateEndYear(), css: {'active': joinedYear === $parent.selectedPrfTableYear() }">
+                            <a href="#" data-bind="text: joinedYear, click: function(){ $parent.selectPrfTableYear(joinedYear); }"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

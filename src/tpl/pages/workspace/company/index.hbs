@@ -1,0 +1,42 @@
+﻿---
+page_title: 'Workspace'
+head_styles:
+  - /content/jquery.fileupload-ui.css
+  - /content/bootstrap-wysihtml5.css
+  - /content/bootstrap/datepicker.min.css
+  - /content/jquery.Jcrop.min.css
+---
+
+<div data-bind="if: isStructureLoaded() === false" style="text-align:center"><span>Loading...</span></div>
+
+<div style="display:none" data-bind="visible: isStructureLoaded">
+    <div class="clearfix">
+        <div class="col-md-2" style="padding-left:0">
+            <div data-bind="template: { name: 'menu', templateUrl: '/wfm-template/workspace/'}"></div>
+        </div>
+        <div class="col-md-10">
+            <div class="workspace-container">
+                <div data-bind="with: selectedWellRegion">
+                    <div data-bind="ifnot: selectedWellField">
+                        <div data-bind="template: { name: 'well-region', templateUrl: '/wfm-template/workspace/'}"></div>
+                    </div>
+                    <div data-bind="with: selectedWellField">
+                        <div data-bind="ifnot: selectedWellGroup">
+                            <div data-bind="template: { name: 'well-field', templateUrl: '/wfm-template/workspace/', afterRender: afterRenderPartial}"></div>
+                        </div>
+                        <div data-bind="template: {if: selectedWellGroup, data: selectedWellGroup}">
+                            <div data-bind="ifnot: selectedWell">
+                                <div data-bind="template: { name: 'well-group', templateUrl: '/wfm-template/workspace/', afterRender: afterRenderPartial}"></div>
+                            </div>
+                            <div data-bind="template: {if: selectedWell, data: selectedWell }">
+                                <div data-bind="template: { name: 'well', templateUrl: '/wfm-template/workspace/'}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p data-bind="if: viewModelError" class="text-error"><span data-bind="text: viewModelError"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{{> modal-wide }}

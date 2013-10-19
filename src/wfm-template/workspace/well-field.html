@@ -1,0 +1,86 @@
+﻿<div class="row">
+    <div class="col-md-8">
+        <div style="width: 620px; height: 512px; border: 1px dotted #ccc">
+            <div data-bind="with: selectedWellFieldMap">
+                <div data-bind="template: {afterRender: afterRenderMapObj }">
+                    <div style="width: 620px; height: 512px" id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="clearfix">
+            <h4 class="pull-left">
+                <span data-bind="text: Name"></span>
+                <small data-bind="if: $root.isEditable">
+                    <button class="btn btn-xs btn-default" data-bind="click: editWellField">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </button>
+                    <button class="btn btn-xs btn-default" data-bind="click: $parent.deleteWellField">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </button>
+                </small>
+            </h4>
+            <h4 class="pull-right">
+                <span class="btn btn-xs btn-default fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Add map...</span>
+                    <input id="map_file_upload" type="file" name="map_files[]">
+                </span>
+            </h4>
+        </div>
+
+        <!-- ko foreach: WellFieldMaps -->
+        <div>
+            <div class="clearfix">
+                <div class="pull-left">
+                    <i class="glyphicon glyphicon-circle-arrow-down" data-bind="visible: $data === $parent.selectedWellFieldMap()"></i>
+                    <i class="glyphicon glyphicon-circle-arrow-right" data-bind="visible: $data != $parent.selectedWellFieldMap()"></i>
+                    <a href="#" data-bind="click: showWellFieldMap, text: Name, attr: { title: Description }"></a>
+                </div>
+                <div class="pull-right">
+                    <i class="glyphicon glyphicon-edit link-icon" data-bind="click: editWellFieldMap"></i>
+                    <i class="glyphicon glyphicon-remove link-icon" data-bind="click: $parent.deleteWellFieldMap"></i>
+                </div>
+            </div>
+            <div data-bind="visible: $data === $parent.selectedWellFieldMap()">
+                <div data-bind="foreach: WellInWellFieldMaps">
+                    <div style="margin-left: 16px">
+                        <i class="glyphicon glyphicon-leaf"></i>&nbsp;<span data-bind="text: getWell().Name()"></span>
+                    </div>
+                </div>
+                <div data-bind="foreach: WellFieldMapAreas">
+                    <div style="margin-left: 16px">
+                        <i class="glyphicon glyphicon-picture"></i>&nbsp;<span data-bind="text: Name"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+    </div>
+
+</div>
+
+<div style="margin-left: 16px">
+    <div id="map_obj_list">
+    </div>
+</div>
+
+<div>
+    <h4>Map help:</h4>
+    <div>
+        <h5>Scale:</h5>
+        <div>1. Select 'Ruler' and specify two points on the map</div>
+        <div>2. Press "Set scale" and enter actual distance between this points (in meters)</div>
+    </div>
+    <div>
+        <h5>Point:</h5>
+        <label>Select 'Add well' button and specify well point on the map</label>
+    </div>
+    <div>
+        <h5>Area:</h5>
+        <div>1. Select "Ruler" and specify few points on the map</div>
+        <div>2. Click "Add area" on the map toolbar</div>
+        <div>3. Hover on selected area to get the result (square meters)</div>
+    </div>
+</div>

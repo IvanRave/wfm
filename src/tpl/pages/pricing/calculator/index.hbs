@@ -1,0 +1,54 @@
+﻿---
+page_title: Pricing calculator
+head_styles:
+ - /content/slider.min.css
+---
+<div class="wfm-content-pad">
+    <h4>{{page_title}}</h4>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Number of wells</label>
+            <div class="col-sm-10">
+                <div class="clearfix slider-wrap">
+                    <div class="pull-left">
+                        <div class="slider" data-bind="sldr: {value: 3}, event: { slide: changeWellCount }" data-slider-max="50" data-slider-step="1"></div>
+                    </div>
+                    <div class="pull-left slider-count"><span data-bind="text: wellCount"></span> </div>
+                    <div class="pull-left slider-price"><span>$</span><span data-bind="text: wellCountPrice"></span> </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Cloud space</label>
+            <div class="col-sm-10">
+                <div class="clearfix slider-wrap">
+                    <div class="pull-left">
+                        <div class="slider" data-bind="sldr: {value: 100}, event: { slide: changeCloudSpace }" data-slider-max="2000" data-slider-step="100"></div>
+                    </div>
+                    <div class="pull-left slider-count"><span data-bind="text: cloudSpace"></span><span>MB</span> </div>
+                    <div class="pull-left slider-price"><span>$</span><span data-bind="text: cloudSpacePrice"></span> </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Viewer count</label>
+            <div class="col-sm-10">
+                <div class="clearfix  slider-wrap">
+                    <div class="pull-left">
+                        <div class="slider" data-bind="sldr: {value: 3}, event: { slide: changeViewerCount }" data-slider-max="20" data-slider-step="1"></div>
+                    </div>
+                    <div class="pull-left slider-count"><span data-bind="text: viewerCount"></span> </div>
+                    <div class="pull-left slider-price"><span>$</span><span data-bind="text: viewerCountPrice"></span> </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Total</label>
+            <div class="col-sm-10">
+                <div class="slider-total">
+                    <span>$</span><span data-bind="text: total"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
