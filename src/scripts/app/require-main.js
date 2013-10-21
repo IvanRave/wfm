@@ -31,8 +31,11 @@ require(['../require-config'], function () {
 
             // Remove trailing slashes if exists
             currentPath = currentPath.replace(/\/+$/, '');
+            
+            // Add one trailing slash whether url slash exists or not
+            currentPath = currentPath + '/';
 
-            if (currentPath === '') {
+            if (currentPath === '/') {
                 if (isAuth) {
                     // Redirect auth users to their company list
                     window.location.href = "/company/";
@@ -75,7 +78,7 @@ require(['../require-config'], function () {
             }
 
             // company/index
-            if (currentPath === '/company' || currentPath === '/company/index') {
+            if (currentPath === '/company/') {
                 require(['jquery', 'angular', 'app/cabinet/project', 'jquery.bootstrap'], function ($, angular, cabinetProject) {
                     // Using jQuery dom ready because it will run this even if DOM load already happened
                     $(function () {
@@ -87,7 +90,7 @@ require(['../require-config'], function () {
             }
 
             // admin
-            if (currentPath === '/admin' || currentPath === '/admin/index') {
+            if (currentPath === '/admin/') {
                 require(['jquery', 'angular', 'app/admin/project', 'jquery.bootstrap'], function ($, angular, adminProject) {
                     $(function () {
                         angular.bootstrap(document.getElementById('admin-project-wrap'), [adminProject.name]);
@@ -98,19 +101,30 @@ require(['../require-config'], function () {
             }
 
             // calculator
-            if (currentPath === '/pricing/calculator') {
+            if (currentPath === '/pricing/calculator/') {
                 require(['jquery', 'jquery.bootstrap', 'app/calculator/project']);
                 return;
             }
 
-            if (currentPath === '/httpinfo') {
+            if (currentPath === '/httpinfo/') {
 
             }
 
-            if (currentPath === '/logon') {
+            if (currentPath === '{{syst.logon_url}}') {
                 require(['jquery', 'angular', 'app/logon/project'], function ($, angular, logonProject) {
                     $(function () {
                         angular.bootstrap(document.getElementById('logon-project-wrap'), [logonProject.name]);
+                    });
+                });
+            }
+
+            if (currentPath === '{{syst.logoff_url}}') {
+                require(['app/datacontext'], function (appDatacontext) {
+                    // Remove AUTH httponly cookie and is_auth cookie
+                    appDatacontext.accountLogoff().done(function () {
+                        cookieHelper.removeCookie('{{syst.cookie_is_auth}}');
+                        // After logoff navigate to the main page
+                        window.location.href = '/';
                     });
                 });
             }

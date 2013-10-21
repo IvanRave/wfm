@@ -1,14 +1,14 @@
 ﻿---
-page_title: Login
+page_title: Sing in
 ---
 <div class="wfm-content-pad" id="logon-project-wrap">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="row" ng-controller="LogonCtrl">
-                <h3>Sign in:</h3>
+                <h3>{{page_title}}:</h3>
                 <form class="form-horizontal" name="logonForm">
                     <div class="form-group" ng-class="{'has-error': logonForm.Email.$invalid}">
-                        <label class="control-label col-sm-2">Email</label>
+                        <label class="control-label col-sm-2">{{titleize lang.email}}</label>
                         <div class="col-sm-6">
                             <input type="text" name="Email" required autofocus class="form-control" ng-model="usver.Email" />
                         </div>
@@ -38,13 +38,13 @@ page_title: Login
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <button ng-click="tryAuth()" ng-disabled="logonForm.$invalid" class="btn btn-primary pull-right">Sign in</button>
+                                <button ng-click="tryAuth()" ng-disabled="logonForm.$invalid" class="btn btn-primary pull-right">{{page_title}}</button>
                             </div>
                         </div>
                     </div>
                 </form>
                 <h4>
-                    or <a href="/account/register">register a new company</a>
+                    or <a href="{{syst.register_url}}">register a new company</a>
                 </h4>
             </div>
         </div>

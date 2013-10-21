@@ -1,4 +1,6 @@
 ﻿define(['jquery', 'app/app-helper'], function ($, appHelper) {
+    'use strict';
+
     function wellRegionUrl(uqp) {
         return "/api/wellregion/" + (uqp ? ("?" + $.param(uqp)) : "");
     }
@@ -61,6 +63,12 @@
     }
     function forecastEvolutionUrl(uqp) {
         return '/api/forecastevolution/' + (uqp ? ('?' + $.param(uqp)) : '');
+    }
+    function accountLogoffUrl(uqp) {
+        return '/api/account/logoff/' + (uqp ? ('?' + $.param(uqp)) : '');
+    }
+    function accountLogonUrl(uqp) {
+        return '/api/account/logon/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
 
     var UrlParameter = function () {
@@ -209,7 +217,7 @@
         }
 
         appHelper.toggleLoadingState(true);
-        return $.ajax(url, options)
+        return $.ajax('{{conf.requrl}}' + url, options)
             .fail(function (jqXHR, textStatus, errorThrown) {
                 // include notification system: https://github.com/Nijikokun/bootstrap-notify
                 alert(textStatus + ": " + jqXHR.responseText + " (" + errorThrown + ")");
@@ -661,6 +669,16 @@
         getWfmParamSquadList: getWfmParamSquadList,
         getForecastEvolution: getForecastEvolution,
         postForecastEvolution: postForecastEvolution
+    };
+
+    // Account logoff
+    datacontext.accountLogoff = function (uqp) {
+        return ajaxRequest("GET", accountLogoffUrl(uqp));
+    };
+
+    // Account logon
+    datacontext.accountLogon = function (uqp, data) {
+        return ajaxRequest("POST", accountLogonUrl(uqp), data)
     };
 
     return datacontext;

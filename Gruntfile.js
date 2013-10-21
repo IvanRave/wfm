@@ -10,14 +10,20 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('assemble');
     grunt.loadNpmTasks('grunt-requirejs');
 
-    // dst folder
-    var trg = grunt.option('trg') || 'dst',
-        requrl = grunt.option('requrl') || 'http://wfm.azurewebsites.net';
+    // Target - destination folder plus config, for example: dev (development) or dst (main distribution) or dst-ipad (distrib for IPad)
+    var trgt = grunt.option('trgt') || 'dst',
+        // Request url
+        requrl = grunt.option('requrl') || 'http://wfm.azurewebsites.net',
+        // Build language: en, ru, es etc.
+        lang = grunt.option('lang') || 'en';
     // Project configuration
     grunt.config.init({
         // Metadata
         pkg: grunt.file.readJSON('package.json'),
-        target: trg, // Use for <% template in JSON keys
+        // Use for <% template in JSON keys
+        trgt: trgt, 
+        lang: lang,
+        // Banner for scripts comments: author, licence etc.
         banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
           '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
@@ -32,7 +38,7 @@ module.exports = function (grunt) {
                     open: true, // Or need url string
                     keepalive: true,
                     port: 12345,
-                    base: '<%= target %>'
+                    base: '<%= trgt %>'
                 }
             }
         },
@@ -52,7 +58,7 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            main: ['<%= target %>']
+            main: ['<%= trgt %>']
         },
         copy: {
             main: {
@@ -60,7 +66,7 @@ module.exports = function (grunt) {
                     expand: true,
                     dot: true,
                     cwd: '<%= folder.src %>/',
-                    dest: '<%= target %>/',
+                    dest: '<%= trgt %>/',
                     // Copy all files besides templates
                     src: ['**/*', '!tpl/**/*', '!scripts/app/**/*']
                 }]
@@ -70,7 +76,7 @@ module.exports = function (grunt) {
             options: {
                 engine: 'handlebars',
                 // Main properties
-                data: ['assemble_store/data/*.json', 'package.json'],
+                data: ['assemble_store/data/syst.json', 'assemble_store/data/lang/<%= lang %>/lang.json', 'package.json'],
                 // Build configuration properties
                 conf: {
                     // Request url (begin of the path)
@@ -89,7 +95,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= folder.src %>/tpl/pages/',
                     src: '**/*.hbs',
-                    dest: '<%= target %>'
+                    dest: '<%= trgt %>'
                 }]
             },
             readme: {
@@ -109,17 +115,17 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= folder.src %>/scripts/app/',
                     src: '**/*.js',
-                    dest: '<%= target %>/scripts/app/'
+                    dest: '<%= trgt %>/scripts/app/'
                 }]
             }
         },
         requirejs: {
             workspace: {
                 options: {
-                    baseUrl: '<%= target %>/scripts/',
+                    baseUrl: '<%= trgt %>/scripts/',
                     name: 'app/workspace/project',
-                    out: '<%= target %>/scripts/app/workspace/project-bundle-<%= pkg.version %>.min.js',
-                    mainConfigFile: '<%= target %>/scripts/require-config.js',
+                    out: '<%= trgt %>/scripts/app/workspace/project-bundle-<%= pkg.version %>.min.js',
+                    mainConfigFile: '<%= trgt %>/scripts/require-config.js',
                     optimize: 'uglify2',
                     // http://requirejs.org/docs/optimization.html#sourcemaps
                     generateSourceMaps: true,
@@ -141,22 +147,27 @@ module.exports = function (grunt) {
                     cwd: '<%= folder.src %>/',
                     spawn: false
                 },
-                files: ['!tpl/', '!scripts/app/', '**/*'],
+                files: ['**/*', '!tpl/**/*', '!scripts/app/**/*'],
                 tasks: ['copy:main']
             },
-            assemble_html: {
-                files: ['assemble_store/**/*', 'package.json', '<%= folder.src %>/tpl/**/*.hbs'],
-                tasks: ['assemble:html']
+            // update all template pages when change template data
+            assemble_data:{
+                files: ['assemble_store/data/syst.json', 'assemble_store/data/lang/<%= lang %>/lang.json', 'package.json'],
+                tasks: ['assemble:html', 'assemble:js', 'assemble:readme']
             },
-            assemble_readme: {
-                files: ['assemble_store/**/*', 'package.json'],
+            assebmle_readme:{
+                files: ['assemble_store/tpl/README.md.hbs'],
                 tasks: ['assemble:readme']
+            },
+            assemble_html: {
+                files: ['<%= folder.src %>/tpl/**/*.hbs'],
+                tasks: ['assemble:html']
             },
             assemble_js: {
                 options: {
                     spawn: false
                 },
-                files: ['assemble_store/**/*', 'package.json', '<%= folder.src %>/scripts/app/**/*.js'],
+                files: ['<%= folder.src %>/scripts/app/**/*.js'],
                 tasks: ['assemble:js']
             }
 
@@ -164,7 +175,7 @@ module.exports = function (grunt) {
             // livereload server: http://127.0.0.1:35729/livereload.js
             ////livereload: {
             ////    options: { livereload: true },
-            ////    files: ['<%= target %>/**/*']
+            ////    files: ['<%= trgt %>/**/*']
             ////}
         }
     });
@@ -189,34 +200,26 @@ module.exports = function (grunt) {
      'requirejs:workspace', // Bundle with r.js app/workspace/project.js
     ]);
 
-    ////grunt.event.on('watch', function (action, filepath, target) {
-    ////    grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
-    ////});
-
-
     // Change file src in dynamic file view
     // <param>fileArrPath: path to files object: http://gruntjs.com/api/grunt.config
     // <param>filepath: watched file (currently changed)
     function changeFileSrc(fileArrPath, filepath) {
         var changedFileArr = grunt.config.get(fileArrPath).map(function (file) {
             file.src = filepath.replace(file.cwd.replace(/\//g, '\\'), '');
-            grunt.log.writeln('SRSRSRSRS: ' + file.src);
             return file;
         });
 
         grunt.config.set(fileArrPath, changedFileArr);
     }
 
-    grunt.event.on('watch', function (action, filepath, target) {
+    grunt.event.on('watch', function (action, filepath, targetEvent) {
         // Copy only changed file
-        if (target === 'copy_main') {
+        if (targetEvent === 'copy_main') {
             changeFileSrc(['copy', 'main', 'files'], filepath);
         }
-        else if (target === 'assemble_js') {
+        else if (targetEvent === 'assemble_js') {
             changeFileSrc(['assemble', 'js', 'files'], filepath);
         }
+        ////grunt.log.writeln(targetEvent + ': ' + filepath + ' has ' + action);
     });
-
-    // Clean entire target directory
-    // 'clean:main',
 };
