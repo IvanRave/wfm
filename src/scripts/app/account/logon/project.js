@@ -1,6 +1,6 @@
 ﻿// Logon page project (angular)
 
-define(['angular', 'app/logon/controllers'], function (angular, appLogonControllers) {
+define(['angular', 'app/account/logon/controllers'], function (angular, appLogonControllers) {
     'use strict';
 
     return angular.module('ang-logon-project', [appLogonControllers.name])

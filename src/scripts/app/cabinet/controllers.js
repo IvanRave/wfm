@@ -2,7 +2,7 @@
 // requirejs: app/cabinet/controllers
 // angular: ang-cabinet-controllers
 
-define(['jquery', 'angular', 'angular-route', 'app/app-resource', 'app/cabinet/services', 'app/app-filters'], function ($, angular) {
+define(['jquery', 'angular', 'app/datacontext', 'angular-route', 'app/app-resource', 'app/cabinet/services', 'app/app-filters'], function ($, angular, appDatacontext) {
     'use strict';
 
     return angular.module('ang-cabinet-controllers', ['ngRoute', 'ang-app-resource', 'ang-cabinet-services', 'ang-app-filters'])
@@ -10,9 +10,20 @@ define(['jquery', 'angular', 'angular-route', 'app/app-resource', 'app/cabinet/s
         scp.accessLevelDict = sharedService.getSharedObject().accessLevelDict;
 
         scp.isLoadedCompanyUserList = false;
-        scp.companyUserList = companyUserFactory.query({}, function (response) {
-            scp.isLoadedCompanyUserList = true;
+
+        scp.companyUserList = [];
+
+        // Get company list
+        appDatacontext.getCompanyUserList().done(function (response) {
+            scp.$apply(function () {
+                scp.companyUserList = response;
+                scp.isLoadedCompanyUserList = true;
+            });
         });
+
+        ////scp.companyUserList = companyUserFactory.query({}, function (response) {
+        ////    scp.isLoadedCompanyUserList = true;
+        ////});
 
         scp.isOwnerAlready = function () {
             // when user is company owner already then block link "register company"

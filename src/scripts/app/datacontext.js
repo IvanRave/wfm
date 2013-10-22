@@ -68,7 +68,11 @@
         return '/api/account/logoff/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function accountLogonUrl(uqp) {
-        return '/api/account/logon/' + (uqp ? ('?' + $.param(uqp)) : '');
+        // may be switched to /api/account/logon/ like logoff
+        return '/api/account/' + (uqp ? ('?' + $.param(uqp)) : '');
+    }
+    function companyUserUrl(uqp) {
+        return '/api/companyuser/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
 
     var UrlParameter = function () {
@@ -172,7 +176,11 @@
         var options = {
             ////dataType: "json",
             cache: false,
-            type: type
+            type: type,
+            xhrFields: {
+                // For CORS request to send cookies
+                withCredentials: true
+            }
         };
 
         ////if (true) {
@@ -204,7 +212,7 @@
                 options.data = JSON.stringify(data);
             }
             else {
-                alert('not ko object and not array');
+                console.log('not ko object and not array');
                 console.log(data);
                 console.log(JSON.stringify(data));
                 // for other libraries (not knockout models - for plain JSON objects)
@@ -219,9 +227,18 @@
         appHelper.toggleLoadingState(true);
         return $.ajax('{{conf.requrl}}' + url, options)
             .fail(function (jqXHR, textStatus, errorThrown) {
-                // include notification system: https://github.com/Nijikokun/bootstrap-notify
-                alert(textStatus + ": " + jqXHR.responseText + " (" + errorThrown + ")");
-                console.log(jqXHR);
+                // TODO: include notification system: https://github.com/Nijikokun/bootstrap-notify
+                switch (jqXHR.status) {
+                    case 401:
+                        window.location.href = '{{syst.logon_url}}';
+                        break;
+                    case 404:
+                        alert('Data is not found');
+                        break;
+                    default:
+                        alert(textStatus + ": " + jqXHR.responseText + " (" + errorThrown + ")");
+                        console.log(jqXHR);
+                }
             })
             .always(function () {
                 appHelper.toggleLoadingState(false);
@@ -678,7 +695,11 @@
 
     // Account logon
     datacontext.accountLogon = function (uqp, data) {
-        return ajaxRequest("POST", accountLogonUrl(uqp), data)
+        return ajaxRequest("POST", accountLogonUrl(uqp), data);
+    };
+
+    datacontext.getCompanyUserList = function (uqp) {
+        return ajaxRequest('GET', companyUserUrl(uqp));
     };
 
     return datacontext;

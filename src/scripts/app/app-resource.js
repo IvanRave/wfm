@@ -43,12 +43,5 @@ define(['angular', 'angular-resource'], function (angular) {
      .factory('AccessLevelFactory', ['$resource', function (angResource) {
          var self = angResource('{{conf.requrl}}/api/accesslevel', {}, {});
          return self;
-     }])
-     .factory('AccountFactory', ['$resource', function (angResource) {
-         var self = angResource('{{conf.requrl}}/api/account', {}, {
-             post: { method: 'POST', isArray: false }
-         });
-
-         return self;
-     }])
+     }]);
 });

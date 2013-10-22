@@ -1,3 +1,10 @@
 {
-  "email":"email"
+  "email": "email",
+  "password": "password",
+  "required": "required",
+  "rememberMe": "remember me",
+  "error": "error" ,
+  "wrongCredentials": "incorrect email or password",
+  "signIn": "sign in",
+  "companyList": "companies"
 }

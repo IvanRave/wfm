@@ -111,7 +111,7 @@ require(['../require-config'], function () {
             }
 
             if (currentPath === '{{syst.logon_url}}') {
-                require(['jquery', 'angular', 'app/logon/project'], function ($, angular, logonProject) {
+                require(['jquery', 'angular', 'app/account/logon/project'], function ($, angular, logonProject) {
                     $(function () {
                         angular.bootstrap(document.getElementById('logon-project-wrap'), [logonProject.name]);
                     });

@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         // Metadata
         pkg: grunt.file.readJSON('package.json'),
         // Use for <% template in JSON keys
-        trgt: trgt, 
+        trgt: trgt,
         lang: lang,
         // Banner for scripts comments: author, licence etc.
         banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
@@ -76,7 +76,8 @@ module.exports = function (grunt) {
             options: {
                 engine: 'handlebars',
                 // Main properties
-                data: ['assemble_store/data/syst.json', 'assemble_store/data/lang/<%= lang %>/lang.json', 'package.json'],
+                // TODO: Change "en" to <%= lang %> parameters - it doesn't work yet for second time of using
+                data: ['assemble_store/data/syst.json', 'assemble_store/data/lang/en/*.json', 'package.json'],
                 // Build configuration properties
                 conf: {
                     // Request url (begin of the path)
@@ -103,7 +104,7 @@ module.exports = function (grunt) {
                     ext: '.md'
                 },
                 files: {
-                    './README': 'assemble_store/tpl/README.md.hbs'
+                    './README': 'assemble_store/tpl/pages/README.md.hbs'
                 }
             },
             // Assemble js files after copy in dest directory
@@ -150,13 +151,13 @@ module.exports = function (grunt) {
                 files: ['**/*', '!tpl/**/*', '!scripts/app/**/*'],
                 tasks: ['copy:main']
             },
-            // update all template pages when change template data
-            assemble_data:{
-                files: ['assemble_store/data/syst.json', 'assemble_store/data/lang/<%= lang %>/lang.json', 'package.json'],
+            // Update all template pages when change template data
+            assemble_data: {
+                files: ['assemble_store/data/syst.json', 'assemble_store/data/lang/en/lang.json', 'package.json'],
                 tasks: ['assemble:html', 'assemble:js', 'assemble:readme']
             },
-            assebmle_readme:{
-                files: ['assemble_store/tpl/README.md.hbs'],
+            assebmle_readme: {
+                files: ['assemble_store/tpl/pages/README.md.hbs'],
                 tasks: ['assemble:readme']
             },
             assemble_html: {
@@ -192,9 +193,9 @@ module.exports = function (grunt) {
 
       // 3. Copy plain and assembled files
      'copy:main', // Copy main files
+     'assemble:js', // After copy all files to destination - replace all {{value}} - rewrite the same files
      'assemble:html', // Copy other files: Assemble and copy templates files
      'assemble:readme', // Use main data to build readme for project description
-     'assemble:js', // After copy all files to destination - replace all {{value}} - rewrite the same files
 
       // 4. Bundle and minify
      'requirejs:workspace', // Bundle with r.js app/workspace/project.js

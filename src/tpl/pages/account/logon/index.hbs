@@ -1,5 +1,5 @@
 ﻿---
-page_title: Sing in
+page_title: <%= _.capitalize(lang.signIn) %>
 ---
 <div class="wfm-content-pad" id="logon-project-wrap">
     <div class="row">
@@ -8,23 +8,23 @@ page_title: Sing in
                 <h3>{{page_title}}:</h3>
                 <form class="form-horizontal" name="logonForm">
                     <div class="form-group" ng-class="{'has-error': logonForm.Email.$invalid}">
-                        <label class="control-label col-sm-2">{{titleize lang.email}}</label>
+                        <label class="control-label col-sm-2">{{capitalizeFirst lang.email}}</label>
                         <div class="col-sm-6">
                             <input type="text" name="Email" required autofocus class="form-control" ng-model="usver.Email" />
                         </div>
 						<!-- TODO: add min and max limit -->
                         <div class="col-sm-4 has-error">
-                            <span ng-show="logonForm.Email.$error.required" class="help-block">required</span>
+                            <span ng-show="logonForm.Email.$error.required" class="help-block">{{lang.required}}</span>
                         </div>
                     </div>
                     <div class="form-group" ng-class="{'has-error': logonForm.Password.$invalid}">
-                        <label class="control-label col-sm-2">Password</label>
+                        <label class="control-label col-sm-2">{{capitalizeFirst lang.password}}</label>
                         <div class="col-sm-6">
-                            <input type="text" name="Password" required class="form-control" ng-model="usver.Password" />
+                            <input type="text" name="Password" required class="form-control" ng-model="usver.Password" autocomplete="off" />
                         </div>
                         <!-- TODO: add min and max limit -->
                         <div class="col-sm-4 has-error">
-                            <span ng-show="logonForm.Password.$error.required" class="help-block">required</span>
+                            <span ng-show="logonForm.Password.$error.required" class="help-block">{{lang.required}}</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -33,15 +33,25 @@ page_title: Sing in
                             <div class="col-sm-4">
                                 <div class="checkbox">
                                     <label>
-                                        <input name="RememberMe" type="checkbox" ng-model="usver.RememberMe" /> Remember me
+                                        <input name="RememberMe" type="checkbox" ng-model="usver.RememberMe" /> {{capitalizeFirst lang.rememberMe}}
                                     </label>
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <button ng-click="tryAuth()" ng-disabled="logonForm.$invalid" class="btn btn-primary pull-right">{{page_title}}</button>
+                                <button ng-click="tryAuth()" ng-disabled="logonForm.$invalid || !isLoginBtnEnabled" class="btn btn-primary pull-right">{{capitalizeFirst lang.signIn}}</button>
                             </div>
                         </div>
                     </div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-2">
+
+							</div>
+							<div class="col-sm-6">
+								<span ng-bind="loginError" style="color: red"></span>
+							</div>
+						</div>
+					</div>
                 </form>
                 <h4>
                     or <a href="{{syst.register_url}}">register a new company</a>
