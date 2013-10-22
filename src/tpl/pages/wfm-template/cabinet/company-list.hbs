@@ -5,16 +5,18 @@
         <li class="list-group-item">
             <div class="clearfix">
                 <div class="pull-left">
-                    <img style="border:1px solid #ccc; width:100px" ng-src="{{companyUser.CompanyDto.LogoUrl || '/images/question.jpg'}}" />
+                    <img style="border:1px solid #ccc; width:100px" ng-src="{[{companyUser.CompanyDto.LogoUrl || '/images/question.jpg'}]}" />
                 </div>
                 <div class="pull-left" style="margin-left:16px">
                     <div class="clearfix">
-                        <h5 class="pull-left"><span>{{companyUser.CompanyDto.Name}}</span><span style="font-weight:normal">:&nbsp;{{companyUser.CompanyDto.Description}}</span></h5>
+                        <h5 class="pull-left">
+                          <span ng-bind="companyUser.CompanyDto.Name"></span>:
+                          <span style="font-weight:normal" ng-bind="companyUser.CompanyDto.Description"></span></h5>
                     </div>
-                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanViewAll.AccessCode" class="btn btn-default" href="/workspace/company/{{companyUser.CompanyDto.Id}}">View WFM</a>
-                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanEditAll.AccessCode" class="btn btn-default" href="/workspace/company/{{companyUser.CompanyDto.Id}}?editable=true">Edit WFM</a>
-                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanManageAll.AccessCode" class="btn btn-default" href="#/{{companyUser.CompanyDto.Id}}/manage/info">Manage company info</a>
-                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanManageAll.AccessCode" class="btn btn-default" href="#/{{companyUser.CompanyDto.Id}}/manage/user">Manage company users</a>
+                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanViewAll.AccessCode" class="btn btn-default" href="/workspace/company/{[{companyUser.CompanyDto.Id}]}">View WFM</a>
+                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanEditAll.AccessCode" class="btn btn-default" href="/workspace/company/{[{companyUser.CompanyDto.Id}]}?editable=true">Edit WFM</a>
+                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanManageAll.AccessCode" class="btn btn-default" href="#/{[{companyUser.CompanyDto.Id}]}/manage/info">Manage company info</a>
+                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanManageAll.AccessCode" class="btn btn-default" href="#/{[{companyUser.CompanyDto.Id}]}/manage/user">Manage company users</a>
                 </div>
             </div>
         </li>
