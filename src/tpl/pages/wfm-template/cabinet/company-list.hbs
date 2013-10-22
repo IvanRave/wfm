@@ -1,5 +1,8 @@
-﻿<h3>{{capitalizeFirst lang.companyList}}</h3>
-<div ng-hide="isLoadedCompanyUserList">loading...</div>
+﻿---
+layout: false
+---
+<h3>{{capitalizeFirst lang.companyList}}</h3>
+<div ng-hide="isLoadedCompanyUserList">{{lang.loading}}...</div>
 <div ng-show="isLoadedCompanyUserList">
     <ul ng-repeat="companyUser in companyUserList" class="list-group">
         <li class="list-group-item">
@@ -13,15 +16,15 @@
                           <span ng-bind="companyUser.CompanyDto.Name"></span>:
                           <span style="font-weight:normal" ng-bind="companyUser.CompanyDto.Description"></span></h5>
                     </div>
-                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanViewAll.AccessCode" class="btn btn-default" href="/workspace/company/{[{companyUser.CompanyDto.Id}]}">View WFM</a>
-                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanEditAll.AccessCode" class="btn btn-default" href="/workspace/company/{[{companyUser.CompanyDto.Id}]}?editable=true">Edit WFM</a>
-                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanManageAll.AccessCode" class="btn btn-default" href="#/{[{companyUser.CompanyDto.Id}]}/manage/info">Manage company info</a>
-                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanManageAll.AccessCode" class="btn btn-default" href="#/{[{companyUser.CompanyDto.Id}]}/manage/user">Manage company users</a>
+                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanViewAll.AccessCode" class="btn btn-default" href="/workspace/company/{[{companyUser.CompanyDto.Id}]}">{{capitalizeFirst lang.toView}} {{lang.wfm}}</a>
+                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanEditAll.AccessCode" class="btn btn-default" href="/workspace/company/{[{companyUser.CompanyDto.Id}]}?editable=true">{{capitalizeFirst lang.toEdit}} {{lang.wfm}}</a>
+                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanManageAll.AccessCode" class="btn btn-default" href="#/{[{companyUser.CompanyDto.Id}]}/manage/info">{{capitalizeFirst lang.toEdit}} {{lang.companyInfo}}</a>
+                    <a ng-show="companyUser.AccessLevel | bitwiseand: accessLevelDict.CanManageAll.AccessCode" class="btn btn-default" href="#/{[{companyUser.CompanyDto.Id}]}/manage/user">{{capitalizeFirst lang.toEdit}} {{lang.companyUsers}}</a>
                 </div>
             </div>
         </li>
     </ul>
     <div ng-hide="isOwnerAlready()">
-        <a href="#/create">Register a company</a>
+        <a href="#/create">{{capitalizeFirst lang.toRegisterACompany}}</a>
     </div>
 </div>

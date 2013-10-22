@@ -7,7 +7,7 @@ head_styles:
   - /content/jquery.Jcrop.min.css
 ---
 
-<div data-bind="if: isStructureLoaded() === false" style="text-align:center"><span>Loading...</span></div>
+<div data-bind="if: isStructureLoaded() === false" style="text-align:center"><span>{{lang.loading}}...</span></div>
 
 <div style="display:none" data-bind="visible: isStructureLoaded">
     <div class="clearfix">

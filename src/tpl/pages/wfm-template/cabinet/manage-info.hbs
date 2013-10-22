@@ -1,14 +1,17 @@
-﻿<div ng-hide="isLoadedCompany">Loading...</div>
+﻿---
+layout: false
+---
+<div ng-hide="isLoadedCompany">{{lang.loading}}...</div>
 <div ng-show="isLoadedCompany">
     <div class="row">
         <div class="col-sm-2 text-center">
             <div>
-                <img ng-src="{{company.LogoUrl || '/images/question.jpg'}}" class="img-responsive img-thumbnail" />
+                <img ng-src="{[{company.LogoUrl || '/images/question.jpg'}]}" class="img-responsive img-thumbnail" />
             </div>
             <div class="min-top-margin">
                 <span class="btn btn-block btn-default fileinput-button">
                     <i class="glyphicon glyphicon-edit"></i>
-                    <span>Select logo...</span>
+                    <span>{{capitalizeFirst lang.toSelect}} {{lang.logo}}...</span>
                     <input type="file" id="company-logo-file-upload" name="company-logo-files[]" ng-init="setFileUpload()">
                 </span>
             </div>
@@ -17,27 +20,27 @@
             <form name="companyManageInfoForm" class="form-horizontal">
                 <div class="form-group" ng-class="{'has-error': companyManageInfoForm.Name.$invalid}">
                     <div class="col-sm-9">
-                        <label class="control-label" for="Name">Company name</label>
+                        <label class="control-label" for="Name">{{capitalizeFirst lang.companyName}}</label>
                         <input type="text" name="Name" id="Name" ng-model="company.Name" required ng-minlength="5" ng-maxlength="255" class="form-control" />
                     </div>
                     <div class="col-sm-3">
                         <span class="help-block" ng-show="companyManageInfoForm.Name.$error.required">*</span>
-                        <span class="help-block" ng-show="companyManageInfoForm.Name.$error.minlength">Min length: 5</span>
+                        <span class="help-block" ng-show="companyManageInfoForm.Name.$error.minlength">{{capitalizeFirst lang.minLength}}: 5</span>
                     </div>
                 </div>
                 <div class="form-group" ng-class="{'has-error': companyManageInfoForm.Description.$invalid}">
                     <div class="col-sm-9">
-                        <label class="control-label" for="Description">Company description</label>
+                        <label class="control-label" for="Description">{{capitalizeFirst lang.companyDescription}}</label>
                         <textarea name="Description" id="Description" ng-model="company.Description" ng-maxlength="800" class="form-control" rows="10"></textarea>
                     </div>
                     <div class="col-sm-3">
-                        <span class="help-block" ng-show="companyManageInfoForm.Description.$error.maxlength">Max length - 800</span>
+                        <span class="help-block" ng-show="companyManageInfoForm.Description.$error.maxlength">{{capitalizeFirst lang.maxLength}}: 800</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-9 text-right">
                         <button class="btn btn-default" ng-click="putCompany()" ng-disabled="companyManageInfoForm.$invalid || isClean()">
-                            {{ isClean() ? 'Saved' : 'Save company info' }}
+                          <span ng-bind="isClean() ? '{{capitalizeFirst lang.saved}}' : '{{capitalizeFirst lang.toSave}} {{lang.companyInfo}}'"></span>
                         </button>
                     </div>
                 </div>
