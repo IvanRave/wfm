@@ -31,106 +31,92 @@ require(['../require-config'], function () {
 
             // Remove trailing slashes if exists
             currentPath = currentPath.replace(/\/+$/, '');
-            
+
             // Add one trailing slash whether url slash exists or not
             currentPath = currentPath + '/';
 
-            if (currentPath === '/') {
-                if (isAuth) {
-                    // Redirect auth users to their company list
-                    window.location.href = "/company/";
-                    return;
-                }
-                require(['jquery', 'dom-ready', 'jquery.bootstrap'], function ($, domReady) {
-                    domReady(function () {
-                        var jqrCarouselWfm = $('#carousel-wfm');
+            switch (currentPath) {
+                case '/':
+                    if (isAuth) {
+                        // Redirect auth users to their company list
+                        window.location.href = "/company/";
+                        return;
+                    }
+                    require(['jquery', 'dom-ready', 'jquery.bootstrap'], function ($, domReady) {
+                        domReady(function () {
+                            var jqrCarouselWfm = $('#carousel-wfm');
 
-                        var itemArr = jqrCarouselWfm.find('.item');
+                            var itemArr = jqrCarouselWfm.find('.item');
 
-                        var i = 0,
-                            iMax = 2;
-                        $(itemArr[i]).find('img').prop('src', '/img/carousel-wfm-' + (i + 1) + '.jpg');
-
-                        jqrCarouselWfm.carousel();
-
-                        i += 1;
-                        jqrCarouselWfm.on('slide.bs.carousel', function () {
+                            var i = 0,
+                                iMax = 2;
                             $(itemArr[i]).find('img').prop('src', '/img/carousel-wfm-' + (i + 1) + '.jpg');
 
-                            if (i === iMax) {
-                                jqrCarouselWfm.off('slide.bs.carousel');
-                            } else {
-                                i += 1;
-                            }
+                            jqrCarouselWfm.carousel();
+
+                            i += 1;
+                            jqrCarouselWfm.on('slide.bs.carousel', function () {
+                                $(itemArr[i]).find('img').prop('src', '/img/carousel-wfm-' + (i + 1) + '.jpg');
+
+                                if (i === iMax) {
+                                    jqrCarouselWfm.off('slide.bs.carousel');
+                                } else {
+                                    i += 1;
+                                }
+                            });
                         });
                     });
-                });
-                return;
-            }
+                    return;
+                case '/workspace/company/':
+                    // {{#if conf.isProd}}
+                    require(['jquery', 'app/workspace/project-bundle-{{package.version}}.min']);
+                    // {{else}}
+                    require(['jquery', 'app/workspace/project']);
+                    // {{/if}}
 
-            // wfm workspace
-            if (/^\/workspace\/company\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(currentPath)) {
-                // production mode:
-                require(['jquery', 'app/workspace/project-bundle-{{package.version}}.min']);
-                // debug mode: 
-                /////require(['jquery', 'app/workspace/project']);
-                return;
-            }
-
-            // company/index
-            if (currentPath === '/company/') {
-                require(['jquery', 'angular', 'app/cabinet/project', 'jquery.bootstrap'], function ($, angular, cabinetProject) {
-                    // Using jQuery dom ready because it will run this even if DOM load already happened
-                    $(function () {
-                        angular.bootstrap(document.getElementById('cabinet-project-wrap'), [cabinetProject.name]);
+                    return;
+                case '/company/':
+                    require(['jquery', 'angular', 'app/cabinet/project', 'jquery.bootstrap'], function ($, angular, cabinetProject) {
+                        // Using jQuery dom ready because it will run this even if DOM load already happened
+                        $(function () {
+                            angular.bootstrap(document.getElementById('cabinet-project-wrap'), [cabinetProject.name]);
+                        });
                     });
-                });
 
-                return;
-            }
-
-            // admin
-            if (currentPath === '/admin/') {
-                require(['jquery', 'angular', 'app/admin/project', 'jquery.bootstrap'], function ($, angular, adminProject) {
-                    $(function () {
-                        angular.bootstrap(document.getElementById('admin-project-wrap'), [adminProject.name]);
+                    return;
+                case '/admin/':
+                    require(['jquery', 'angular', 'app/admin/project', 'jquery.bootstrap'], function ($, angular, adminProject) {
+                        $(function () {
+                            angular.bootstrap(document.getElementById('admin-project-wrap'), [adminProject.name]);
+                        });
                     });
-                });
 
-                return;
-            }
-
-            // calculator
-            if (currentPath === '/pricing/calculator/') {
-                require(['jquery', 'jquery.bootstrap', 'app/calculator/project']);
-                return;
-            }
-
-            if (currentPath === '/httpinfo/') {
-
-            }
-
-            if (currentPath === '{{syst.logon_url}}') {
-                require(['jquery', 'angular', 'app/account/logon/project'], function ($, angular, logonProject) {
-                    $(function () {
-                        angular.bootstrap(document.getElementById('logon-project-wrap'), [logonProject.name]);
+                    return;
+                case '/pricing/calculator/':
+                    require(['jquery', 'jquery.bootstrap', 'app/calculator/project']);
+                    return;
+                case '/httpinfo/': return;
+                case '{{syst.logon_url}}':
+                    require(['jquery', 'angular', 'app/account/logon/project'], function ($, angular, logonProject) {
+                        $(function () {
+                            angular.bootstrap(document.getElementById('logon-project-wrap'), [logonProject.name]);
+                        });
                     });
-                });
-            }
-
-            if (currentPath === '{{syst.logoff_url}}') {
-                require(['app/datacontext'], function (appDatacontext) {
-                    // Remove AUTH httponly cookie and is_auth cookie
-                    appDatacontext.accountLogoff().done(function () {
-                        cookieHelper.removeCookie('{{syst.cookie_is_auth}}');
-                        // After logoff navigate to the main page
-                        window.location.href = '/';
+                    return;
+                case '{{syst.logoff_url}}':
+                    require(['app/datacontext'], function (appDatacontext) {
+                        // Remove AUTH httponly cookie and is_auth cookie
+                        appDatacontext.accountLogoff().done(function () {
+                            cookieHelper.removeCookie('{{syst.cookie_is_auth}}');
+                            // After logoff navigate to the main page
+                            window.location.href = '/';
+                        });
                     });
-                });
+                    return;
+                default:
+                    require(['jquery.bootstrap']);
+                    return;
             }
-
-            // for other pages
-            require(['jquery.bootstrap']);
         });
     });
 });

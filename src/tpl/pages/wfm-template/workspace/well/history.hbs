@@ -1,4 +1,7 @@
-﻿<span data-bind="ifnot: isLoadedHistoryList">Loading...</span>
+﻿---
+layout: false
+---
+<span data-bind="ifnot: isLoadedHistoryList">{{capitalizeFirst lang.loading}}...</span>
 
 <div data-bind="if: isLoadedHistoryList">
     <div class="row">

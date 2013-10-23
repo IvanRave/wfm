@@ -7,11 +7,11 @@ head_styles:
   - /content/jquery.Jcrop.min.css
 ---
 
-<div data-bind="if: isStructureLoaded() === false" style="text-align:center"><span>{{lang.loading}}...</span></div>
+<div data-bind="if: isStructureLoaded() === false" class="text-center"><span>{{lang.loading}}...</span></div>
 
 <div style="display:none" data-bind="visible: isStructureLoaded">
     <div class="clearfix">
-        <div class="col-md-2" style="padding-left:0">
+        <div class="col-md-2" style="padding-left: 0">
             <div data-bind="template: { name: 'menu', templateUrl: '/wfm-template/workspace/'}"></div>
         </div>
         <div class="col-md-10">

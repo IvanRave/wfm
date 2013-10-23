@@ -1,4 +1,7 @@
-﻿<div data-bind="foreach: wellPropertyList">
+﻿---
+layout: false
+---
+<div data-bind="foreach: wellPropertyList">
     <div>
         <i class="glyphicon glyphicon-edit" data-bind="click: $parent.editField, visible: $root.isEditable"></i>
         <label data-bind="text: ttl"></label>

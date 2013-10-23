@@ -1,4 +1,7 @@
-﻿<div data-bind="ifnot: isLoadedHstProductionData">loading...</div>
+﻿---
+layout: false
+---
+<div data-bind="ifnot: isLoadedHstProductionData">loading...</div>
 
 <div data-bind="if: isLoadedHstProductionData">
     <div data-bind="if: hstProductionDataSet().length === 0">No data. Import files from "File manager" to view production data.</div>

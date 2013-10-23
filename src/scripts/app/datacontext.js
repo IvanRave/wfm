@@ -75,6 +75,7 @@
         return '/api/companyuser/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
 
+    // TODO: move to apphelper.js
     var UrlParameter = function () {
         // This function is anonymous, is executed immediately and 
         // the return value is assigned to QueryString!

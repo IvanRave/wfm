@@ -28,6 +28,6 @@
     "grunt-bower-task": "~0.3.2",
     "requirejs": "~2.1.9",
     "grunt-requirejs": "~0.4.0",
-    "assemble": "~0.4.13"
+    "assemble": "~0.4.14"
   }
 }

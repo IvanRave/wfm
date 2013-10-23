@@ -1,6 +1,13 @@
 ﻿Developer notes
 ===
 
+Build:
+---
+### Development (dev folder)
+* grunt
+### Production (dst folder)
+* grunt --prod
+
 AngularJs: 
 ---
 * for ngSrc and href - use {[{ my.value }]}

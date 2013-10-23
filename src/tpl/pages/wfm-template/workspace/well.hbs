@@ -1,4 +1,7 @@
-﻿<div class="wfm-workspace-well-tab clearfix">
+﻿---
+layout: false
+---
+<div class="wfm-workspace-well-tab clearfix">
     <div class="pull-left">
         <ul class="nav nav-pills" data-bind="template: {foreach: sectionList, as: 'section'}">
             <!-- ko if: (section.id !== 'volume' && section.id !== 'sketch' && section.id !== 'pd') -->
@@ -43,7 +46,7 @@
 <div data-bind="if: selectedSectionId">
     <div class="tab-content" style="padding:8px 15px 0 0">
         <div class="tab-pane active">
-            <div data-bind="template: { name: selectedSectionId, templateUrl: '/wfm-template/', afterRender: function(){ afterRenderSectionList(selectedSectionId()); }}"></div>
+            <div data-bind="template: { name: selectedSectionId, templateUrl: '/wfm-template/workspace/well/', afterRender: function(){ afterRenderSectionList(selectedSectionId()); }}"></div>
         </div>
     </div>
 </div>

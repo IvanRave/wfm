@@ -1,4 +1,7 @@
-﻿<div data-bind="foreach: sectionList ">
+﻿---
+layout: false
+---
+<div data-bind="foreach: sectionList ">
     <!-- ko if: ($.inArray(id, ['report', 'test', 'integrity', 'nodalanalysis']) === -1) -->
     <div class="row" style="border: 1px solid #ccc; padding: 4px; border-radius: 2px; margin-bottom: 1px">
         <div class="col-sm-2">

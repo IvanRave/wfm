@@ -1,12 +1,12 @@
 ﻿---
-page_title: <%= package.description %>
+page_title: <%= _.capitalize(lang.wellFileManager) %>
 ---
 <div class="wfm-content-pad">
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
             <div class="clearfix">
-                <h3 class="pull-left">{{page_title}}</h3>
+                <h3 class="pull-left">{{capitalizeFirst lang.wellFileManager}}</h3>
                 <h3 class="pull-right wfm-icon-home-list">
                     <i title="Well summary" class="wfmicon wfmicon-summary"></i>
                     <i title="Well sketch and volume" class="wfmicon wfmicon-sketch"></i>
@@ -58,12 +58,12 @@ page_title: <%= package.description %>
                 </div>
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="/account/register">Register a company</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.register_url}}">{{capitalizeFirst lang.toRegisterACompany}}</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="/testinfo/">Test WFM</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}">Test WFM</a>
                     </p>
                 </div>
             </div>

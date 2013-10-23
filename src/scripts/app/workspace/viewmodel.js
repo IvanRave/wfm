@@ -3,14 +3,14 @@
     'ko',
     'app/datacontext',
     'bootstrap-modal.min',
+    'app/app-helper',
     'knockout-lazy.min',
     'app/models/WellRegion'
-], function ($, ko, datacontext, bootstrapModal) {
+], function ($, ko, datacontext, bootstrapModal, appHelper) {
     'use strict';
 
-    // get company Id (last part of url)
-    var pathNameArray = window.location.pathname.split('/');
-    var companyId = pathNameArray[pathNameArray.length - 1];
+    // get company Id
+    var companyId = appHelper.queryString['cid']
 
     // test company Id with Guid format (this checks retry server check in WorkSpace view of Home controller
     var regExpGuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -20,7 +20,7 @@
     }
 
     var self = {
-        isEditable: datacontext.UrlParameter["editable"] === "true" ? true : false,
+        isEditable: appHelper.queryString['editable'] === 'true' ? true : false,
         wellRegionList: ko.observableArray(),
         viewModelError: ko.observable(),
         selectedWellRegion: ko.observable(),

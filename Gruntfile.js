@@ -10,12 +10,25 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('assemble');
     grunt.loadNpmTasks('grunt-requirejs');
 
-    // Target - destination folder plus config, for example: dev (development) or dst (main distribution) or dst-ipad (distrib for IPad)
-    var trgt = grunt.option('trgt') || 'dst',
+
+    // By default = devSite
+    var isProd = grunt.option('prod') ? true : false,
+        isIpad = grunt.option('ipad') ? true : false,
         // Request url
         requrl = grunt.option('requrl') || 'http://wfm.azurewebsites.net',
         // Build language: en, ru, es etc.
         lang = grunt.option('lang') || 'en';
+
+    // Target - destination folder plus config, for example: 
+    // dev (development)
+    // dst (main distribution)
+    // devipad (dev for IPad)
+    // dstipad (distrib for IPad)
+    var trgt = isProd ? 'dst' : 'dev';
+    if (isIpad) {
+        trgt += "ipad";
+    }
+
     // Project configuration
     grunt.config.init({
         // Metadata
@@ -77,14 +90,16 @@ module.exports = function (grunt) {
                 engine: 'handlebars',
                 // Main properties
                 // TODO: Change "en" to <%= lang %> parameters - it doesn't work yet for second time of using
-                data: ['assemble_store/data/syst.json', 'assemble_store/data/lang/en/*.json', 'package.json'],
+                data: ['assemble_store/data/syst.json', 'assemble_store/data/lang/en/lang.json', 'package.json'],
                 // Build configuration properties
                 conf: {
                     // Request url (begin of the path)
                     // if exists - other domain (CORS requests - for local testing and side programs)
                     // if empty - the same domain (simple requests)
                     // Example {{requrl}}/api/values
-                    requrl: requrl
+                    requrl: requrl,
+                    isProd: isProd,
+                    isIpad: isIpad
                 }
             },
             html: {
@@ -138,6 +153,7 @@ module.exports = function (grunt) {
                 }
             }
         },
+        // For development: run tasks when change files
         watch: {
             jshint_gruntfile: {
                 files: ['<%= jshint.gruntfile.src %>'],
@@ -182,8 +198,8 @@ module.exports = function (grunt) {
     });
 
     // Default task
-    grunt.registerTask('default',
-    [
+
+    var tasks = [
       // 1. Check and test
      'jshint:gruntfile',
       ////'jshint: app', // TODO: fix jshint errors
@@ -195,11 +211,16 @@ module.exports = function (grunt) {
      'copy:main', // Copy main files
      'assemble:js', // After copy all files to destination - replace all {{value}} - rewrite the same files
      'assemble:html', // Copy other files: Assemble and copy templates files
-     'assemble:readme', // Use main data to build readme for project description
+     'assemble:readme' // Use main data to build readme for project description
+    ];
 
-      // 4. Bundle and minify
-     'requirejs:workspace', // Bundle with r.js app/workspace/project.js
-    ]);
+    // 4. Bundle and minify for production
+    if (isProd) {
+        // Bundle with r.js app/workspace/project.js
+        tasks.push('requirejs:workspace');
+    }
+
+    grunt.registerTask('default', tasks);
 
     // Change file src in dynamic file view
     // <param>fileArrPath: path to files object: http://gruntjs.com/api/grunt.config

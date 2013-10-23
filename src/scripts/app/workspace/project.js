@@ -10,7 +10,6 @@
     //DOM nodes in this function.
     domReady(function () {
         ko.applyBindings(appViewModel);
-
         var $window = $(window);
         $window.resize(function () {
             appViewModel.windowHeight($window.height());

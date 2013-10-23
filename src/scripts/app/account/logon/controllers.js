@@ -11,8 +11,6 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
         scp.loginError = '';
 
         scp.tryAuth = function () {
-            console.log(scp.usver);
-            console.log(appDatacontext);
             scp.isLoginBtnEnabled = false;
             appDatacontext.accountLogon({}, scp.usver).done(function (res) {
                 console.log(res);
@@ -33,6 +31,25 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
                     scp.isLoginBtnEnabled = true;
                 });
             })
+        };
+
+        scp.isTestLoginBtnEnabled = true;
+
+        scp.testAuth = function () {
+            scp.isTestLoginBtnEnabled = false;
+            appDatacontext.accountLogon({}, {
+                "Email": "wfm@example.com",
+                "Password": "123321"
+            }).done(function (res) {
+                if (res === true) {
+                    cookieHelper.createCookie('{{syst.cookie_is_auth}}', 'true');
+                    // Navigate to company list
+                    window.location.href = '/company/';
+                }
+                else {
+                    alert('Unknown error. Please try again');
+                }
+            });
         };
     }]);
 });
