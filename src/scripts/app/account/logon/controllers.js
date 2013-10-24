@@ -17,7 +17,7 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
                 if (res === true) {
                     cookieHelper.createCookie('{{syst.cookie_is_auth}}', 'true');
                     // Navigate to company list
-                    window.location.href = '/company/';
+                    window.location.href = '/company/{{conf.defPage}}';
                 }
                 else {
                     // Because using jQuery ajax is out of the world of angular, you need to wrap your $scope assignment inside of

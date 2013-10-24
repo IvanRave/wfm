@@ -52,7 +52,7 @@
             'jquery.jcrop': { deps: ['jquery'] },
             'lightbox': { deps: ['jquery'] },
             'slimscroll': { deps: ['jquery'] },
-            'angular': { exports: 'angular' }, // work: angular.module and other
+            'angular': { deps: ['jquery'], exports: 'angular' }, // work: angular.module and other
             'angular-route': { deps: ['angular'] },
             'angular-resource': { deps: ['angular'] },
             'ng-upload': { deps: ['angular'] },

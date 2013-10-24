@@ -550,8 +550,12 @@
         return ajaxRequest("get", wfmParameterUrl(uqp));
     }
 
-    function postWfmParameter(wfmParameterItem) {
-        return ajaxRequest("post", wfmParameterUrl(), wfmParameterItem);
+    function postWfmParameter(data) {
+        return ajaxRequest("post", wfmParameterUrl(), data);
+    }
+
+    function putWfmParameter(uqp, data) {
+        return ajaxRequest('PUT', wfmParameterUrl(uqp), data);
     }
 
     // get wellGroup wfmParameter list
@@ -675,6 +679,7 @@
         // wfm parameter
         getWfmParameterList: getWfmParameterList,
         postWfmParameter: postWfmParameter,
+        putWfmParameter: putWfmParameter,
         // well group wfm parameter
         getWellGroupWfmParameterList: getWellGroupWfmParameterList,
         postWellGroupWfmParameter: postWellGroupWfmParameter,

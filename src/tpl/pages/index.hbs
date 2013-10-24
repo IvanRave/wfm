@@ -53,17 +53,17 @@ page_title: <%= _.capitalize(lang.wellFileManager) %>
             <div style="margin-top:8px" class="row">
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}">Log on to my company</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}{{conf.defPage}}">Log on to my company</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.register_url}}">{{capitalizeFirst lang.toRegisterACompany}}</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.register_url}}{{conf.defPage}}">{{capitalizeFirst lang.toRegisterACompany}}</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}">Test WFM</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}{{conf.defPage}}">Test WFM</a>
                     </p>
                 </div>
             </div>

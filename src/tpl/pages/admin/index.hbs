@@ -1,0 +1,10 @@
+﻿---
+page_title: '<%= _.capitalize(lang.admin) %>'
+---
+<div id="admin-project-wrap">
+    <ul class="nav nav-tabs">
+        <li ng-class="{active: location.path() === '/wfmparameter' }"><a href="#/wfmparameter">Wfm parameters</a></li>
+        <li ng-class="{active: location.path() === '/company' }"><a href="#/company">Companies</a></li>
+    </ul>
+    <div ng-view></div>
+</div>

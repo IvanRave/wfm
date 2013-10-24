@@ -14,6 +14,7 @@ module.exports = function (grunt) {
     // By default = devSite
     var isProd = grunt.option('prod') ? true : false,
         isIpad = grunt.option('ipad') ? true : false,
+		isMetro = grunt.option('metro') ? true : false,
         // Request url
         requrl = grunt.option('requrl') || 'http://wfm.azurewebsites.net',
         // Build language: en, ru, es etc.
@@ -26,7 +27,10 @@ module.exports = function (grunt) {
     // dstipad (distrib for IPad)
     var trgt = isProd ? 'dst' : 'dev';
     if (isIpad) {
-        trgt += "ipad";
+        trgt += 'ipad';
+    }
+    else if (isMetro) {
+        trgt += 'metro';
     }
 
     // Project configuration
@@ -99,7 +103,9 @@ module.exports = function (grunt) {
                     // Example {{requrl}}/api/values
                     requrl: requrl,
                     isProd: isProd,
-                    isIpad: isIpad
+                    isIpad: isIpad,
+                    isMetro: isMetro,
+                    defPage: isMetro ? 'index.html' : ''
                 }
             },
             html: {

@@ -1,14 +1,19 @@
 ﻿// Controllers for admin page
 
-define(['angular', 'app/app-resource'], function (angular, appResource) {
+define(['angular', 'app/datacontext', 'app/app-resource'], function (angular, appDatacontext, appResource) {
     'use strict';
 
     return angular.module('ang-admin-controllers', [appResource.name])
     .controller('WfmParameterCtrl', ['$scope', 'WfmParameterFactory', function (scp, wfmParameterFactory) {
         scp.isLoadedList = false;
 
-        scp.wfmParameterList = wfmParameterFactory.query(function () {
-            scp.isLoadedList = true;
+        scp.wfmParameterList = [];
+
+        appDatacontext.getWfmParameterList().done(function (res) {
+            scp.$apply(function () {
+                scp.wfmParameterList = res;
+                scp.isLoadedList = true;
+            });
         });
 
         scp.turnEdit = function (wfmParameterToEdit, isEditable) {
@@ -39,7 +44,8 @@ define(['angular', 'app/app-resource'], function (angular, appResource) {
             delete wfmParameterToPut.wfmParameterClone;
 
             // save
-            wfmParameterFactory.put({ id: wfmParameterToPut.Id }, wfmParameterToPut);
+            ////wfmParameterFactory.put({ id: wfmParameterToPut.Id }, wfmParameterToPut);
+            appDatacontext.putWfmParameter({ id: wfmParameterToPut.Id }, wfmParameterToPut);
 
             wfmParameterToPut.isEditable = false;
         };

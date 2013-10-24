@@ -917,12 +917,6 @@
         };
 
         self.startLogImageEdit = function (data, event) {
-            // Modernizr - global, loads in the html head
-            if (!Modernizr.canvas) {
-                alert('Please upgrade browser to access edit feature');
-                return;
-            }
-
             self.IsLogImageEditable(!self.IsLogImageEditable());
             var cnvs = document.getElementById('log_cnvs');
             window.G_vmlCanvasManager && (cnvs = G_vmlCanvasManager.initElement(cnvs));
