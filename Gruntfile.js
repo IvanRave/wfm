@@ -71,7 +71,13 @@ module.exports = function (grunt) {
                     jshintrc: '<%= folder.src %>/scripts/app/.jshintrc'
                 },
                 // all js files in js folder
-                src: ['<%= folder.src %>/scripts/app/**/*.js']
+                ////src: ['<%= folder.src %>/scripts/app/**/*.js']
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= folder.src %>/scripts/app/',
+                    src: ['**/*.js']
+                }]
             }
         },
         clean: {
@@ -94,7 +100,7 @@ module.exports = function (grunt) {
                 engine: 'handlebars',
                 // Main properties
                 // TODO: Change "en" to <%= lang %> parameters - it doesn't work yet for second time of using
-                data: ['assemble_store/data/syst.json', 'assemble_store/data/lang/en/lang.json', 'package.json'],
+                data: ['<%= folder.src %>/data/syst.json', '<%= folder.src %>/data/lang/en/lang.json', 'package.json'],
                 // Build configuration properties
                 conf: {
                     // Request url (begin of the path)
@@ -125,7 +131,7 @@ module.exports = function (grunt) {
                     ext: '.md'
                 },
                 files: {
-                    './README': 'assemble_store/tpl/pages/README.md.hbs'
+                    './README': 'README.md.hbs'
                 }
             },
             // Assemble js files after copy in dest directory
@@ -165,6 +171,13 @@ module.exports = function (grunt) {
                 files: ['<%= jshint.gruntfile.src %>'],
                 tasks: ['jshint:gruntfile']
             },
+            jshint_app: {
+                options: {
+                    spawn: false
+                },
+                files: ['<%= folder.src %>/scripts/app/**/*.js'],
+                tasks: ['jshint:app']
+            },
             copy_main: {
                 options: {
                     cwd: '<%= folder.src %>/',
@@ -175,11 +188,11 @@ module.exports = function (grunt) {
             },
             // Update all template pages when change template data
             assemble_data: {
-                files: ['assemble_store/data/syst.json', 'assemble_store/data/lang/en/lang.json', 'package.json'],
-                tasks: ['assemble:html', 'assemble:js', 'assemble:readme']
+                files: ['<%= folder.src %>/data/syst.json', '<%= folder.src %>/data/lang/en/lang.json', 'package.json'],
+                tasks: ['assemble:html', 'assemble:js']
             },
             assebmle_readme: {
-                files: ['assemble_store/tpl/pages/README.md.hbs'],
+                files: ['README.md.hbs', 'package.json'],
                 tasks: ['assemble:readme']
             },
             assemble_html: {
@@ -247,6 +260,9 @@ module.exports = function (grunt) {
         }
         else if (targetEvent === 'assemble_js') {
             changeFileSrc(['assemble', 'js', 'files'], filepath);
+        }
+        else if (targetEvent === 'jshint_app'){
+            changeFileSrc(['jshint', 'app', 'files'], filepath);
         }
         ////grunt.log.writeln(targetEvent + ': ' + filepath + ' has ' + action);
     });

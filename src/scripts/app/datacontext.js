@@ -69,14 +69,14 @@
     }
     function accountLogonUrl(uqp) {
         // may be switched to /api/account/logon/ like logoff
-        return '/api/account/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '/api/account/logon/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function companyUserUrl(uqp) {
         return '/api/companyuser/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
 
     // TODO: move to apphelper.js
-    var UrlParameter = function () {
+    var UrlParameter = (function () {
         // This function is anonymous, is executed immediately and 
         // the return value is assigned to QueryString!
         var query_string = {};
@@ -98,13 +98,13 @@
         }
 
         return query_string;
-    }();
+    }());
 
     // 1999-12-31 yyyy-mm-dd
     var DatePatternEn = '(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))';
 
     function isValueInteger(checkedValue) {
-        return /^\d+$/.test(checkedValue);
+        return (/^\d+$/).test(checkedValue);
     }
 
     function getChoosedIdFromHash() {
@@ -229,12 +229,36 @@
         return $.ajax('{{conf.requrl}}' + url, options)
             .fail(function (jqXHR, textStatus, errorThrown) {
                 // TODO: include notification system: https://github.com/Nijikokun/bootstrap-notify
+                console.log(jqXHR);
                 switch (jqXHR.status) {
                     case 401:
                         window.location.href = '{{syst.logon_url}}';
                         break;
                     case 404:
                         alert('Data is not found');
+                        break;
+                    case 422:
+                        // Business-logic errors
+                        // TODO: handle all 400 errors
+                        break;
+                    case 400:
+                        var resJson = jqXHR.responseJSON;
+                        console.log(resJson);
+                        if (resJson.errId === 'validationErrors') {
+                            // Show window - but modal window can be active already
+                            // TODO: make realization for all cases, or show in alert
+                            var errMsg = '{{capitalizeFirst lang.validationErrors}}:\n';
+                            $.each(resJson.modelState, function (stateKey, stateValue) {
+                                errMsg += stateKey + ': ' + stateValue.join('; ');
+                            });
+
+                            alert(errMsg);
+                        }
+                        else {
+                            console.log(resJson);
+                            alert(textStatus + ": " + jqXHR.responseText + " (" + errorThrown + ")");
+                        }
+
                         break;
                     default:
                         alert(textStatus + ": " + jqXHR.responseText + " (" + errorThrown + ")");
@@ -696,12 +720,12 @@
 
     // Account logoff
     datacontext.accountLogoff = function (uqp) {
-        return ajaxRequest("GET", accountLogoffUrl(uqp));
+        return ajaxRequest('POST', accountLogoffUrl(uqp));
     };
 
     // Account logon
     datacontext.accountLogon = function (uqp, data) {
-        return ajaxRequest("POST", accountLogonUrl(uqp), data);
+        return ajaxRequest('POST', accountLogonUrl(uqp), data);
     };
 
     datacontext.getCompanyUserList = function (uqp) {
