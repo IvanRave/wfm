@@ -99,7 +99,9 @@ require(['../require-config'], function () {
                 case '{{syst.logon_url}}':
                     require(['jquery', 'angular', 'app/account/logon/project'], function ($, angular, logonProject) {
                         $(function () {
-                            angular.bootstrap(document.getElementById('logon-project-wrap'), [logonProject.name]);
+                            var logonProjectWrap = document.getElementById('logon-project-wrap');
+                            angular.bootstrap(logonProjectWrap, [logonProject.name]);
+                            $(logonProjectWrap).removeClass('hide');
                         });
                     });
                     return;

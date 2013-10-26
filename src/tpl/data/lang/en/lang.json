@@ -18,6 +18,8 @@
   "toDelete": "delete",
   "selection": "selection",
   "toSelect": "select",
+  "using": "use",
+  "toUse": "use",
   "registration": "registration",
   "toRegister": "register",
   "loading": "loading",
@@ -27,6 +29,7 @@
   "unknownError": "unknown error",
   "wrongCredentials": "incorrect email or password",
   "emailIsNotConfirmed": "email is not confirmed",
+  "emailConfirmation": "email confirmation",
   "validationErrors": "validation errors",
   "wrongEmailFormat": "wrong email format",
   "signIn": "sign in",
@@ -39,5 +42,8 @@
   "logo": "logo",
   "minLength": "min length",
   "maxLength": "max length",
-  "admin": "admin"
+  "admin": "admin",
+  "or": "or",
+  "test": "test",
+  "testWfmCaution": "Please don't load secret or important data. All loaded data can be removed at any time."
 }

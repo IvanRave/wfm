@@ -4,8 +4,10 @@ define(['angular', 'app/account/logon/controllers'], function (angular, appLogon
     'use strict';
 
     return angular.module('ang-logon-project', [appLogonControllers.name])
-    .config(['$httpProvider', function (angHttpProvider) {
-        angHttpProvider.defaults.withCredentials = true;
+    .config(['$httpProvider', '$interpolateProvider', function (angHttpProvider, angInterpolateProvider) {
+        ////angHttpProvider.defaults.withCredentials = true;
+        // Change standard curly braces tempate engine to {[{value}]}
+        angInterpolateProvider.startSymbol('{[{').endSymbol('}]}');
     }]);
     // For outer templates (other domains)
     ////.config(['$sceDelegateProvider', function (sceDelegateProvider) {

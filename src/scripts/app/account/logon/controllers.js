@@ -9,6 +9,11 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
 
         scp.loginError = '';
 
+        scp.reqEmail = {
+            minLength: 6,
+            maxLength: 18
+        };
+
         scp.tryAuth = function () {
             scp.isLoginBtnEnabled = false;
             appDatacontext.accountLogon({}, scp.usver).done(function () {
