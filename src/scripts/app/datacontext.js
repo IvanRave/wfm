@@ -68,8 +68,10 @@
         return '/api/account/logoff/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function accountLogonUrl(uqp) {
-        // may be switched to /api/account/logon/ like logoff
         return '/api/account/logon/' + (uqp ? ('?' + $.param(uqp)) : '');
+    }
+    function accountRegisterUrl(uqp) {
+        return '/api/account/register' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function companyUserUrl(uqp) {
         return '/api/companyuser/' + (uqp ? ('?' + $.param(uqp)) : '');
@@ -81,14 +83,14 @@
         // the return value is assigned to QueryString!
         var query_string = {};
         var query = window.location.search.substring(1);
-        var vars = query.split("&");
+        var vars = query.split('&');
         for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split("=");
+            var pair = vars[i].split('=');
             // If first entry with this name
-            if (typeof query_string[pair[0]] === "undefined") {
+            if (typeof query_string[pair[0]] === 'undefined') {
                 query_string[pair[0]] = pair[1];
                 // If second entry with this name
-            } else if (typeof query_string[pair[0]] === "string") {
+            } else if (typeof query_string[pair[0]] === 'string') {
                 var arr = [query_string[pair[0]], pair[1]];
                 query_string[pair[0]] = arr;
                 // If third or later entry with this name
@@ -247,12 +249,21 @@
                         if (resJson.errId === 'validationErrors') {
                             // Show window - but modal window can be active already
                             // TODO: make realization for all cases, or show in alert
-                            var errMsg = '{{capitalizeFirst lang.validationErrors}}:\n';
-                            $.each(resJson.modelState, function (stateKey, stateValue) {
-                                errMsg += stateKey + ': ' + stateValue.join('; ');
+
+                            require(['app/lang-helper'], function (langHelper) {
+                                var errMsg = '{{capitalizeFirst lang.validationErrors}}:';
+                                $.each(resJson.modelState, function (stateKey, stateValue) {
+                                    errMsg += '\n' + (langHelper.translate(stateKey) || stateKey) + ': ';
+
+                                    $.each(stateValue, function (errIndex, errValue) {
+                                        errMsg += langHelper.translateRow(errValue) + '; ';
+                                    });
+                                });
+
+                                alert(errMsg);
                             });
 
-                            alert(errMsg);
+                            return;
                         }
                         else {
                             console.log(resJson);
@@ -726,6 +737,10 @@
     // Account logon
     datacontext.accountLogon = function (uqp, data) {
         return ajaxRequest('POST', accountLogonUrl(uqp), data);
+    };
+
+    datacontext.accountRegister = function (uqp, data) {
+        return ajaxRequest('POST', accountRegisterUrl(uqp), data);
     };
 
     datacontext.getCompanyUserList = function (uqp) {

@@ -7,7 +7,7 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
     .controller('LogonCtrl', ['$scope', '$window', function (scp, angWindow) {
         scp.isLoginBtnEnabled = true;
 
-        scp.loginError = ''; 
+        scp.loginError = '';
 
         scp.tryAuth = function () {
             scp.isLoginBtnEnabled = false;
@@ -20,18 +20,12 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
                 if (jqXHR.status === 422) {
                     var resJson = jqXHR.responseJSON;
                     var tmpLoginError = '{{capitalizeFirst lang.error}}: ';
-                    if (resJson.errId === 'wrongCredentials') {
-                        tmpLoginError += 'wrong credentials';
-                    }
-                    else if (resJson.errId === 'emailIsNotConfirmed') {
-                        tmpLoginError += 'email is not confirmed';
-                    }
-                    else {
-                        tmpLoginError += '{{lang.unknownError}}';
-                    }
-                    // Because using jQuery ajax is out of the world of angular, you need to wrap your $scope assignment inside of
-                    scp.$apply(function () {
-                        scp.loginError = tmpLoginError;
+                    require(['app/lang-helper'], function (langHelper) {
+                        tmpLoginError += (langHelper.translate(resJson.errId) || '{{lang.unknownError}}');
+                        // Because using jQuery ajax is out of the world of angular, you need to wrap your $scope assignment inside of
+                        scp.$apply(function () {
+                            scp.loginError = tmpLoginError;
+                        });
                     });
                 }
             })
@@ -50,15 +44,10 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
             appDatacontext.accountLogon({}, {
                 "Email": "wfm@example.com",
                 "Password": "123321"
-            }).done(function (res) {
-                if (res === true) {
-                    cookieHelper.createCookie('{{syst.cookie_is_auth}}', 'true');
-                    // Navigate to company list
-                    window.location.href = '/company/';
-                }
-                else {
-                    alert('Unknown error. Please try again');
-                }
+            }).done(function () {
+                cookieHelper.createCookie('{{syst.cookie_is_auth}}', 'true');
+                // Navigate to company list
+                window.location.href = '/company/';
             });
         };
     }]);

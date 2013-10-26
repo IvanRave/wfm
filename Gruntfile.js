@@ -100,7 +100,7 @@ module.exports = function (grunt) {
                 engine: 'handlebars',
                 // Main properties
                 // TODO: Change "en" to <%= lang %> parameters - it doesn't work yet for second time of using
-                data: ['<%= folder.src %>/data/syst.json', '<%= folder.src %>/data/lang/en/lang.json', 'package.json'],
+                data: ['<%= folder.src %>/tpl/data/syst.json', '<%= folder.src %>/tpl/data/lang/en/lang.json', 'package.json'],
                 // Build configuration properties
                 conf: {
                     // Request url (begin of the path)
@@ -188,7 +188,7 @@ module.exports = function (grunt) {
             },
             // Update all template pages when change template data
             assemble_data: {
-                files: ['<%= folder.src %>/data/syst.json', '<%= folder.src %>/data/lang/en/lang.json', 'package.json'],
+                files: ['<%= folder.src %>/tpl/data/syst.json', '<%= folder.src %>/tpl/data/lang/en/lang.json', 'package.json'],
                 tasks: ['assemble:html', 'assemble:js']
             },
             assebmle_readme: {
