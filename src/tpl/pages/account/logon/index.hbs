@@ -3,59 +3,53 @@ page_title: <%= _.capitalize(lang.signIn) %>
 ---
 <div class="wfm-content-pad hide" id="logon-project-wrap">
     <div class="clearfix" ng-controller="LogonCtrl">
-        <div class="col-md-5 col-md-offset-1">
-            <h3 class="text-center">{{page_title}} {{lang.or}} <a href="{{syst.register_url}}">{{lang.toRegisterACompany}}</a></h3>
-            <div class="row">
-                <form class="form-horizontal" name="accountForm">
-                    <div class="form-group" ng-class="{'has-error': accountForm.Email.$invalid}">
-                        <label class="control-label col-sm-2">{{capitalizeFirst lang.email}}</label>
-                        <div class="col-sm-6">
-                            <input type="email" name="Email" required autofocus class="form-control" ng-model="usver.Email" />
-                        </div>
-                        <div class="col-sm-4 has-error">
-                            <span ng-show="accountForm.Email.$error.email" class="help-block">{{lang.wrongEmailFormat}}</span>
-                            <span ng-show="accountForm.Email.$error.required" class="help-block">{{lang.required}}</span>
+        <div class="col-md-6 col-md-offset-1">
+            <h3>{{page_title}} {{lang.or}} <a href="{{syst.register_url}}">{{lang.toRegisterACompany}}</a>:</h3>
+            <form class="form-horizontal" name="accountForm">
+                <div class="form-group" ng-class="{'has-error': accountForm.Email.$invalid}">
+                    <label class="control-label col-sm-2">{{capitalizeFirst lang.email}}</label>
+                    <div class="col-sm-6">
+                        <input type="email" name="Email" required autofocus class="form-control" ng-model="usver.Email" />
+                    </div>
+                    <div class="col-sm-4 has-error">
+                        <span ng-show="accountForm.Email.$error.email" class="help-block">{{lang.wrongEmailFormat}}</span>
+                        <span ng-show="accountForm.Email.$error.required" class="help-block">{{lang.required}}</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error': accountForm.Password.$invalid}">
+                    <label class="control-label col-sm-2">{{capitalizeFirst lang.password}}</label>
+                    <div class="col-sm-6">
+                        <input type="text" name="Password" required class="form-control" ng-model="usver.Password"
+                               ng-minlength="{[{bound.password.minLength}]}" ng-maxlength="{[{bound.password.maxLength}]}" autocomplete="off" />
+                    </div>
+                    <div class="col-sm-4 has-error">
+                        <span ng-show="accountForm.Password.$error.maxlength" class="help-block">{{lang.maxLength}}: <span ng-bind="bound.password.maxLength"></span></span>
+                        <span ng-show="accountForm.Password.$error.minlength" class="help-block">{{lang.minLength}}: <span ng-bind="bound.password.minLength"></span></span>
+                        <span ng-show="accountForm.Password.$error.required" class="help-block">{{lang.required}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                <input name="RememberMe" type="checkbox" ng-model="usver.RememberMe" /> {{lang.rememberMeInThisBrowser}}
+                            </label>
                         </div>
                     </div>
-                    <div class="form-group" ng-class="{'has-error': accountForm.Password.$invalid}">
-                        <label class="control-label col-sm-2">{{capitalizeFirst lang.password}}</label>
-                        <div class="col-sm-6">
-                            <input type="text" name="Password" required class="form-control" ng-model="usver.Password"
-                                   ng-minlength="{[{reqEmail.minLength}]}" ng-maxlength="{[{reqEmail.maxLength}]}" autocomplete="off" />
-                        </div>
-                        <div class="col-sm-4 has-error">
-                            <span ng-show="accountForm.Password.$error.maxlength" class="help-block">{{lang.maxLength}}: <span ng-bind="reqEmail.maxLength"></span></span>
-                            <span ng-show="accountForm.Password.$error.minlength" class="help-block">{{lang.minLength}}: <span ng-bind="reqEmail.minLength"></span></span>
-                            <span ng-show="accountForm.Password.$error.required" class="help-block">{{lang.required}}</span>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 col-sm-offset-2">
+                        <button ng-click="tryAuth()" ng-disabled="accountForm.$invalid || !isProcessBtnEnabled" class="btn btn-primary">{{capitalizeFirst lang.signIn}}</button>
                     </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <div class="checkbox">
-                                    <label>
-                                        <input name="RememberMe" type="checkbox" ng-model="usver.RememberMe" /> {{capitalizeFirst lang.rememberMe}}
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <button ng-click="tryAuth()" ng-disabled="accountForm.$invalid || !isLoginBtnEnabled" class="btn btn-primary pull-right">{{capitalizeFirst lang.signIn}}</button>
-                            </div>
-                        </div>
+                    <div class="col-sm-8 has-error">
+                        <span class="help-block" ng-bind="processError"></span>
                     </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-sm-6 col-sm-offset-2 has-error">
-                                <span class="help-block" ng-bind="loginError"></span>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
-        <div class="col-md-4 col-md-offset-1 text-center">
-            <h3>{{capitalizeFirst lang.test}} {{lang.signIn}}</h3>
-            <div class="well">
+        <div class="col-md-4">
+            <h3>{{capitalizeFirst lang.test}} {{lang.signIn}}:</h3>
+            <div class="well text-center">
                 <p>{{capitalizeFirst lang.testWfmCaution}}</p>
                 <button class="btn btn-primary" ng-disabled="!isTestLoginBtnEnabled" ng-click="testAuth()">{{capitalizeFirst lang.test}} {{lang.signIn}}</button>
             </div>

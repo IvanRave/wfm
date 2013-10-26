@@ -1,10 +1,8 @@
-﻿// Controllers for logon page
-
-define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, appDatacontext, cookieHelper) {
+﻿define(['angular', 'app/datacontext'], function (angular, appDatacontext) {
     'use strict';
 
-    return angular.module('ang-logon-controllers', [])
-    .controller('LogonCtrl', ['$scope', '$window', function (scp, angWindow) {
+    return angular.module('ang-register-controllers', [])
+    .controller('RegisterCtrl', ['$scope', '$window', function (scp, angWindow) {
         scp.isProcessBtnEnabled = true;
 
         scp.processError = '';
@@ -17,12 +15,10 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
             }
         };
 
-        scp.tryAuth = function () {
+        scp.tryRegister = function () {
             scp.isProcessBtnEnabled = false;
-            appDatacontext.accountLogon({}, scp.usver).done(function () {
-                cookieHelper.createCookie('{{syst.cookie_is_auth}}', 'true');
-                // Navigate to company list
-                angWindow.location.href = '/company/{{conf.defPage}}';
+            appDatacontext.accountRegister({}, scp.usver).done(function () {
+                angWindow.alert('success');
             })
             .fail(function (jqXHR) {
                 if (jqXHR.status === 422) {
@@ -38,24 +34,10 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
                 }
             })
             .always(function () {
-                // When error or smth activate login button
+                // When error or smth activate button
                 scp.$apply(function () {
                     scp.isProcessBtnEnabled = true;
                 });
-            });
-        };
-
-        scp.isTestLoginBtnEnabled = true;
-
-        scp.testAuth = function () {
-            scp.isTestLoginBtnEnabled = false;
-            appDatacontext.accountLogon({}, {
-                "Email": "wfm@example.com",
-                "Password": "123321"
-            }).done(function () {
-                cookieHelper.createCookie('{{syst.cookie_is_auth}}', 'true');
-                // Navigate to company list
-                window.location.href = '/company/';
             });
         };
     }]);

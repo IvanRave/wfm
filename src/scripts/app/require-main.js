@@ -96,6 +96,15 @@ require(['../require-config'], function () {
                     require(['jquery', 'jquery.bootstrap', 'app/calculator/project']);
                     return;
                 case '/httpinfo/': return;
+                case '{{syst.register_url}}':
+                    require(['jquery', 'angular', 'app/account/register/project'], function ($, angular, registerProject) {
+                        $(function () {
+                            var registerProjectWrap = document.getElementById('register-project-wrap');
+                            angular.bootstrap(registerProjectWrap, [registerProject.name]);
+                            $(registerProjectWrap).removeClass('hide');
+                        });
+                    });
+                    return;
                 case '{{syst.logon_url}}':
                     require(['jquery', 'angular', 'app/account/logon/project'], function ($, angular, logonProject) {
                         $(function () {
