@@ -71,7 +71,10 @@
         return '/api/account/logon/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function accountRegisterUrl(uqp) {
-        return '/api/account/register' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '/api/account/register/' + (uqp ? ('?' + $.param(uqp)) : '');
+    }
+    function accountRegisterConfirmationUrl(uqp) {
+        return '/api/account/register/confirmation/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function companyUserUrl(uqp) {
         return '/api/companyuser/' + (uqp ? ('?' + $.param(uqp)) : '');
@@ -745,6 +748,10 @@
 
     datacontext.getCompanyUserList = function (uqp) {
         return ajaxRequest('GET', companyUserUrl(uqp));
+    };
+
+    datacontext.accountRegisterConfirmation = function (uqp, data) {
+        return ajaxRequest('POST', accountRegisterConfirmationUrl(uqp), data)
     };
 
     return datacontext;

@@ -18,7 +18,9 @@
         scp.tryRegister = function () {
             scp.isProcessBtnEnabled = false;
             appDatacontext.accountRegister({}, scp.usver).done(function () {
-                angWindow.alert('success');
+                angWindow.alert('Success. Please check your email to confirm registration.');
+                // TODO:
+                // Send to email-confirm-sending
             })
             .fail(function (jqXHR) {
                 if (jqXHR.status === 422) {

@@ -5,6 +5,7 @@
   "email": "email",
   "password": "password",
   "passwordConfirmation": "password confirmation",
+  "passwordConfirmationAndPasswordAreNotEqual": "password confirmation and password are not equal",
   "steps": "steps",
   "required": "required",
   "cancel": "cancel",
@@ -33,8 +34,12 @@
   "wrongCredentials": "incorrect email or password",
   "emailIsNotConfirmed": "email is not confirmed",
   "emailConfirmation": "email confirmation",
+  "emailIsAlreadyTaken": "email is already taken",
+  "confirmationEmailFailedToSend": "confirmation email failed to send. Please try register again later.",
   "validationErrors": "validation errors",
   "wrongEmailFormat": "wrong email format",
+  "emailConfirmationIsUnsuccessful": "email confirmation is unsuccessful",
+  "success": "success",
   "signIn": "sign in",
   "companyList": "companies",
   "companyName": "company name",
@@ -48,5 +53,5 @@
   "admin": "admin",
   "or": "or",
   "test": "test",
-  "testWfmCaution": "Please don't load secret or important data. All loaded data can be removed at any time."
+  "testWfmCaution": "please don't load secret or important data. All loaded data can be removed at any time."
 }

@@ -2,5 +2,6 @@
   "cookie_is_auth": "is_auth",
   "logon_url": "/account/logon/",
   "logoff_url": "/account/logoff/",
-  "register_url": "/account/register/"
+  "register_url": "/account/register/",
+  "register_confirmation_url": "/account/register/confirmation/"
 }

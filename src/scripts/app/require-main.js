@@ -105,6 +105,22 @@ require(['../require-config'], function () {
                         });
                     });
                     return;
+                case '{{syst.register_confirmation_url}}':
+                    require(['jquery', 'app/app-helper', 'app/datacontext'], function ($, appHelper, appDatacontext) {
+                        var confirmationEmail = decodeURIComponent(appHelper.queryString['email']),
+                            confirmationToken = appHelper.queryString['token'];
+
+                        if (confirmationEmail && confirmationToken) {
+                            appDatacontext.accountRegisterConfirmation({}, { 'Email': confirmationEmail, 'Token': confirmationToken })
+                            .done(function () {
+                                $('#confirmation-success').removeClass('hide');
+                            })
+                            .fail(function () {
+                                $('#confirmation-failure').removeClass('hide');
+                            });
+                        }
+                    });
+                    return;
                 case '{{syst.logon_url}}':
                     require(['jquery', 'angular', 'app/account/logon/project'], function ($, angular, logonProject) {
                         $(function () {
