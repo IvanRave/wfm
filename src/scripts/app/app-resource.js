@@ -24,22 +24,6 @@ define(['angular', 'angular-resource'], function (angular) {
                      });
          return self;
      }])
-     .factory('CompanyUserFactory', ['$resource', function (angResource) {
-         var self = angResource('{{conf.requrl}}/api/companyuser', {}, {
-             post: { method: 'POST', isArray: false },
-             put: { method: 'PUT', isArray: false }
-         });
-
-         return self;
-     }])
-     .factory('CompanyFactory', ['$resource', function (angResource) {
-         var self = angResource('{{conf.requrl}}/api/company', {}, {
-             post: { method: 'POST', isArray: false },
-             put: { method: 'PUT', isArray: false }
-         });
-
-         return self;
-     }])
      .factory('AccessLevelFactory', ['$resource', function (angResource) {
          var self = angResource('{{conf.requrl}}/api/accesslevel', {}, {});
          return self;

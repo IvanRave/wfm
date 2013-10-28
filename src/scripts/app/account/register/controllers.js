@@ -22,15 +22,12 @@
                 // TODO:
                 // Send to email-confirm-sending
             })
-            .fail(function (jqXHR) {
-                if (jqXHR.status === 422) {
-                    var resJson = jqXHR.responseJSON;
-                    var tmpProcessError = '*';
+            .fail(function (jqXhr) {
+                if (jqXhr.status === 422) {
                     require(['app/lang-helper'], function (langHelper) {
-                        tmpProcessError += (langHelper.translate(resJson.errId) || '{{lang.unknownError}}');
                         // Because using jQuery ajax is out of the world of angular, you need to wrap your $scope assignment inside of
                         scp.$apply(function () {
-                            scp.processError = tmpProcessError;
+                            scp.processError = (langHelper.translate(jqXhr.responseJSON.errId) || '{{lang.unknownError}}');
                         });
                     });
                 }

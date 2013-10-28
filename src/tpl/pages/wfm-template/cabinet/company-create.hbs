@@ -23,14 +23,17 @@ layout: false
         </div>
     </div>
     <div class="form-group">
-        <div class="col-sm-4">
-        </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 col-sm-offset-4">
             <label class="checkbox">
-                <input type="checkbox" ng-model="isAgree" name="Agree" required /> I agree to the <a target="_blank" href="/about/">terms & conditions</a>
+                <input type="checkbox" ng-model="isAgree" name="Agree" required /> I agree to the <a target="_blank" href="/about/">{{lang.termsAndConditions}}</a>
             </label>
             <button class="btn btn-primary" ng-click="postCompany()" ng-disabled="companyCreateForm.$invalid || isPostSended">{{capitalizeFirst lang.toRegisterACompany}}</button>
             <a href="#" class="btn btn-default">{{capitalizeFirst lang.cancel}}</a>
+        </div>
+    </div>
+    <div class="form-group has-error">
+        <div class="col-sm-4 col-sm-offset-4">
+            <span class="help-block" ng-bind="processError"></span>
         </div>
     </div>
 </form>

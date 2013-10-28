@@ -6,14 +6,14 @@ layout: false
     <h4>{{capitalizeFirst lang.companyUsers}}:</h4>
   </div>
   <div class="col-sm-4">
-    <form name="postedCompanyUserForm">
+    <!--<form name="postedCompanyUserForm">
       <div class="input-group">
         <input name="companyUserEmail" placeholder="E-mail" type="email" required="" ng-model="companyUserNew.UserProfileDto.Email" class="form-control" />
         <span class="input-group-btn">
           <button type="button" class="btn btn-primary" ng-click="postCompanyUser()" ng-disabled="postedCompanyUserForm.$invalid">Add new user</button>
         </span>
       </div>
-    </form>
+    </form>-->
   </div>
 </div>
 <table class="table table-condensed">
@@ -21,7 +21,6 @@ layout: false
     <tr>
       <th>N</th>
       <th>{{capitalizeFirst lang.email}}</th>
-      <th title="Is user's email confirmed? This user can activate account using confirmation link from email (send by adding)">Is confirmed</th>
       <th>Access levels</th>
       <th>Action</th>
     </tr>
@@ -35,11 +34,8 @@ layout: false
         <span ng-bind="companyUser.UserProfileDto.Email"></span>
       </td>
       <td>
-        <span ng-bind="companyUser.UserProfileDto.IsConfirmed"></span>
-      </td>
-      <td>
         <label class="checkbox-inline" ng-repeat="accessLevelItem in accessLevelDict">
-          <input type="checkbox" ng-checked="companyUser.AccessLevel | bitwiseand : accessLevelItem.AccessCode" />
+          <input type="checkbox" ng-checked="companyUser.AccessLevel | bitwiseand : accessLevelItem.AccessCode" disabled />
           <span ng-bind="accessLevelItem.Description"></span>
         </label>
       </td>

@@ -2,7 +2,7 @@
 // require: app/cabinet/project
 // angular: ang-cabinet-project
 
-define(['angular', 'angular-route', 'app/cabinet/controllers'], function (angular, angRoute) {
+define(['angular', 'angular-route', 'app/cabinet/controllers'], function (angular) {
     'use strict';
 
     return angular.module('ang-cabinet-project', ['ngRoute', 'ang-cabinet-controllers'])

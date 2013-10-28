@@ -79,6 +79,9 @@
     function companyUserUrl(uqp) {
         return '/api/companyuser/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
+    function companyUrl(uqp) {
+        return '/api/company/' + (uqp ? ('?' + $.param(uqp)) : '');
+    }
 
     // TODO: move to apphelper.js
     var UrlParameter = (function () {
@@ -742,16 +745,31 @@
         return ajaxRequest('POST', accountLogonUrl(uqp), data);
     };
 
+    // Account register
     datacontext.accountRegister = function (uqp, data) {
         return ajaxRequest('POST', accountRegisterUrl(uqp), data);
     };
 
-    datacontext.getCompanyUserList = function (uqp) {
-        return ajaxRequest('GET', companyUserUrl(uqp));
+    datacontext.accountRegisterConfirmation = function (uqp, data) {
+        return ajaxRequest('POST', accountRegisterConfirmationUrl(uqp), data);
     };
 
-    datacontext.accountRegisterConfirmation = function (uqp, data) {
-        return ajaxRequest('POST', accountRegisterConfirmationUrl(uqp), data)
+    // api/company/
+    datacontext.postCompany = function (uqp, data) {
+        return ajaxRequest('POST', companyUrl(uqp), data);
+    };
+
+    datacontext.getCompany = function (uqp) {
+        return ajaxRequest('GET', companyUrl(uqp));
+    };
+
+    datacontext.putCompany = function (uqp, data) {
+        return ajaxRequest('PUT', companyUrl(uqp), data);
+    };
+
+    // api/companyuser/
+    datacontext.getCompanyUserList = function (uqp) {
+        return ajaxRequest('GET', companyUserUrl(uqp));
     };
 
     return datacontext;
