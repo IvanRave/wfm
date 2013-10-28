@@ -53,7 +53,8 @@
   "admin": "admin",
   "or": "or",
   "test": "test",
-  "testWfmCaution": "please don't load secret or important data. All loaded data can be removed at any time.",
+  "demo": "demo",
+  "demoWfmCaution": "please don't load secret or important data. All loaded data can be removed at any time.",
   "termsAndConditions": "terms and conditions",
   "userCanNotRegisterFewCompanies": "user can not register few companies"
 }

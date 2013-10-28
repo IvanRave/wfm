@@ -79,15 +79,12 @@
                             ////return '/api/wellfile/?well_id=80&purpose=history&status=work&file_name=fid20130213003420656_Map2560x1600.jpg&crop=(' + cropCoords.join(',') + ')&map_size=250'
                             ////return 'imgUrl + '&crop=(' + cropCoords.join(',') + ')';
                             return wellFieldMapItem.fullImgUrl + '&x1=' + x1 + '&y1=' + y1 + '&x2=' + x2 + '&y2=' + y2;
-                            ////return "/Images/WellMaps/10/.png";
-                            ////return "/Images/WellMaps/'++'/tile-" + tile[0] + "-" + tile[1] + ".png";
                         });
 
 
                     // %z - zoom; %x,%y - coordinates
                     //var mapUrl = '/api/wellfile/?well_id=80&purpose=history&status=work&file_name=fid20130212221840151_MOTsketch.jpeg&crop(%z,%z,%x,%y)'
                     //return new ymaps.Layer(mapUrl);
-                    //return new ymaps.Layer('/Images/WellMaps/' + '%z/tile-%x-%y' + '.jpg')
                 };
 
                 // add layer to map storage
@@ -280,7 +277,7 @@
                         //    balloonCloseButton: false,
                         //    // Балун будем открывать и закрывать кликом по иконке метки.
                         //    hideIconOnBalloonOpen: false
-                        //    //iconImageHref: '/Images/myIcon.gif', // картинка иконки
+                        //    //iconImageHref: '/myIcon.gif', // картинка иконки
                         //    //iconImageSize: [15, 21], // размеры картинки
                         //    //iconImageOffset: [-3, -21] // смещение картинки
                         //});
@@ -415,7 +412,7 @@
 
                 ////    }
                 ////}, {
-                ////    ////iconImageHref: '/images/drop.png', // картинка иконки
+                ////    ////iconImageHref: '/img/drop.png', // картинка иконки
                 ////    ////iconImageSize: [12, 18], // размеры картинки
                 ////    ////iconImageOffset: [-3, -21], // смещение картинки
                 ////    balloonContentBodyLayout: myBalloonContentBodyLayout,

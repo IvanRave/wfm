@@ -32,14 +32,14 @@
 }
 .progress-animated .progress-bar,
 .progress-animated .bar {
-  background: url(../images/progressbar.gif) !important;
+  background: url(../img/progressbar.gif) !important;
   filter: none;
 }
 .fileupload-loading {
   float: right;
   width: 32px;
   height: 32px;
-  background: url(../images/loading.gif) center no-repeat;
+  background: url(../img/loading-upload.gif) center no-repeat;
   background-size: contain;
   display: none;
 }

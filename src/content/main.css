@@ -122,7 +122,7 @@ footer {
     height: 100px;
     top: 50%;
     left: 50%;
-    background: url(../Images/ajax-loader.gif) no-repeat center;
+    background: url(../img/ajax-loader.gif) no-repeat center;
     text-align: center;
     padding: 10px;
     margin-left: -50px;
@@ -424,7 +424,7 @@ footer {
     font-weight: lighter;
     -webkit-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    padding: 16px;
+    padding: 12px;
     -moz-transition: all .1s ease-in-out;
     -o-transition: all .1s ease-in-out;
     -webkit-transition: all .1s ease-in-out;

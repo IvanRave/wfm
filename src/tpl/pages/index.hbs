@@ -3,8 +3,7 @@ page_title: <%= _.capitalize(lang.wellFileManager) %>
 ---
 <div class="wfm-content-pad">
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
+        <div class="col-md-8 col-md-offset-2">
             <div class="clearfix">
                 <h3 class="pull-left">{{capitalizeFirst lang.wellFileManager}}</h3>
                 <h3 class="pull-right wfm-icon-home-list">
@@ -50,20 +49,20 @@ page_title: <%= _.capitalize(lang.wellFileManager) %>
                     </a>
                 </div>
             </div>
-            <div style="margin-top:8px" class="row">
+            <div class="row" style="margin-top:4px">
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}{{conf.defPage}}">Log on to my company</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}{{conf.defPage}}">{{capitalizeFirst lang.signIn}}</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.register_url}}{{conf.defPage}}">{{capitalizeFirst lang.toRegisterACompany}}</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.register_url}}{{conf.defPage}}">{{capitalizeFirst lang.toRegister}}</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}{{conf.defPage}}">Test WFM</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logon_url}}{{conf.defPage}}">{{capitalizeFirst lang.demo}} {{lang.wfm}}</a>
                     </p>
                 </div>
             </div>
