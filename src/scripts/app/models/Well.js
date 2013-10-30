@@ -189,12 +189,7 @@
         self.selectedSectionId = ko.observable(null);
 
         ///<param>attrGroup - when select PD section need to point attrGroup</param>
-        self.selectSection = function (sectionId, attrGroupItem) {
-            if (sectionId === 'pd' && attrGroupItem) {
-                // Wfm param squad - attrGroupItem
-                self.mainPerfomanceView.selectedAttrGroup(attrGroupItem);
-            }
-
+        self.selectSection = function (sectionId) {
             self.selectedSectionId(sectionId);
         };
 
@@ -1000,10 +995,65 @@
         self.perfomancePartial.prdColumnAttributeList(importColumnAttributesDto(datacontext.getColumnAttributesLocal()));
 
         self.mainPerfomanceView = self.perfomancePartial.createPerfomanceView({
-            isVisibleForecastData: true
+            isVisibleForecastData: false
         });
 
-        ////self.mainPrf = new obj(self.perfomancePartial, optns);
+        // ============================= Dashboard ==============
+        self.dashBoardLayout = [
+            {
+                col: 3,
+                widgets: [
+                    {
+                        tplId: 'summary-tpl',
+                        widgetId: 123,
+                        title: ko.observable('SuperWidget'),
+                        optns: {
+                            isVisibleDescription: ko.observable(true),
+                            isVisibleProductionHistory: ko.observable(true)
+                        },
+                        saveWidget: function (widgetItem) {
+                            console.log(widgetItem);
+                        },
+                        processWidget: function () {
+                            console.log('asdf');
+                        }
+                    }
+                ]
+            },
+            {
+                col: 3,
+                widgets: []
+            },
+            {
+                col: 6,
+                widgets: [
+                    {
+                        tplId: 'perfomance-tpl',
+                        widgetId: 12312,
+                        title: ko.observable('Graph'),
+                        // Can be stored as a one json string, or xml
+                        optns: {
+                            ////isVisibleGraph: ko.observable(true),
+                            ////startYear: ko.observable(),
+                            ////endYear: ko.observable(),
+                            ////startMonth: ko.observable(1),
+                            ////endMonth: ko.observable(12),
+                            ////hasForecast: ko.observable(false),
+                            perfomanceView: self.perfomancePartial.createPerfomanceView({
+                                isVisibleForecastData: false
+                            })
+                        },
+                        saveWidget: function (widgetItem) {
+                            console.log(widgetItem);
+                        },
+                        processWidget: function () {
+                            self.perfomancePartial.getHstProductionDataSet();
+                            ////self.perfomancePartial.selectAttrGroup('Rate');
+                        }
+                    }
+                ]
+            }
+        ];
 
         // ============================================================ Change tab section =========================================================
         self.selectedSectionId.subscribe(function (sectionId) {
@@ -1017,7 +1067,7 @@
 
                     self.perfomancePartial.forecastEvolution.getDict();
 
-                    // TODO: Caution: when import new data, set ProductionDataSet to [] (empty array)
+                    // TODO: Caution: when import new data, set ProductionDataSet to [] (empty array) and isLoaded to false
                     if (ko.unwrap(self.perfomancePartial.hstProductionDataSet).length === 0) {
                         self.perfomancePartial.getHstProductionDataSet();
                     }
@@ -1103,60 +1153,6 @@
                 }
             }
         });
-
-        // ============================= Dashboard ==============
-        self.dashBoardLayout = [
-            {
-                col: 3,
-                widgets: [
-                    {
-                        tplId: 'summary-tpl',
-                        widgetId: 123,
-                        title: ko.observable('SuperWidget'),
-                        optns: {
-                            isVisibleDescription: ko.observable(true),
-                            isVisibleProductionHistory: ko.observable(true)
-                        },
-                        saveWidget: function (widgetItem) {
-                            console.log(widgetItem);
-                        },
-                        processWidget: function () {
-                            console.log('asdf');
-                        }
-                    }
-                ]
-            },
-            {
-                col: 3,
-                widgets: []
-            },
-            {
-                col: 6,
-                widgets: [
-                    {
-                        tplId: 'perfomance-tpl',
-                        widgetId: 12312,
-                        title: ko.observable('Graph'),
-                        // Can be stored as a one json string, or xml
-                        optns: {
-                            isVisibleGraph: ko.observable(true),
-                            startYear: ko.observable(),
-                            endYear: ko.observable(),
-                            startMonth: ko.observable(1),
-                            endMonth: ko.observable(12),
-                            hasForecast: ko.observable(false)
-                        },
-                        saveWidget: function (widgetItem) {
-                            console.log(widgetItem);
-                        },
-                        processWidget: function () {
-                            self.perfomancePartial.getHstProductionDataSet();
-                            ////self.perfomancePartial.selectAttrGroup('Rate');
-                        }
-                    }
-                ]
-            }
-        ];
 
         // ==================================================================== Well perfomance section end ========================================
 

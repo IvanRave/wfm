@@ -5,9 +5,9 @@ layout: false
     <div data-bind="ifnot: prfPartial.isLoadedHstProductionData">{{lang.loading}}...</div>
     <div data-bind="if: prfPartial.isLoadedHstProductionData">
         <div data-bind="if: prfPartial.hstProductionDataSet().length === 0">No data. Import files from "File manager" to view production data.</div>
-        <div data-bind="if: prfPartial.hstProductionDataSet().length > 0">
+        <div data-bind="if: prfPartial.hstProductionDataSet().length > 0">			
+            <!-- Settings panel -->
             <div data-bind="with: prfPartial">
-                <!-- hide forecast panel by default -->
                 <div data-bind="if: requiredForecastParamListNaNString" class="text-right">
                     <small>Forecast inaccessible: required parameters:<span data-bind="text: requiredForecastParamListNaNString"></span></small>
                 </div>
@@ -73,7 +73,9 @@ layout: false
                 Please choose perfomance group:
                 <ul data-bind="foreach: $root.wfmParamSquadList">
                     <li>
-                        <a href="#" data-bind="click: function() { $parents[1].selectSection('pd', $data); return true; }, text: id, attr: {href: $parents[1].getHashPath()  + '/section/pd'}"></a>
+                        <a href="#" data-bind="click: $parent.selectAttrGroup">
+							<span data-bind="text: id"></span>
+						</a>
                     </li>
                 </ul>
             </div>

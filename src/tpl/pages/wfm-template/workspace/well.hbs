@@ -29,12 +29,14 @@ layout: false
             <!-- ko if: section.id === 'pd' -->
             <li class="dropup" data-bind="css: {'active': section.id === $parent.selectedSectionId() }">
                 <a class="dropdown-toggle" title="Decline curve analysis" data-toggle="dropdown" data-bind="drpdwn:{}" href="#">
-                    <span data-bind="text: section.name"></span><br /><i class="wfmicon" data-bind="css: 'wfmicon-'+section.id"></i>
+                    <span data-bind="text: section.name"></span><br /><i class="wfmicon" data-bind="css: 'wfmicon-' + section.id"></i>
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" data-bind="foreach: $root.wfmParamSquadList">
                     <li>
-                        <a href="#" data-bind="click: function() { $parents[1].selectSection(section.id, $data); return true; }, text: id, attr: {href: $parents[1].getHashPath()  + '/section/' + section.id}"></a>
+                        <a href="#" data-bind="click: function() { $parents[1].selectSection(section.id); $parents[1].mainPerfomanceView.selectAttrGroup($data); return true; }, attr: {href: $parents[1].getHashPath()  + '/section/' + section.id}">
+							<span data-bind="text: id"></span>
+						</a>
                     </li>
                 </ul>
             </li>

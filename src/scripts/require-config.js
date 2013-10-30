@@ -15,7 +15,7 @@
             'trafficcop': 'TrafficCop-amd.min',
             'slimscroll': 'jquery.slimscroll.min',
             'jquery.jcrop': 'jquery.Jcrop.min',
-            'jquery.bootstrap': 'bootstrap.min',
+            'jquery.bootstrap': 'bootstrap',
             'moment': 'moment.min', // no deps
             // The jQuery UI widget factory, can be omitted if jQuery UI is already included 
             'jquery.ui.widget': 'ajaxupload/vendor/jquery.ui.widget',

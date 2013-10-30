@@ -22,6 +22,39 @@ layout: false
     <script type="text/html" id="perfomance-tpl">
         <div>
             <input type="text" data-bind="value: widget.title" />
+            <div data-bind="with: widget.optns.perfomanceView">
+                <div data-bind="ifnot: prfPartial.isLoadedHstProductionData">{{lang.loading}}...</div>
+                <div data-bind="if: prfPartial.isLoadedHstProductionData">
+                    <div data-bind="if: prfPartial.hstProductionDataSet().length === 0">No data. Import files from "File manager" to view production data.</div>
+                    <div data-bind="if: prfPartial.hstProductionDataSet().length > 0">
+                        <div data-bind="ifnot: selectedAttrGroup">
+                            Please choose perfomance group:
+                            <ul data-bind="foreach: $root.wfmParamSquadList">
+                                <li>
+                                    <a href="#" data-bind="click: $parent.selectAttrGroup">
+                                        <span data-bind="text: id"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div data-bind="if: selectedAttrGroup">
+                            {{> well-pd-graph }}
+                            <div class="clearfix" style="margin-top:4px">
+                                <div class="text-center">
+                                    <select data-bind="options: joinedYearList, value: WPDDateStartYear" class="input-sm"></select>
+                                    <select data-bind="options: monthList, value: WPDDateStartMonth" class="input-sm"></select>
+                                    <span>&nbsp;-&nbsp;</span>
+                                    <select data-bind="options: joinedYearList, value: WPDDateEndYear" class="input-sm"></select>
+                                    <select data-bind="options: monthList, value: WPDDateEndMonth" class="input-sm"></select>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" data-bind="checked: isVisibleForecastData, enable: prfPartial.isForecastPossible" />Show forecast graph and data
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </script>
     <div class="row" data-bind="foreach: dashBoardLayout">
