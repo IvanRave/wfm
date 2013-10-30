@@ -22,17 +22,6 @@ layout: false
     <script type="text/html" id="perfomance-tpl">
         <div>
             <input type="text" data-bind="value: widget.title" />
-            <input type="checkbox" data-bind="checked: widget.optns.isVisibleGraph" /> is vis graph
-            <button type="button" data-bind="click: widget.saveWidget">Save</button>
-        </div>
-        <div data-bind="with: $parents[2]">
-            <div data-bind="if: widget.optns.isVisibleGraph">
-                <div data-bind="with: perfomancePartial">
-                    <div data-bind="if: selectedAttrGroup">
-                        {{> well-pd-graph }}
-                    </div>
-                </div>
-            </div>
         </div>
     </script>
     <div class="row" data-bind="foreach: dashBoardLayout">

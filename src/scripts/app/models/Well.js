@@ -125,9 +125,9 @@
                             if (previousWell.selectedSectionId()) {
                                 previousSelectedSectionId = previousWell.selectedSectionId();
                             }
-                            var tmpSelectedAttrGroup = ko.unwrap(previousWell.perfomancePartial.selectedAttrGroup);
+                            var tmpSelectedAttrGroup = ko.unwrap(previousWell.mainPerfomanceView.selectedAttrGroup);
                             if (tmpSelectedAttrGroup) {
-                                self.perfomancePartial.selectedAttrGroup(tmpSelectedAttrGroup);
+                                self.mainPerfomanceView.selectedAttrGroup(tmpSelectedAttrGroup);
                             }
                         }
                     }
@@ -192,7 +192,7 @@
         self.selectSection = function (sectionId, attrGroupItem) {
             if (sectionId === 'pd' && attrGroupItem) {
                 // Wfm param squad - attrGroupItem
-                self.perfomancePartial.selectedAttrGroup(attrGroupItem);
+                self.mainPerfomanceView.selectedAttrGroup(attrGroupItem);
             }
 
             self.selectedSectionId(sectionId);
@@ -382,141 +382,142 @@
 
         self.isCompanyLogoInReport = ko.observable(false);
 
-        self.createReport = function () {
-            // checking checkboxes
-            if (self.reportSectionIdList().length === 0) {
-                alert('No selected sections for the report');
-                return;
-            }
+        // TODO: make create report
+        ////self.createReport = function () {
+        ////    // checking checkboxes
+        ////    if (self.reportSectionIdList().length === 0) {
+        ////        alert('No selected sections for the report');
+        ////        return;
+        ////    }
 
-            // existing selected map when map section is checked
-            if ($.inArray('map', self.reportSectionIdList()) >= 0) {
-                if (typeof self.selectedReportMap() === 'undefined') {
-                    alert('No selected map in the map section');
-                    return;
-                }
-            }
+        ////    // existing selected map when map section is checked
+        ////    if ($.inArray('map', self.reportSectionIdList()) >= 0) {
+        ////        if (typeof self.selectedReportMap() === 'undefined') {
+        ////            alert('No selected map in the map section');
+        ////            return;
+        ////        }
+        ////    }
 
-            if ($.inArray('log', self.reportSectionIdList()) >= 0) {
-                if (typeof self.selectedReportLog() === 'undefined') {
-                    alert('No selected log in the log section');
-                    return;
-                }
-            }
+        ////    if ($.inArray('log', self.reportSectionIdList()) >= 0) {
+        ////        if (typeof self.selectedReportLog() === 'undefined') {
+        ////            alert('No selected log in the log section');
+        ////            return;
+        ////        }
+        ////    }
 
-            if (self.isCompanyLogoInReport() === true) {
-                // get user profile
-                if (!appViewModel.curUserProfile().companyLogo()) {
-                    alert('No company logo. Please upload company logo in Cabinet');
-                    return;
-                }
-            }
+        ////    if (self.isCompanyLogoInReport() === true) {
+        ////        // get user profile
+        ////        if (!appViewModel.curUserProfile().companyLogo()) {
+        ////            alert('No company logo. Please upload company logo in Cabinet');
+        ////            return;
+        ////        }
+        ////    }
 
-            // todo: make check for begin date existence (or end date or together)
-            ////if ($.inArray('history', self.reportSectionIdList()) >= 0) {
-            ////    if (typeof self.reportHistoryBeginDate === 'undefined') {
-            ////        alert('No selected maps in the map section');
-            ////        return;
-            ////    }
-            ////}
-            // get all unknown data for pdf report and creating
+        ////    // todo: make check for begin date existence (or end date or together)
+        ////    ////if ($.inArray('history', self.reportSectionIdList()) >= 0) {
+        ////    ////    if (typeof self.reportHistoryBeginDate === 'undefined') {
+        ////    ////        alert('No selected maps in the map section');
+        ////    ////        return;
+        ////    ////    }
+        ////    ////}
+        ////    // get all unknown data for pdf report and creating
 
-            var logoUrl = null;
-            if (self.isCompanyLogoInReport() === true) {
-                var companyLogoByte64String = appViewModel.curUserProfile().companyLogo();
-                if (companyLogoByte64String) {
-                    logoUrl = companyLogoByte64String;
-                }
-            }
+        ////    var logoUrl = null;
+        ////    if (self.isCompanyLogoInReport() === true) {
+        ////        var companyLogoByte64String = appViewModel.curUserProfile().companyLogo();
+        ////        if (companyLogoByte64String) {
+        ////            logoUrl = companyLogoByte64String;
+        ////        }
+        ////    }
 
-            appHelper.toggleLoadingState(true);
-            require(['app/pdf-helper'], function (pdfHelper) {
+        ////    appHelper.toggleLoadingState(true);
+        ////    require(['app/pdf-helper'], function (pdfHelper) {
 
-                pdfHelper.getImageFromUrl(logoUrl, function (logoBase64) {
-                    var sketchUrl = $.inArray('sketch', self.reportSectionIdList()) >= 0 ? self.MainSketchUrl() : null;
-                    pdfHelper.getImageFromUrl(sketchUrl, function (sketchBase64) {
-                        // coord to nill - load full image (without crop)
-                        var mapUrl = ($.inArray('map', self.reportSectionIdList()) >= 0) ? (self.selectedReportMap().fullImgUrl + '&x1=0&y1=0&x2=0&y2=0') : null;
-                        pdfHelper.getImageFromUrl(mapUrl, function (mapBase64) {
-                            var logUrl = ($.inArray('log', self.reportSectionIdList()) >= 0) ? (self.selectedReportLog().Url()) : null;
-                            pdfHelper.getImageFromUrl(logUrl, function (logBase64) {
-                                var doc = pdfHelper.createPdf();
-                                // start string position
-                                var strPos = 0;
-                                strPos = pdfHelper.writeFileHeader(doc, strPos, "Well report");
-                                var nowDateString = moment().format("YYYY-MM-DD");
-                                strPos = pdfHelper.writeHeaderDate(doc, strPos, nowDateString);
+        ////        pdfHelper.getImageFromUrl(logoUrl, function (logoBase64) {
+        ////            var sketchUrl = $.inArray('sketch', self.reportSectionIdList()) >= 0 ? self.MainSketchUrl() : null;
+        ////            pdfHelper.getImageFromUrl(sketchUrl, function (sketchBase64) {
+        ////                // coord to nill - load full image (without crop)
+        ////                var mapUrl = ($.inArray('map', self.reportSectionIdList()) >= 0) ? (self.selectedReportMap().fullImgUrl + '&x1=0&y1=0&x2=0&y2=0') : null;
+        ////                pdfHelper.getImageFromUrl(mapUrl, function (mapBase64) {
+        ////                    var logUrl = ($.inArray('log', self.reportSectionIdList()) >= 0) ? (self.selectedReportLog().Url()) : null;
+        ////                    pdfHelper.getImageFromUrl(logUrl, function (logBase64) {
+        ////                        var doc = pdfHelper.createPdf();
+        ////                        // start string position
+        ////                        var strPos = 0;
+        ////                        strPos = pdfHelper.writeFileHeader(doc, strPos, "Well report");
+        ////                        var nowDateString = moment().format("YYYY-MM-DD");
+        ////                        strPos = pdfHelper.writeHeaderDate(doc, strPos, nowDateString);
 
-                                if (logoBase64.length > 0) {
-                                    strPos = pdfHelper.writeLogoImage(doc, strPos, logoBase64[0]);
-                                }
+        ////                        if (logoBase64.length > 0) {
+        ////                            strPos = pdfHelper.writeLogoImage(doc, strPos, logoBase64[0]);
+        ////                        }
 
-                                strPos = pdfHelper.writeWellName(doc, strPos, self.Name());
+        ////                        strPos = pdfHelper.writeWellName(doc, strPos, self.Name());
 
-                                // other summary fields
-                                if ($.inArray('summary', self.reportSectionIdList()) >= 0) {
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlDescription, self.Description(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlProductionHistory, self.ProductionHistory(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlCompletionType, self.CompletionType(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlFormationCompleteState, self.FormationCompleteState(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlDrillingDate, self.DrillingDate() ? moment(self.DrillingDate()).format('YYYY-MM-DD') : '', strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlIntegrityStatus, self.IntegrityStatus(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlLastInterventionType, self.LastInterventionType(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlLastInterventionDate, self.LastInterventionDate() ? moment(self.LastInterventionDate()).format('YYYY-MM-DD') : '', strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlPerforationDepth, self.PerforationDepth(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlPressureData, self.PressureData(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlPvt, self.Pvt(), strPos);
-                                    strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlReservoirData, self.ReservoirData(), strPos);
-                                }
+        ////                        // other summary fields
+        ////                        if ($.inArray('summary', self.reportSectionIdList()) >= 0) {
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlDescription, self.Description(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlProductionHistory, self.ProductionHistory(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlCompletionType, self.CompletionType(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlFormationCompleteState, self.FormationCompleteState(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlDrillingDate, self.DrillingDate() ? moment(self.DrillingDate()).format('YYYY-MM-DD') : '', strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlIntegrityStatus, self.IntegrityStatus(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlLastInterventionType, self.LastInterventionType(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlLastInterventionDate, self.LastInterventionDate() ? moment(self.LastInterventionDate()).format('YYYY-MM-DD') : '', strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlPerforationDepth, self.PerforationDepth(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlPressureData, self.PressureData(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlPvt, self.Pvt(), strPos);
+        ////                            strPos = pdfHelper.addSummaryFieldToPdf(doc, self.ttlReservoirData, self.ReservoirData(), strPos);
+        ////                        }
 
-                                // sketch
-                                if ($.inArray('sketch', self.reportSectionIdList()) >= 0) {
-                                    // no string position (new page)
-                                    pdfHelper.writeSketchImg(doc, sketchBase64, 'Sketch');
+        ////                        // sketch
+        ////                        if ($.inArray('sketch', self.reportSectionIdList()) >= 0) {
+        ////                            // no string position (new page)
+        ////                            pdfHelper.writeSketchImg(doc, sketchBase64, 'Sketch');
 
-                                    if (self.SketchDesc()) {
-                                        pdfHelper.writeSketchDesc(doc, self.SketchDesc(), 'Sketch description');
-                                    }
-                                }
+        ////                            if (self.SketchDesc()) {
+        ////                                pdfHelper.writeSketchDesc(doc, self.SketchDesc(), 'Sketch description');
+        ////                            }
+        ////                        }
 
-                                if (mapBase64.length > 0) {
-                                    pdfHelper.writeMap(doc, mapBase64, 'Map', self.selectedReportMap().WellInWellFieldMaps(), self.selectedReportMap().WellFieldMapAreas());
-                                }
+        ////                        if (mapBase64.length > 0) {
+        ////                            pdfHelper.writeMap(doc, mapBase64, 'Map', self.selectedReportMap().WellInWellFieldMaps(), self.selectedReportMap().WellFieldMapAreas());
+        ////                        }
 
-                                if ($.inArray('history', self.reportSectionIdList()) >= 0) {
-                                    pdfHelper.writeHistory(doc, 'History', self.sortedHistoryList());
-                                }
+        ////                        if ($.inArray('history', self.reportSectionIdList()) >= 0) {
+        ////                            pdfHelper.writeHistory(doc, 'History', self.sortedHistoryList());
+        ////                        }
 
-                                if (logBase64.length > 0) {
-                                    pdfHelper.writeLog(doc, logBase64, 'Log');
-                                }
+        ////                        if (logBase64.length > 0) {
+        ////                            pdfHelper.writeLog(doc, logBase64, 'Log');
+        ////                        }
 
-                                if ($.inArray('pd', self.reportSectionIdList()) >= 0) {
-                                    var arrPd = ko.unwrap(self.perfomancePartial.filteredByDateProductionDataSet);
-                                    $.each(ko.unwrap(self.selectedWfmParamSquadList), function (elemIndex, elemValue) {
-                                        var headerList = $.grep(ko.unwrap(self.perfomancePartial.prdColumnAttributeList), function (pdElem) {
-                                            return pdElem.Group === elemValue;
-                                        });
+        ////                        if ($.inArray('pd', self.reportSectionIdList()) >= 0) {
+        ////                            var arrPd = ko.unwrap(self.perfomancePartial.filteredByDateProductionDataSet);
+        ////                            $.each(ko.unwrap(self.selectedWfmParamSquadList), function (elemIndex, elemValue) {
+        ////                                var headerList = $.grep(ko.unwrap(self.perfomancePartial.prdColumnAttributeList), function (pdElem) {
+        ////                                    return pdElem.Group === elemValue;
+        ////                                });
 
-                                        pdfHelper.writePd(doc, elemValue, arrPd, headerList);
+        ////                                pdfHelper.writePd(doc, elemValue, arrPd, headerList);
 
-                                        pdfHelper.addHeaderToPdfDoc(doc, 'Perfomance: ' + elemValue + ' graph');
-                                        pdfHelper.drawGraphLabelInPdf(doc, headerList);
+        ////                                pdfHelper.addHeaderToPdfDoc(doc, 'Perfomance: ' + elemValue + ' graph');
+        ////                                pdfHelper.drawGraphLabelInPdf(doc, headerList);
 
-                                        // Graph data is not generated by array
-                                        ////var graphData = getGraphData(arrPd, headerList);
-                                        ////pdfHelper.drawGraphDataInPdf(doc, graphData, headerList);
-                                    });
-                                }
+        ////                                // Graph data is not generated by array
+        ////                                ////var graphData = getGraphData(arrPd, headerList);
+        ////                                ////pdfHelper.drawGraphDataInPdf(doc, graphData, headerList);
+        ////                            });
+        ////                        }
 
-                                pdfHelper.savePdf(doc, 'Report ' + self.Name() + ' ' + nowDateString);
-                                appHelper.toggleLoadingState(false);
-                            });
-                        });
-                    });
-                });
-            });
-        };
+        ////                        pdfHelper.savePdf(doc, 'Report ' + self.Name() + ' ' + nowDateString);
+        ////                        appHelper.toggleLoadingState(false);
+        ////                    });
+        ////                });
+        ////            });
+        ////        });
+        ////    });
+        ////};
 
         // =============================================================Well report end=================================================
 
@@ -995,8 +996,14 @@
 
         self.perfomancePartial = wellPerfomancePartial.init(self);
 
-        // Load column attributes - all loading logic in this file (not separated - not in perfomancePartial file)
+        // Load column attributes - all loading logic in this file (not separated - not in perfomance-partial file)
         self.perfomancePartial.prdColumnAttributeList(importColumnAttributesDto(datacontext.getColumnAttributesLocal()));
+
+        self.mainPerfomanceView = self.perfomancePartial.createPerfomanceView({
+            isVisibleForecastData: true
+        });
+
+        ////self.mainPrf = new obj(self.perfomancePartial, optns);
 
         // ============================================================ Change tab section =========================================================
         self.selectedSectionId.subscribe(function (sectionId) {
@@ -1130,10 +1137,14 @@
                         tplId: 'perfomance-tpl',
                         widgetId: 12312,
                         title: ko.observable('Graph'),
+                        // Can be stored as a one json string, or xml
                         optns: {
                             isVisibleGraph: ko.observable(true),
-                            startYear: 2001,
-                            endYear: 2008
+                            startYear: ko.observable(),
+                            endYear: ko.observable(),
+                            startMonth: ko.observable(1),
+                            endMonth: ko.observable(12),
+                            hasForecast: ko.observable(false)
                         },
                         saveWidget: function (widgetItem) {
                             console.log(widgetItem);

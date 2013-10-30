@@ -70,7 +70,7 @@
 
         self.isSelectedPrfYear = ko.computed({
             read: function () {
-                return ko.unwrap(self.getWell().perfomancePartial.selectedPrfTableYear) === self.prfYear;
+                return ko.unwrap(self.getWell().mainPerfomanceView.selectedPrfTableYear) === self.prfYear;
             },
             deferEvaluation: true
         });

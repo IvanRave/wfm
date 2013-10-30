@@ -11,56 +11,50 @@
     // ProductionDataSet (convert data objects into array)
     function importProductionDataSetDto(data, parent) { return $.map(data || [], function (item) { return datacontext.createProductionData(item, parent); }); }
 
-    function PerfomancePartial(wellObj) {
+    function PerfomanceView(optns, prfPartial) {
+        var prfv = this;
 
-        var prtl = this;
+        prfv.prfPartial = prfPartial;
 
-        // History data
-        prtl.hstProductionDataSet = ko.observableArray();
+        prfv.isVisibleForecastData = ko.observable(optns.isVisibleForecastData);
 
-        prtl.isLoadedHstProductionData = ko.observable(false);
-
-        prtl.isVisibleForecastData = ko.observable(false);
-
-        prtl.selectedPrfTableYear = ko.observable();
-        prtl.selectPrfTableYear = function (selectedPrfTableYearItem) {
-            prtl.selectedPrfTableYear(selectedPrfTableYearItem);
+        prfv.selectedPrfTableYear = ko.observable();
+        prfv.selectPrfTableYear = function (selectedPrfTableYearItem) {
+            prfv.selectedPrfTableYear(selectedPrfTableYearItem);
         };
 
-        prtl.monthList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        prfv.monthList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-        prtl.WPDDateStartYear = ko.observable();
-        prtl.WPDDateEndYear = ko.observable();
-        prtl.WPDDateStartMonth = ko.observable(1);
-        prtl.WPDDateEndMonth = ko.observable(12);
+        prfv.WPDDateStartYear = ko.observable();
+        prfv.WPDDateEndYear = ko.observable();
+        prfv.WPDDateStartMonth = ko.observable(1);
+        prfv.WPDDateEndMonth = ko.observable(12);
 
         function updateSelectedPrfTableYear() {
-            var tmpWpdDateStartYear = ko.unwrap(prtl.WPDDateStartYear),
-                tmpWpdDateEndYear = ko.unwrap(prtl.WPDDateEndYear),
-                tmpSelectedPrfTableYear = ko.unwrap(prtl.selectedPrfTableYear);
+            var tmpWpdDateStartYear = ko.unwrap(prfv.WPDDateStartYear),
+                tmpWpdDateEndYear = ko.unwrap(prfv.WPDDateEndYear),
+                tmpSelectedPrfTableYear = ko.unwrap(prfv.selectedPrfTableYear);
 
             if (tmpWpdDateStartYear && tmpWpdDateEndYear) {
                 if (!tmpSelectedPrfTableYear || tmpSelectedPrfTableYear < tmpWpdDateStartYear || tmpSelectedPrfTableYear > tmpWpdDateEndYear) {
-                    prtl.selectedPrfTableYear(tmpWpdDateStartYear);
+                    prfv.selectedPrfTableYear(tmpWpdDateStartYear);
                 }
             }
         }
 
-        prtl.WPDDateStartYear.subscribe(updateSelectedPrfTableYear);
-        prtl.WPDDateEndYear.subscribe(updateSelectedPrfTableYear);
+        prfv.WPDDateStartYear.subscribe(updateSelectedPrfTableYear);
+        prfv.WPDDateEndYear.subscribe(updateSelectedPrfTableYear);
 
-        prtl.prdColumnAttributeList = ko.observableArray();
-
-        prtl.selectedAttrGroup = ko.observable();
+        prfv.selectedAttrGroup = ko.observable();
 
         // Well group parameters for selected squad
-        prtl.selectedWellGroupWfmParameterList = ko.computed({
+        prfv.selectedWellGroupWfmParameterList = ko.computed({
             read: function () {
                 var resultArr = [];
-                var tmpSelectedAttrGroup = ko.unwrap(prtl.selectedAttrGroup);
+                var tmpSelectedAttrGroup = ko.unwrap(prfv.selectedAttrGroup);
                 if (tmpSelectedAttrGroup) {
                     // list of wg parameters for this well group
-                    var tmpWellGroupWfmParameterList = ko.unwrap(wellObj.getWellGroup().wellGroupWfmParameterList);
+                    var tmpWellGroupWfmParameterList = ko.unwrap(prfPartial.getWellObj().getWellGroup().wellGroupWfmParameterList);
 
                     // list of parameter for selected squad
                     var tmpSelectedWfmParameterList = ko.unwrap(tmpSelectedAttrGroup.wfmParameterList);
@@ -81,38 +75,48 @@
             deferEvaluation: true
         });
 
-        prtl.filteredByDateProductionDataSet = ko.computed({
-            read: function () {
-                var resultArr = [];
+        function filterDataByDate(startYear, endYear, startMonth, endMonth, hasForecast) {
+            var resultArr = [];
+            if (startYear && endYear) {
+                // Seconds from Unix Epoch
+                var startUnixTime = new Date(Date.UTC(startYear, startMonth - 1, 1)).getTime() / 1000;
+                var endUnixTime = new Date(Date.UTC(endYear, endMonth - 1, 1)).getTime() / 1000;
 
-                if (ko.unwrap(prtl.WPDDateStartYear) && ko.unwrap(prtl.WPDDateEndYear)) {
-                    // Seconds from Unix Epoch
-                    var startUnixTime = new Date(Date.UTC(ko.unwrap(prtl.WPDDateStartYear), ko.unwrap(prtl.WPDDateStartMonth) - 1, 1)).getTime() / 1000;
-                    var endUnixTime = new Date(Date.UTC(ko.unwrap(prtl.WPDDateEndYear), ko.unwrap(prtl.WPDDateEndMonth) - 1, 1)).getTime() / 1000;
-
-                    var prdArray;
-                    if (ko.unwrap(prtl.isVisibleForecastData) === true) {
-                        prdArray = ko.unwrap(prtl.dcaProductionDataSet).concat(ko.unwrap(prtl.hstProductionDataSet));
-                    }
-                    else {
-                        prdArray = ko.unwrap(prtl.hstProductionDataSet);
-                    }
-
-                    resultArr = ko.utils.arrayFilter(prdArray, function (r) {
-                        return ((r.unixTime >= startUnixTime) && (r.unixTime <= endUnixTime));
-                    });
+                var prdArray;
+                if (hasForecast) {
+                    prdArray = ko.unwrap(prfPartial.dcaProductionDataSet).concat(ko.unwrap(prfPartial.hstProductionDataSet));
+                }
+                else {
+                    prdArray = ko.unwrap(prfPartial.hstProductionDataSet);
                 }
 
-                return resultArr;
+                resultArr = ko.utils.arrayFilter(prdArray, function (r) {
+                    return ((r.unixTime >= startUnixTime) && (r.unixTime <= endUnixTime));
+                });
+            }
+
+            return resultArr;
+        }
+
+        prfv.filteredByDateProductionDataSet = ko.computed({
+            read: function () {
+                return filterDataByDate(
+                    ko.unwrap(prfv.WPDDateStartYear),
+                    ko.unwrap(prfv.WPDDateEndYear),
+                    ko.unwrap(prfv.WPDDateStartMonth),
+                    ko.unwrap(prfv.WPDDateEndMonth),
+                    ko.unwrap(prfv.isVisibleForecastData) ? true : false
+                    );
             },
             deferEvaluation: true
         });
 
+
         // Real time border: min and max values in unix time format
         // This time border other than WPDDateStartYear, EndYear (ant other selectable values)
-        prtl.filteredByDateProductionDataSetTimeBorder = ko.computed({
+        prfv.filteredByDateProductionDataSetTimeBorder = ko.computed({
             read: function () {
-                var arr = ko.unwrap(prtl.filteredByDateProductionDataSet);
+                var arr = ko.unwrap(prfv.filteredByDateProductionDataSet);
                 if (arr.length === 0) { return []; }
 
                 return [arr[arr.length - 1].unixTime, arr[0].unixTime];
@@ -121,13 +125,13 @@
         });
 
         // Real value border: min and max values of data in selected squad
-        prtl.filteredByDateProductionDataSetValueBorder = ko.computed({
+        prfv.filteredByDateProductionDataSetValueBorder = ko.computed({
             read: function () {
                 // get max and min value to find coef for graph
                 var minValue, maxValue;
 
-                $.each(ko.unwrap(prtl.filteredByDateProductionDataSet), function (prfIndex, prfElem) {
-                    $.each(ko.unwrap(prtl.selectedWellGroupWfmParameterList), function (clmIndex, clmElem) {
+                $.each(ko.unwrap(prfv.filteredByDateProductionDataSet), function (prfIndex, prfElem) {
+                    $.each(ko.unwrap(prfv.selectedWellGroupWfmParameterList), function (clmIndex, clmElem) {
                         if (ko.unwrap(clmElem.isVisible)) {
                             if ($.isNumeric(ko.unwrap(prfElem[clmElem.wfmParameterId]))) {
                                 var tmpValue = ko.unwrap(prfElem[clmElem.wfmParameterId]) * ko.unwrap(clmElem.wfmParameter().uomCoef);
@@ -149,6 +153,91 @@
             deferEvaluation: true
         });
 
+        // actual height of graph ang y-axis
+        prfv.prfGraphHeight = ko.observable();
+
+        function getSvgPath(dataSet, paramList, timeBorder, valueBorder) {
+            var resultJson = {};
+
+            // Check parameter and data existence
+            if (dataSet.length > 0 &&
+                paramList.length > 0 &&
+                $.isNumeric(timeBorder[0]) &&
+                $.isNumeric(timeBorder[1]) &&
+                $.isNumeric(valueBorder[0]) &&
+                $.isNumeric(valueBorder[1])) {
+
+                ////require(['d3'], function (d3) {
+                var x = d3.time.scale().range([0, prfPartial.prfGraph.viewBox.width]),
+                    y = d3.scale.linear().range([prfPartial.prfGraph.viewBox.height, 0]);
+
+                var line = d3.svg.line()
+                    .interpolate('linear')
+                    ////monotone
+                    .x(function (d) { return x(new Date(d.unixTime * 1000)); });
+
+                x.domain([new Date(timeBorder[0] * 1000), new Date(timeBorder[1] * 1000)]);
+                y.domain(valueBorder);
+
+                $.each(paramList, function (paramIndex, paramElem) {
+                    if (ko.unwrap(paramElem.isVisible) === true) {
+                        line.y(function (d) {
+                            return y(
+                                $.isNumeric(ko.unwrap(d[paramElem.wfmParameterId])) ? (ko.unwrap(d[paramElem.wfmParameterId]) * ko.unwrap(ko.unwrap(paramElem.wfmParameter).uomCoef)) : null
+                            );
+                        });
+
+                        resultJson[paramElem.wfmParameterId] = line(dataSet);
+                    }
+                });
+            }
+
+            return resultJson;
+        }
+
+        // Update perfomance graph data: graph path for selected regions
+        prfv.productionDataSetSvgPath = ko.computed(function () {
+            return getSvgPath(
+                    ko.unwrap(prfv.filteredByDateProductionDataSet),
+                    ko.unwrap(prfv.selectedWellGroupWfmParameterList),
+                    ko.unwrap(prfv.filteredByDateProductionDataSetTimeBorder),
+                    ko.unwrap(prfv.filteredByDateProductionDataSetValueBorder));
+        });
+
+        prfv.joinedYearList = ko.computed({
+            read: function () {
+                if (ko.unwrap(prfv.isVisibleForecastData)) {
+                    return prfPartial.forecastYearList().concat(ko.unwrap(prfPartial.histYearList));
+                }
+                else {
+                    return ko.unwrap(prfPartial.histYearList);
+                }
+            },
+            deferEvaluation: true
+        });
+
+        return prfv;
+    }
+
+    function PerfomancePartial(wellObj) {
+
+        var prtl = this;
+
+        prtl.getWellObj = function () {
+            return wellObj;
+        };
+
+        // History data
+        prtl.hstProductionDataSet = ko.observableArray();
+
+        prtl.isLoadedHstProductionData = ko.observable(false);
+
+        prtl.createPerfomanceView = function (optns) {
+            return new PerfomanceView(optns, prtl);
+        };
+
+        prtl.prdColumnAttributeList = ko.observableArray();
+
         // namespace for graph
         prtl.prfGraph = {
             viewBox: {
@@ -158,55 +247,6 @@
             },
             axisSize: 10
         };
-
-        // actual height of graph ang y-axis
-        prtl.prfGraphHeight = ko.observable();
-
-        // Update perfomance graph data: graph path for selected regions
-        prtl.productionDataSetSvgPath = ko.computed(function () {
-            var columnPathJson = {};
-
-            var tmpSelectedWellGroupWfmParameterList = ko.unwrap(prtl.selectedWellGroupWfmParameterList),
-                tmpFilteredByDateProductionDataSet = ko.unwrap(prtl.filteredByDateProductionDataSet);
-
-            var tmpFilteredByDateProductionDataSetValueBorder = ko.unwrap(prtl.filteredByDateProductionDataSetValueBorder),
-                tmpFilteredByDateProductionDataSetTimeBorder = ko.unwrap(prtl.filteredByDateProductionDataSetTimeBorder);
-
-            // Check parameter and data existence
-            if (tmpSelectedWellGroupWfmParameterList.length > 0 &&
-                tmpFilteredByDateProductionDataSet.length > 0 &&
-                $.isNumeric(tmpFilteredByDateProductionDataSetValueBorder[0]) &&
-                $.isNumeric(tmpFilteredByDateProductionDataSetValueBorder[1]) &&
-                $.isNumeric(tmpFilteredByDateProductionDataSetTimeBorder[0]) &&
-                $.isNumeric(tmpFilteredByDateProductionDataSetTimeBorder[1])) {
-
-                //require(['d3'], function (d3) {
-                var x = d3.time.scale().range([0, prtl.prfGraph.viewBox.width]),
-                    y = d3.scale.linear().range([prtl.prfGraph.viewBox.height, 0]);
-
-                var line = d3.svg.line()
-                    .interpolate('linear')
-                    ////monotone
-                    .x(function (d) { return x(new Date(d.unixTime * 1000)); });
-
-                x.domain([new Date(tmpFilteredByDateProductionDataSetTimeBorder[0] * 1000), new Date(tmpFilteredByDateProductionDataSetTimeBorder[1] * 1000)]);
-                y.domain(tmpFilteredByDateProductionDataSetValueBorder);
-
-                $.each(tmpSelectedWellGroupWfmParameterList, function (paramIndex, paramElem) {
-                    if (ko.unwrap(paramElem.isVisible) === true) {
-                        line.y(function (d) {
-                            return y(
-                                $.isNumeric(ko.unwrap(d[paramElem.wfmParameterId])) ? (ko.unwrap(d[paramElem.wfmParameterId]) * ko.unwrap(ko.unwrap(paramElem.wfmParameter).uomCoef)) : null
-                            );
-                        });
-
-                        columnPathJson[paramElem.wfmParameterId] = line(tmpFilteredByDateProductionDataSet);
-                    }
-                });
-            }
-
-            return columnPathJson;
-        });
 
         // ================================ FORECAST ===============================
 
@@ -420,7 +460,6 @@
             deferEvaluation: true
         });
 
-
         prtl.startForecastUnixTime = ko.computed({
             read: function () {
                 var tmpFirstForecastPd = ko.unwrap(prtl.firstForecastPd);
@@ -457,8 +496,9 @@
                     }
 
                     // Update according fields
-                    prtl.WPDDateStartYear(yearList.length > 1 ? (endDate.getFullYear() - 1) : endDate.getFullYear());
-                    prtl.WPDDateEndYear(endDate.getFullYear());
+                    // Can be updated after loading date or automatically by select boxes
+                    ////prtl.WPDDateStartYear(yearList.length > 1 ? (endDate.getFullYear() - 1) : endDate.getFullYear());
+                    ////prtl.WPDDateEndYear(endDate.getFullYear());
                 }
                 return yearList;
             },
@@ -476,19 +516,7 @@
             },
             deferEvaluation: true
         });
-
-        prtl.joinedYearList = ko.computed({
-            read: function () {
-                if (ko.unwrap(prtl.isVisibleForecastData)) {
-                    return prtl.forecastYearList().concat(ko.unwrap(prtl.histYearList));
-                }
-                else {
-                    return ko.unwrap(prtl.histYearList);
-                }
-            },
-            deferEvaluation: true
-        });
-
+        
         // All history data; without any filters
         prtl.getHstProductionDataSet = function () {
             prtl.isLoadedHstProductionData(false);
