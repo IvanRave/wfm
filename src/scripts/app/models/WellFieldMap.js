@@ -27,7 +27,7 @@
             self.Id = data.Id;
             self.Name = ko.observable(data.Name);
             self.Description = ko.observable(data.Description);
-            //// '/api/wellfieldmap?img_url=' + data.ImgUrl;
+            //// '{{conf.requrl}}/api/wellfieldmap?img_url=' + data.ImgUrl;
             self.ImgUrl = data.ImgUrl;
 
             self.fullImgUrl = datacontext.getWellFieldMapUrl({ img_url: self.ImgUrl });
@@ -76,14 +76,14 @@
                             if (y2 >= imgHeight) { y2 = imgHeight; }
 
                             var cropCoords = [x1, y1, x2, y2];
-                            ////return '/api/wellfile/?well_id=80&purpose=history&status=work&file_name=fid20130213003420656_Map2560x1600.jpg&crop=(' + cropCoords.join(',') + ')&map_size=250'
+                            ////return '{{conf.requrl}}/api/wellfile/?well_id=80&purpose=history&status=work&file_name=fid20130213003420656_Map2560x1600.jpg&crop=(' + cropCoords.join(',') + ')&map_size=250'
                             ////return 'imgUrl + '&crop=(' + cropCoords.join(',') + ')';
                             return wellFieldMapItem.fullImgUrl + '&x1=' + x1 + '&y1=' + y1 + '&x2=' + x2 + '&y2=' + y2;
                         });
 
 
                     // %z - zoom; %x,%y - coordinates
-                    //var mapUrl = '/api/wellfile/?well_id=80&purpose=history&status=work&file_name=fid20130212221840151_MOTsketch.jpeg&crop(%z,%z,%x,%y)'
+                    //var mapUrl = '{{conf.requrl}}/api/wellfile/?well_id=80&purpose=history&status=work&file_name=fid20130212221840151_MOTsketch.jpeg&crop(%z,%z,%x,%y)'
                     //return new ymaps.Layer(mapUrl);
                 };
 

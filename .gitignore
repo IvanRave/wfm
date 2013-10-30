@@ -1,8 +1,9 @@
 /node_modules/
 /bower_components/
+/.grunt/
 /dev/
 /dst/
+/devipad/
 /dstipad/
+/devmetro/
 /dstmetro/
-/docs/
-/.grunt/

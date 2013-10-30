@@ -413,11 +413,9 @@
                         bootstrapModal.closeModalWideWindow();
                         // TODO: message
                         // TODO: update model ProductionDataList
-                        // empty dza
-                        self.getWell().dcaProductionDataSet([]);
 
-                        self.getWell().getHstProductionDataSet();
-                        alert('Imported successfully: ' + self.Name());
+                        self.getWell().perfomancePartial.getHstProductionDataSet();
+                        alert('Imported successfully: ' + ko.unwrap(self.Name));
                     });
                 };
 

@@ -4,7 +4,7 @@ page_title: <%= _.capitalize(lang.signIn) %>
 <div class="wfm-content-pad hide" id="logon-project-wrap">
     <div class="clearfix" ng-controller="LogonCtrl">
         <div class="col-md-6 col-md-offset-1">
-            <h3>{{page_title}} {{lang.or}} <a href="{{syst.register_url}}">{{lang.toRegisterACompany}}</a>:</h3>
+            <h3>{{page_title}} {{lang.or}} <a href="{{syst.registerUrl}}{{conf.defPage}}">{{lang.toRegisterACompany}}</a>:</h3>
             <form class="form-horizontal" name="accountForm">
                 <div class="form-group" ng-class="{'has-error': accountForm.Email.$invalid}">
                     <label class="control-label col-sm-2">{{capitalizeFirst lang.email}}</label>

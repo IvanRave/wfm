@@ -5,7 +5,7 @@
             'jquery': 'jquery-2.0.3.min',
             'dom-ready': 'dom-ready.min',
             'lightbox': 'lightbox',
-            'ko': 'knockout-2.3.0', // minified version
+            'ko': 'knockout-3.0.0', // minified version
             'ko.external-template': 'koExternalTemplateEngine-amd.min',
             'angular': 'angular',
             'angular-route': 'angular-route',

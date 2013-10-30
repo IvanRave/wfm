@@ -14,12 +14,12 @@ require(['../require-config'], function () {
                 // is_auth and .ASPXAUTH cookies stores simultaneously
                 // Every page check user auth
                 // Cookie name stores in assemble_store/data/syst.json
-                if (cookieHelper.getCookie('{{syst.cookie_is_auth}}')) {
+                if (cookieHelper.getCookie('{{syst.cookieIsAuth}}')) {
                     isAuth = true;
-                    document.getElementById('logoff_block').style.display = "block";
+                    document.getElementById('logoff_block').style.display = 'block';
                 }
                 else {
-                    document.getElementById('logon_block').style.display = "block";
+                    document.getElementById('logon_block').style.display = 'block';
                 }
             })();
 
@@ -96,7 +96,7 @@ require(['../require-config'], function () {
                     require(['jquery', 'jquery.bootstrap', 'app/calculator/project']);
                     return;
                 case '/httpinfo/': return;
-                case '{{syst.register_url}}':
+                case '{{syst.registerUrl}}':
                     require(['jquery', 'angular', 'app/account/register/project'], function ($, angular, registerProject) {
                         $(function () {
                             var registerProjectWrap = document.getElementById('register-project-wrap');
@@ -105,7 +105,7 @@ require(['../require-config'], function () {
                         });
                     });
                     return;
-                case '{{syst.register_confirmation_url}}':
+                case '{{syst.registerConfirmationUrl}}':
                     require(['jquery', 'app/app-helper', 'app/datacontext'], function ($, appHelper, appDatacontext) {
                         var confirmationEmail = decodeURIComponent(appHelper.queryString['email']),
                             confirmationToken = appHelper.queryString['token'];
@@ -121,7 +121,7 @@ require(['../require-config'], function () {
                         }
                     });
                     return;
-                case '{{syst.logon_url}}':
+                case '{{syst.logonUrl}}':
                     require(['jquery', 'angular', 'app/account/logon/project'], function ($, angular, logonProject) {
                         $(function () {
                             var logonProjectWrap = document.getElementById('logon-project-wrap');
@@ -130,11 +130,11 @@ require(['../require-config'], function () {
                         });
                     });
                     return;
-                case '{{syst.logoff_url}}':
+                case '{{syst.logoffUrl}}':
                     require(['app/datacontext'], function (appDatacontext) {
                         // Remove AUTH httponly cookie and is_auth cookie
                         appDatacontext.accountLogoff().done(function () {
-                            cookieHelper.removeCookie('{{syst.cookie_is_auth}}');
+                            cookieHelper.removeCookie('{{syst.cookieIsAuth}}');
                             // After logoff navigate to the main page
                             window.location.href = '/';
                         });

@@ -10,7 +10,7 @@
     'use strict';
 
     // get company Id
-    var companyId = appHelper.queryString['cid']
+    var companyId = appHelper.queryString['cid'];
 
     // test company Id with Guid format (this checks retry server check in WorkSpace view of Home controller
     var regExpGuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -164,9 +164,10 @@
                             if (choosedObj.sectionId) {
                                 tmpWell.selectedSectionId(choosedObj.sectionId);
                             }
-                            else {
-                                tmpWell.selectedSectionId(tmpWell.sectionList[0].id);
-                            }
+                            // Apchive: previously - set summary as a default page
+                            ////else {
+                            ////    tmpWell.selectedSectionId(tmpWell.sectionList[0].id);
+                            ////}
 
                             // this set selected well
                             ////console.log(self.selectedWellRegion().selectedWellField().selectedWellGroup().selectedWell());

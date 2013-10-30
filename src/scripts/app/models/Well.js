@@ -5,21 +5,16 @@
     'app/file-helper',
     'bootstrap-modal.min',
     'app/app-helper',
-    'd3',
+    'app/models/well-partials/perfomance-partial',
     'app/models/WellFile',
-    'app/models/ProductionData',
     'app/models/ColumnAttribute',
     'app/models/WellHistory',
-    'app/models/TestScope',
-    'app/models/ForecastEvolutionDto'
-], function ($, ko, datacontext, fileHelper, bootstrapModal, appHelper, d3) {
+    'app/models/TestScope'
+], function ($, ko, datacontext, fileHelper, bootstrapModal, appHelper, wellPerfomancePartial) {
     'use strict';
 
     // WellFiles (convert data objects into array)
     function importWellFilesDto(data, parent) { return $.map(data || [], function (item) { return datacontext.createWellFile(item, parent); }); }
-
-    // ProductionDataSet (convert data objects into array)
-    function importProductionDataSetDto(data, parent) { return $.map(data || [], function (item) { return datacontext.createProductionData(item, parent); }); }
 
     // ColumnAttributes (convert data objects into array)
     function importColumnAttributesDto(data) { return $.map(data || [], function (item) { return datacontext.createColumnAttribute(item); }); }
@@ -116,11 +111,13 @@
         });
 
         self.selectItem = function () {
-            // by default - summary
-            var previousSelectedSectionId = self.sectionList[0].id;
+            // By default - no template - show widget page
+            // Previous - by default - summary self.sectionList[0].id;
+            var previousSelectedSectionId;
+
             // get previous selected section (if exists)
-            if (appViewModel.selectedWellRegion())
-                if (appViewModel.selectedWellRegion().selectedWellField())
+            if (appViewModel.selectedWellRegion()) {
+                if (appViewModel.selectedWellRegion().selectedWellField()) {
                     if (appViewModel.selectedWellRegion().selectedWellField().selectedWellGroup()) {
                         // previous selected well
                         var previousWell = appViewModel.selectedWellRegion().selectedWellField().selectedWellGroup().selectedWell();
@@ -128,11 +125,14 @@
                             if (previousWell.selectedSectionId()) {
                                 previousSelectedSectionId = previousWell.selectedSectionId();
                             }
-                            if (previousWell.selectedAttrGroup()) {
-                                self.selectedAttrGroup(previousWell.selectedAttrGroup());
+                            var tmpSelectedAttrGroup = ko.unwrap(previousWell.perfomancePartial.selectedAttrGroup);
+                            if (tmpSelectedAttrGroup) {
+                                self.perfomancePartial.selectedAttrGroup(tmpSelectedAttrGroup);
                             }
                         }
                     }
+                }
+            }
 
             // set new selected data (plus region in the end)
             var slcWell = self;
@@ -152,26 +152,29 @@
             // set selected well field
             slcWellRegion.selectedWellField(slcWellField);
 
-            self.selectedSectionId(previousSelectedSectionId);
+            if (previousSelectedSectionId) {
+                self.selectedSectionId(previousSelectedSectionId);
+            }
         };
 
         // after render all sections
-        self.afterRenderSectionList = function (sectionId) {
-            switch (sectionId) {
-                case 'sketch': {
-                    $('#sketch_desc').wysihtml5({
-                        "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
-                        "emphasis": true, //Italics, bold, etc. Default true
-                        "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
-                        "html": false, //Button which allows you to edit the generated HTML. Default false
-                        "link": false, //Button to insert a link. Default true
-                        "image": false, //Button to insert an image. Default true,
-                        "color": false //Button to change color of font
-                    });
-                    break;
-                }
-            }
-        };
+        // TODO: update wysihtml5 for bootstrap 3 and initialize it with knockout bindings
+        ////self.afterRenderSectionList = function (sectionId) {
+        ////    switch (sectionId) {
+        ////        case 'sketch': {
+        ////            $('#sketch_desc').wysihtml5({
+        ////                'font-styles': true, //Font styling, e.g. h1, h2, etc. Default true
+        ////                'emphasis': true, //Italics, bold, etc. Default true
+        ////                'lists': true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+        ////                'html': false, //Button which allows you to edit the generated HTML. Default false
+        ////                'link': false, //Button to insert a link. Default true
+        ////                'image': false, //Button to insert an image. Default true,
+        ////                'color': false //Button to change color of font
+        ////            });
+        ////            break;
+        ////        }
+        ////    }
+        ////};
 
         // ======================= file manager section ======================
         // file manager section: like above section but in file manager view
@@ -189,7 +192,7 @@
         self.selectSection = function (sectionId, attrGroupItem) {
             if (sectionId === 'pd' && attrGroupItem) {
                 // Wfm param squad - attrGroupItem
-                self.selectedAttrGroup(attrGroupItem);
+                self.perfomancePartial.selectedAttrGroup(attrGroupItem);
             }
 
             self.selectedSectionId(sectionId);
@@ -200,13 +203,13 @@
                 return self.WellFiles();
             }
 
-            return $.grep(self.WellFiles(), function (elemValue, elemIndex) {
+            return $.grep(self.WellFiles(), function (elemValue) {
                 return elemValue.Purpose === self.selectedFmgSectionId();
             });
         });
 
         self.logImageList = ko.computed(function () {
-            return $.grep(self.WellFiles(), function (elemValue, elemIndex) {
+            return $.grep(self.WellFiles(), function (elemValue) {
                 return ((elemValue.Purpose === 'log') && (elemValue.getExt() === 'png'));
             });
         });
@@ -336,7 +339,7 @@
             var sortFilterArr = self.historyList();
 
             if (self.historyListFilter.startDate() || self.historyListFilter.endDate()) {
-                sortFilterArr = $.grep(sortFilterArr, function (elemValue, elemIndex) {
+                sortFilterArr = $.grep(sortFilterArr, function (elemValue) {
                     if (self.historyListFilter.startDate() && new Date(self.historyListFilter.startDate()) > new Date(elemValue.StartDate())) {
                         return false;
                     }
@@ -370,7 +373,7 @@
                 case 'map': self.getWellGroup().getWellField().getWellFieldMaps(); break;
                 case 'history': self.getHistoryList(); break;
                 case 'log': self.getWellFileList('log', 'work'); break;
-                case 'pd': self.getHstProductionDataSet(); break;
+                case 'pd': self.perfomancePartial.getHstProductionDataSet(); break;
             }
         };
 
@@ -489,9 +492,9 @@
                                 }
 
                                 if ($.inArray('pd', self.reportSectionIdList()) >= 0) {
-                                    var arrPd = self.filteredByDateProductionDataSet();
+                                    var arrPd = ko.unwrap(self.perfomancePartial.filteredByDateProductionDataSet);
                                     $.each(self.selectedWfmParamSquadList(), function (elemIndex, elemValue) {
-                                        var headerList = $.grep(self.prdColumnAttributeList(), function (pdElem, pdIndex) {
+                                        var headerList = $.grep(ko.unwrap(self.perfomancePartial.prdColumnAttributeList), function (pdElem) {
                                             return pdElem.Group === elemValue;
                                         });
 
@@ -500,8 +503,9 @@
                                         pdfHelper.addHeaderToPdfDoc(doc, 'Perfomance: ' + elemValue + ' graph');
                                         pdfHelper.drawGraphLabelInPdf(doc, headerList);
 
-                                        var graphData = getGraphData(arrPd, headerList);
-                                        pdfHelper.drawGraphDataInPdf(doc, graphData, headerList);
+                                        // Graph data is not generated by array
+                                        ////var graphData = getGraphData(arrPd, headerList);
+                                        ////pdfHelper.drawGraphDataInPdf(doc, graphData, headerList);
                                     });
                                 }
 
@@ -559,7 +563,7 @@
                 self.getWellFileList();
                 var submitFunction = function () {
                     // get checked (selected) files
-                    var checkedWellFiles = $.map(self.WellFiles(), function (elemValue, elemIndex) {
+                    var checkedWellFiles = $.map(self.WellFiles(), function (elemValue) {
                         if (elemValue.isChecked() === true) {
                             return elemValue;
                         }
@@ -776,8 +780,8 @@
 
         self.wellMapList = ko.computed(function () {
             var wellFieldItem = self.getWellGroup().getWellField();
-            return $.map(wellFieldItem.WellFieldMaps(), function (elemValue, elemIndex) {
-                var wellIdList = $.map(elemValue.WellInWellFieldMaps(), function (wfmElem, wfmIndex) {
+            return $.map(wellFieldItem.WellFieldMaps(), function (elemValue) {
+                var wellIdList = $.map(elemValue.WellInWellFieldMaps(), function (wfmElem) {
                     return wfmElem.WellId;
                 });
 
@@ -916,10 +920,9 @@
             });
         };
 
-        self.startLogImageEdit = function (data, event) {
+        self.startLogImageEdit = function () {
             self.IsLogImageEditable(!self.IsLogImageEditable());
             var cnvs = document.getElementById('log_cnvs');
-            window.G_vmlCanvasManager && (cnvs = G_vmlCanvasManager.initElement(cnvs));
             var cntx = cnvs.getContext('2d');
             cntx.clearRect(0, 0, cnvs.width, cnvs.height);
             self.checkedLogTool('tool-hand');
@@ -972,7 +975,6 @@
             };
 
             var cnvs = document.getElementById('log_cnvs');
-            window.G_vmlCanvasManager && (cnvs = G_vmlCanvasManager.initElement(cnvs));
 
             require(['app/models/ByteImagePart'], function () {
                 var createdByteImagePart = datacontext.createByteImagePart({
@@ -991,579 +993,10 @@
         // ==================================================================== Well log section end ========================================
         // ==================================================================== Well perfomance begin ========================================
 
-        // history data
-        self.hstProductionDataSet = ko.observableArray();
+        self.perfomancePartial = wellPerfomancePartial.init(self);
 
-        self.isLoadedHstProductionData = ko.observable(false);
-        self.isVisibleForecastData = ko.observable(false);
-
-        self.selectedPrfTableYear = ko.observable();
-        self.selectPrfTableYear = function (selectedPrfTableYearItem) {
-            self.selectedPrfTableYear(selectedPrfTableYearItem);
-        };
-
-        self.monthList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-        self.WPDDateStartYear = ko.observable();
-        self.WPDDateStartMonth = ko.observable(1);
-        self.WPDDateEndYear = ko.observable();
-        self.WPDDateEndMonth = ko.observable(12);
-
-        function updateSelectedPrfTableYear() {
-            if (self.WPDDateStartYear() && self.WPDDateEndYear()) {
-                if (!self.selectedPrfTableYear() || self.selectedPrfTableYear() < self.WPDDateStartYear() || self.selectedPrfTableYear() > self.WPDDateEndYear()) {
-                    self.selectedPrfTableYear(self.WPDDateStartYear());
-                }
-            }
-        }
-
-        self.WPDDateStartYear.subscribe(updateSelectedPrfTableYear);
-        self.WPDDateEndYear.subscribe(updateSelectedPrfTableYear);
-
-        // forecast length
-        self.forecastDayCount = ko.observable(3600); // 50 years = 18250 //3600
-
-        // forecast parameters to build graph
-        self.forecastEvolution = datacontext.createForecastEvolution({ WellId: self.Id });
-
-        self.prdColumnAttributeList = ko.observableArray(importColumnAttributesDto(datacontext.getColumnAttributesLocal()));
-
-        self.selectedAttrGroup = ko.observable();
-
-        // Well group parameters for selected squad
-        self.selectedWellGroupWfmParameterList = ko.computed({
-            read: function () {
-                if (!self.selectedAttrGroup()) { return []; }
-
-                // list of wg parameters for this well group
-                var tmpWellGroupWfmParameterList = self.getWellGroup().wellGroupWfmParameterList();
-
-                // list of parameter for selected squad
-                var tmpSelectedWfmParameterList = self.selectedAttrGroup().wfmParameterList();
-
-                // Select only parameter ids
-                var tmpSelectedWfmParameterIdList = $.map(tmpSelectedWfmParameterList, function (ssgElem) { return ssgElem.id });
-
-                // return only well group wfm parameters in selected squad
-                return $.grep(tmpWellGroupWfmParameterList, function (wgpElem) {
-                    return $.inArray(wgpElem.wfmParameterId, tmpSelectedWfmParameterIdList) >= 0;
-                });
-            },
-            deferEvaluation: true
-        });
-
-        self.filteredByDateProductionDataSet = ko.computed({
-            read: function () {
-                if (!self.WPDDateStartYear() || !self.WPDDateEndYear()) { return []; }
-
-                // Seconds from Unix Epoch
-                var startUnixTime = new Date(Date.UTC(self.WPDDateStartYear(), self.WPDDateStartMonth() - 1, 1)).getTime() / 1000;
-                var endUnixTime = new Date(Date.UTC(self.WPDDateEndYear(), self.WPDDateEndMonth() - 1, 1)).getTime() / 1000;
-
-                var prdArray;
-                if (self.isVisibleForecastData() === true) {
-                    prdArray = self.dcaProductionDataSet().concat(self.hstProductionDataSet());
-                }
-                else {
-                    prdArray = self.hstProductionDataSet();
-                }
-
-                return ko.utils.arrayFilter(prdArray, function (r) {
-                    return ((r.unixTime >= startUnixTime) && (r.unixTime <= endUnixTime));
-                });
-            },
-            deferEvaluation: true
-        });
-
-        // Real time border: min and max values in unix time format
-        // This time border other than WPDDateStartYear, EndYear (ant other selectable values)
-        self.filteredByDateProductionDataSetTimeBorder = ko.computed({
-            read: function () {
-                var arr = self.filteredByDateProductionDataSet();
-                if (arr.length === 0) { return []; }
-
-                return [arr[arr.length - 1].unixTime, arr[0].unixTime];
-            },
-            deferEvaluation: true
-        });
-
-        // Real value border: min and max values of data in selected squad
-        self.filteredByDateProductionDataSetValueBorder = ko.computed({
-            read: function () {
-                // get max and min value to find coef for graph
-                var minValue, maxValue;
-
-                $.each(self.filteredByDateProductionDataSet(), function (prfIndex, prfElem) {
-                    $.each(self.selectedWellGroupWfmParameterList(), function (clmIndex, clmElem) {
-                        if (ko.unwrap(clmElem.isVisible)) {
-                            if ($.isNumeric(ko.unwrap(prfElem[clmElem.wfmParameterId]))) {
-                                var tmpValue = ko.unwrap(prfElem[clmElem.wfmParameterId]) * ko.unwrap(clmElem.wfmParameter().uomCoef);
-                                // init first values
-                                if (typeof minValue === 'undefined' || typeof maxValue === 'undefined') {
-                                    minValue = maxValue = tmpValue;
-                                }
-                                else {
-                                    if (tmpValue > maxValue) { maxValue = tmpValue; }
-                                    else if (tmpValue < minValue) { minValue = tmpValue; }
-                                }
-                            }
-                        }
-                    });
-                });
-                // Still can be undefined
-                return [minValue, maxValue];
-            },
-            deferEvaluation: true
-        });
-
-        // namespace for graph
-        self.prfGraph = {
-            viewBox: {
-                width: 1200,
-                height: 400,
-                ratio: 1 / 3
-            },
-            axisSize: 10
-        };
-
-        // actual height of graph ang y-axis
-        self.prfGraphHeight = ko.observable();
-
-        // Update perfomance graph data: graph path for selected regions
-        self.productionDataSetSvgPath = ko.computed(function () {
-            // Check parameter existence and data existence
-            if (self.selectedWellGroupWfmParameterList().length === 0) { return {}; }
-            if (self.filteredByDateProductionDataSet().length === 0) { return {}; }
-            if ($.isNumeric(self.filteredByDateProductionDataSetValueBorder()[0]) === false) { return {}; }
-            if ($.isNumeric(self.filteredByDateProductionDataSetValueBorder()[1]) === false) { return {}; }
-            if ($.isNumeric(self.filteredByDateProductionDataSetTimeBorder()[0]) === false) { return {}; }
-            if ($.isNumeric(self.filteredByDateProductionDataSetTimeBorder()[1]) === false) { return {}; }
-
-            //require(['d3'], function (d3) {
-            var x = d3.time.scale().range([0, self.prfGraph.viewBox.width]),
-                y = d3.scale.linear().range([self.prfGraph.viewBox.height, 0]);
-
-            var line = d3.svg.line()
-                .interpolate("linear")
-                ////monotone
-                .x(function (d) { return x(new Date(d.unixTime * 1000)); });
-
-            x.domain([new Date(self.filteredByDateProductionDataSetTimeBorder()[0] * 1000), new Date(self.filteredByDateProductionDataSetTimeBorder()[1] * 1000)]);
-            y.domain(self.filteredByDateProductionDataSetValueBorder());
-
-            var columnPathJson = {};
-
-            $.each(self.selectedWellGroupWfmParameterList(), function (paramIndex, paramElem) {
-                if (ko.unwrap(paramElem.isVisible) === true) {
-                    line.y(function (d) {
-                        return y(
-                            $.isNumeric(ko.unwrap(d[paramElem.wfmParameterId])) ? (ko.unwrap(d[paramElem.wfmParameterId]) * paramElem.wfmParameter().uomCoef()) : null
-                        );
-                    });
-
-                    columnPathJson[paramElem.wfmParameterId] = line(self.filteredByDateProductionDataSet());
-                }
-            });
-
-            return columnPathJson;
-        });
-
-        // first element in history production data
-        self.LastProductionData = ko.computed({
-            read: function () {
-                return ko.unwrap(self.hstProductionDataSet)[0];
-            },
-            deferEvaluation: true
-        });
-
-        // forecast panel with properties and evolutions and differences
-        self.isVisibleForecastPanel = ko.observable(false);
-
-        // DZA diff liquid ==============================
-        self.DZADiffLiquid = ko.computed({
-            read: function () {
-                if (ko.unwrap(self.LastProductionData)) {
-                    var cum = ko.unwrap(ko.unwrap(self.LastProductionData)['LiquidCum']);
-                    if ($.isNumeric(cum)) {
-                        var evoDict = ko.unwrap(ko.unwrap(self.forecastEvolution).Dict);
-                        var evoLiquidA = ko.unwrap(evoDict['LiquidEvolutionA']),
-                            evoLiquidB = ko.unwrap(evoDict['LiquidEvolutionB']);
-
-                        if ($.isNumeric(evoLiquidA) === true && $.isNumeric(evoLiquidB) === true) {
-                            return +evoLiquidA * Math.exp(+evoLiquidB * +cum);
-                        }
-                    }
-                }
-            },
-            deferEvaluation: true
-        });
-
-        self.DZADiffLiquidResult = ko.computed({
-            read: function () {
-                var ddl = ko.unwrap(self.DZADiffLiquid);
-
-                if ($.isNumeric(ddl)) {
-                    var llr = ko.unwrap(ko.unwrap(self.LastProductionData)['LiquidRate']);
-                    if ($.isNumeric(llr)) {
-                        return +ddl - +llr;
-                    }
-                }
-            },
-            deferEvaluation: true
-        });
-        // DZA diff liquid END ===============================
-
-        // DZA diff WaterCut =================================
-        self.DZADiffWCT = ko.computed({
-            read: function () {
-                if (ko.unwrap(self.LastProductionData)) {
-                    var cum = ko.unwrap(ko.unwrap(self.LastProductionData)['OilCum']);
-                    if ($.isNumeric(cum)) {
-                        var evoDict = ko.unwrap(ko.unwrap(self.forecastEvolution).Dict);
-                        var evoWctC = ko.unwrap(evoDict['WctEvolutionC']),
-                            evoWctD = ko.unwrap(evoDict['WctEvolutionD']);
-                        if ($.isNumeric(evoWctC) && $.isNumeric(evoWctD)) {
-                            return +evoWctC * Math.log(+cum) - +evoWctD;
-                        }
-                    }
-                }
-            },
-            deferEvaluation: true
-        });
-
-        self.DZADiffWCTResult = ko.computed({
-            read: function () {
-                var ddw = ko.unwrap(self.DZADiffWCT);
-                if ($.isNumeric(ddw)) {
-                    var wct = ko.unwrap(ko.unwrap(self.LastProductionData)['WaterCut']);
-                    if ($.isNumeric(wct)) {
-                        return +ddw - +wct;
-                    }
-                }
-            },
-            deferEvaluation: true
-        });
-        // DZA diff WaterCut END ================================
-
-        // DZA diff GOR =========================================
-        self.DZADiffGOR = ko.computed({
-            read: function () {
-                if (ko.unwrap(self.LastProductionData)) {
-                    var cum = ko.unwrap(ko.unwrap(self.LastProductionData)['OilCum']);
-                    if ($.isNumeric(cum)) {
-                        var evoDict = ko.unwrap(ko.unwrap(self.forecastEvolution).Dict);
-                        var evoGorF = ko.unwrap(evoDict['GorEvolutionF']),
-                            evoGorG = ko.unwrap(evoDict['GorEvolutionG']);
-
-                        if ($.isNumeric(evoGorF) && $.isNumeric(evoGorG)) {
-                            return +evoGorF * Math.log(+cum) + +evoGorG;
-                        }
-                    }
-                }
-            },
-            deferEvaluation: true
-        });
-
-        self.DZADiffGORResult = ko.computed({
-            read: function () {
-                var ddg = ko.unwrap(self.DZADiffGOR);
-                if ($.isNumeric(ddg)) {
-                    var gor = ko.unwrap(ko.unwrap(self.LastProductionData)['GOR']);
-                    if ($.isNumeric(gor)) {
-                        return +ddg - +gor;
-                    }
-                }
-            },
-            deferEvaluation: true
-        });
-        // DZA diff GOR END ====================================
-
-        self.deleteWellProductionData = function () {
-            if (confirm('Are you sure you want to delete all production data from well?')) {
-                datacontext.deleteWellProductionData(self.Id).done(function () {
-                    self.hstProductionDataSet([]);
-                    self.dcaProductionDataSet([]);
-                });
-            }
-        };
-
-        // ============= Required forecast params list ===============================================
-
-        self.requiredForecastParamListNaN = ko.computed({
-            read: function () {
-                var lastHistoryPD = ko.unwrap(self.LastProductionData());
-                var requiredForecastParamList = ['OilCum', 'WaterCum', 'GasCum', 'LiquidRate', 'LiquidCum'];
-                if (!lastHistoryPD) {
-                    // if no last pd then need all params
-                    return requiredForecastParamList;
-                }
-
-                return $.grep(requiredForecastParamList, function (arrElem) {
-                    return $.isNumeric(ko.unwrap(lastHistoryPD[arrElem])) === false;
-                });
-            },
-            deferEvaluation: true
-        });
-
-        self.requiredForecastParamListNaNString = ko.computed({
-            read: function () {
-                return ko.unwrap(self.requiredForecastParamListNaN).join(', ');
-            },
-            deferEvaluation: true
-        });
-
-        self.firstForecastPd = ko.computed({
-            read: function () {
-                var lastHistoryPD = ko.unwrap(self.LastProductionData());
-                if (!lastHistoryPD) { return; }
-
-                // if some required param is NaN then return
-                if ((ko.unwrap(self.requiredForecastParamListNaN)).length > 0) { return; }
-
-                if ((ko.unwrap(self.forecastEvolution.requiredForecastEvoListNaN)).length > 0) { return; }
-
-                // all these parameters calculates from required params (check above requred params before checking these params)
-                if ($.isNumeric(ko.unwrap(self.DZADiffLiquidResult)) === false) {
-                    console.log("DZADiffLiquidResult is not number");
-                    return;
-                }
-
-                if ($.isNumeric(ko.unwrap(self.DZADiffWCTResult)) === false) {
-                    console.log("DZADiffWCTResult is not number");
-                    return;
-                }
-
-                if ($.isNumeric(ko.unwrap(self.DZADiffGORResult)) === false) {
-                    console.log("DZADiffGORResult is not number");
-                    return;
-                }
-
-                var fddDict = {
-                    OilCum: +ko.unwrap(lastHistoryPD.OilCum),
-                    GasCum: +ko.unwrap(lastHistoryPD.GasCum),
-                    WaterCum: +ko.unwrap(lastHistoryPD.WaterCum)
-                };
-
-                // Dictionary with forecast evolution parameters
-                var evoDict = ko.unwrap(ko.unwrap(self.forecastEvolution).Dict);
-
-                var evoLiquidA = +ko.unwrap(evoDict['LiquidEvolutionA']),
-                    evoLiquidB = +ko.unwrap(evoDict['LiquidEvolutionB']),
-                    evoWctC = +ko.unwrap(evoDict['WctEvolutionC']),
-                    evoWctD = +ko.unwrap(evoDict['WctEvolutionD']),
-                    evoGorF = +ko.unwrap(evoDict['GorEvolutionF']),
-                    evoGorG = +ko.unwrap(evoDict['GorEvolutionG']);
-
-                var diffLiquid = +ko.unwrap(self.DZADiffLiquidResult),
-                    diffWct = +ko.unwrap(self.DZADiffWCTResult),
-                    diffGor = +ko.unwrap(self.DZADiffGORResult);
-
-                // calculated
-                fddDict.LiquidCum = fddDict.OilCum + fddDict.WaterCum;
-                fddDict.LiquidRate = evoLiquidA * Math.exp(evoLiquidB * fddDict.LiquidCum) - diffLiquid;
-                fddDict.WaterCut = evoWctC * Math.log(fddDict.OilCum) - evoWctD - diffWct;
-                fddDict.OilRate = (100 - fddDict.WaterCut) * fddDict.LiquidRate / 100;
-                fddDict.WaterRate = fddDict.LiquidRate - fddDict.OilRate;
-                fddDict.GOR = evoGorF * Math.log(fddDict.OilCum) + evoGorG - diffGor;
-                fddDict.GasRate = fddDict.GOR * fddDict.OilRate;
-
-                ////console.log(fddDict);
-                ////console.log('evoGorF', evoGorF);
-                ////console.log('evoGorG', evoGorG);
-                ////console.log('diffGor', diffGor);
-                ////console.log('oilcum', fddDict.OilCum);
-                ////console.log('oilcum', Math.log(fddDict.OilCum));
-                ////console.log('proiz', evoGorF * Math.log(fddDict.OilCum));
-                ////console.log('sdfsdfs', evoGorF * Math.log(fddDict.OilCum) + evoGorG);
-
-                // first item in forecast - it's equals last actual production data by main parameters
-                // from OADate to daysInMonth
-                //var daysInMonth = moment(ko.unwrap(lastHistoryPD.unixTime) * 1000).daysInMonth();
-
-                return datacontext.createProductionData({
-                    WellId: +ko.unwrap(self.Id),
-                    UnixTime: +ko.unwrap(lastHistoryPD.unixTime),
-                    ProdDays: +ko.unwrap(lastHistoryPD.ProdDays),
-                    Dict: fddDict,
-                    IsForecast: true
-                }, self);
-            },
-            deferEvaluation: true
-        });
-
-        self.startForecastUnixTime = ko.computed({
-            read: function () {
-                var tmpFirstForecastPd = ko.unwrap(self.firstForecastPd);
-                if (tmpFirstForecastPd) {
-                    return tmpFirstForecastPd.unixTime + tmpFirstForecastPd.ProdDays * 24 * 60 * 60;
-                }
-            },
-            deferEvaluation: true
-        });
-
-        self.endForecastUnixTime = ko.computed({
-            read: function () {
-                if (ko.unwrap(self.startForecastUnixTime)) {
-                    return ko.unwrap(self.startForecastUnixTime) + ko.unwrap(self.forecastDayCount) * 24 * 60 * 60;
-                }
-            },
-            deferEvaluation: true
-        });
-
-        self.histYearList = ko.observableArray();
-        self.forecastYearList = ko.computed({
-            read: function () {
-                var tmpStartForecastUnixTime = ko.unwrap(self.startForecastUnixTime);
-                var tmpEndForecastUnixTime = ko.unwrap(self.endForecastUnixTime);
-
-                if (tmpStartForecastUnixTime && tmpEndForecastUnixTime) {
-                    return appHelper.getYearList(new Date(tmpStartForecastUnixTime * 1000).getFullYear() + 1, new Date(tmpEndForecastUnixTime * 1000).getFullYear());
-                }
-            },
-            deferEvaluation: true
-        });
-
-        self.joinedYearList = ko.computed({
-            read: function () {
-                if (self.isVisibleForecastData()) {
-                    return self.forecastYearList().concat(self.histYearList());
-                }
-                else {
-                    return self.histYearList();
-                }
-            },
-            deferEvaluation: true
-        });
-
-        self.getHstProductionDataSet = function () {
-            self.isLoadedHstProductionData(false);
-            datacontext.getProductionData({ well_id: self.Id }).done(function (result) {
-                self.isLoadedHstProductionData(true);
-                var rlength = result.length;
-                if (rlength > 0) {
-                    var startDate = new Date(result[rlength - 1].UnixTime * 1000);
-                    var endDate = new Date(result[0].UnixTime * 1000);
-
-                    // set available years
-                    var yearList = [];
-                    for (var i = endDate.getFullYear(), ilim = startDate.getFullYear() ; i >= ilim; i -= 1) {
-                        yearList.push(i);
-                    }
-
-                    self.histYearList(yearList);
-
-                    self.WPDDateStartYear(yearList.length > 1 ? (endDate.getFullYear() - 1) : endDate.getFullYear());
-
-                    self.WPDDateEndYear(endDate.getFullYear());
-
-                    self.hstProductionDataSet(importProductionDataSetDto(result, self));
-                }
-            });
-        };
-
-        self.isForecastPossible = ko.computed(function () {
-            if (ko.unwrap(self.firstForecastPd)) {
-                return true
-            }
-            else {
-                return false;
-            }
-        });
-
-        self.dcaProductionDataSet = ko.computed({
-            read: function () {
-                ////if (!ko.unwrap(self.LastProductionData)) {
-                ////    // Get last production data
-                ////    datacontext.getProductionData({ well_ids: [self.Id] }).done(function (result) {
-                ////        if (result.length > 0) {
-                ////            self.LastProductionData(datacontext.createProductionData(result[0], self));
-                ////        }
-                ////    });
-
-                ////    return;
-                ////}
-
-                // set first elem in forecast collection
-                var lastDca = ko.unwrap(self.firstForecastPd);
-
-                // only if forecast possible
-                if (!lastDca) { return; }
-
-                var forecastArr = [lastDca];
-
-                var startForecastUnixTime = +ko.unwrap(self.startForecastUnixTime);
-                var endForecastUnixTime = +ko.unwrap(self.endForecastUnixTime);
-
-                var evoDict = ko.unwrap(ko.unwrap(self.forecastEvolution).Dict);
-
-                var evoLiquidA = +ko.unwrap(evoDict['LiquidEvolutionA']),
-                    evoLiquidB = +ko.unwrap(evoDict['LiquidEvolutionB']),
-                    evoWctC = +ko.unwrap(evoDict['WctEvolutionC']),
-                    evoWctD = +ko.unwrap(evoDict['WctEvolutionD']),
-                    evoGorF = +ko.unwrap(evoDict['GorEvolutionF']),
-                    evoGorG = +ko.unwrap(evoDict['GorEvolutionG']);
-
-                var diffLiquid = +ko.unwrap(self.DZADiffLiquidResult),
-                    diffWct = +ko.unwrap(self.DZADiffWCTResult),
-                    diffGor = +ko.unwrap(self.DZADiffGORResult);
-
-                var k = startForecastUnixTime;
-                while (k < endForecastUnixTime) {
-                    // from OADate to daysInMonth
-                    var daysInMonth = moment(k * 1000).daysInMonth();
-
-                    var tmpDict = {};
-
-                    tmpDict.LiquidRate = evoLiquidA * Math.exp(evoLiquidB * +ko.unwrap(lastDca.LiquidCum)) - diffLiquid;
-                    tmpDict.WaterCut = evoWctC * Math.log(+ko.unwrap(lastDca.OilCum)) - evoWctD - diffWct;
-                    tmpDict.OilRate = (100 - tmpDict.WaterCut) * tmpDict.LiquidRate / 100;
-                    tmpDict.WaterRate = tmpDict.LiquidRate - tmpDict.OilRate;
-                    tmpDict.OilCum = +ko.unwrap(lastDca.OilCum) + (daysInMonth * tmpDict.OilRate);
-                    tmpDict.GOR = evoGorF * Math.log(tmpDict.OilCum) + evoGorG - diffGor;
-                    tmpDict.GasRate = tmpDict.GOR * tmpDict.OilRate;
-                    tmpDict.GasCum = +ko.unwrap(lastDca.GasCum) + tmpDict.GasRate * daysInMonth;
-                    tmpDict.WaterCum = +ko.unwrap(lastDca.WaterCum) + tmpDict.WaterRate * daysInMonth;
-                    tmpDict.LiquidCum = tmpDict.WaterCum + tmpDict.OilCum;
-
-                    // set as last DCA
-                    // decline curve analyze unit
-                    lastDca = datacontext.createProductionData({
-                        UnixTime: k,
-                        ProdDays: daysInMonth, // or 30.5 as standart
-                        Dict: tmpDict,
-                        IsForecast: true
-                    }, self);
-
-                    forecastArr.unshift(lastDca);
-
-                    // add one month
-                    k += daysInMonth * 24 * 60 * 60;
-                }
-
-                return forecastArr;
-            },
-            deferEvaluation: true
-        });
-
-        function getGraphData(arrPd, headerList) {
-            var graphData = [];
-            for (var i = arrPd.length - 1; i >= 0; i -= 1) {
-                var rowCellList = [new Date(arrPd[i].unixTime * 1000)];
-
-                $.each(headerList, function (elemIndex, elemValue) {
-                    var propValue = arrPd[i][elemValue.Name];
-                    if ($.isFunction(propValue) === true) {
-                        propValue = propValue();
-                    }
-
-                    rowCellList.push(propValue * self['coef' + elemValue.Name]());
-                });
-
-                graphData.push(rowCellList);
-            }
-
-            return graphData;
-        }
+        // Load column attributes - all loading logic in this file (not separated - not in perfomancePartial file)
+        self.perfomancePartial.prdColumnAttributeList(importColumnAttributesDto(datacontext.getColumnAttributesLocal()));
 
         // ============================================================ Change tab section =========================================================
         self.selectedSectionId.subscribe(function (sectionId) {
@@ -1575,11 +1008,11 @@
                 case 'pd': {
                     self.getWellGroup().getWellGroupWfmParameterList();
 
-                    self.forecastEvolution.getDict();
+                    self.perfomancePartial.forecastEvolution.getDict();
 
-                    // TODO: when import new data, set ProductionDataSet to [] (empty array)
-                    if (self.hstProductionDataSet().length === 0) {
-                        self.getHstProductionDataSet();
+                    // TODO: Caution: when import new data, set ProductionDataSet to [] (empty array)
+                    if (ko.unwrap(self.perfomancePartial.hstProductionDataSet).length === 0) {
+                        self.perfomancePartial.getHstProductionDataSet();
                     }
 
                     break;
@@ -1663,7 +1096,47 @@
                 }
             }
         });
-
+        
+        // ============================= Dashboard ==============
+        self.dashBoardLayout = [
+            {
+                col: 3,
+                widgets: [
+                    {
+                        tplId: 'summary-tpl',
+                        widgetId: 123,
+                        title: ko.observable('SuperWidget'),
+                        optns: {
+                            isVisibleDescription: ko.observable(true),
+                            isVisibleProductionHistory: ko.observable(true)
+                        },
+                        saveWidget: function (widgetItem) {
+                            console.log(widgetItem);
+                        }
+                    }
+                ]
+            },
+            {
+                col: 3,
+                widgets: []
+            },
+            {
+                col: 6,
+                widgets: [
+                    {
+                        tplId: 'perfomance-tpl',
+                        widgetId: 12312,
+                        title: ko.observable('Graph'),
+                        optns: {
+                            isVisibleGraph: ko.observable(true)
+                        },
+                        saveWidget: function (widgetItem) {
+                            console.log(widgetItem);
+                        }
+                    }
+                ]
+            }
+        ];
 
         // ==================================================================== Well perfomance section end ========================================
 

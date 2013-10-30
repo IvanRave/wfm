@@ -29,14 +29,14 @@
             if ($.isNumeric(gorOilRate) === false) { return { error: { msg: 'required as a number', param: 'OilRate', mainParam: 'GOR' } }; }
             if (gorOilRate === 0) { return { error: { msg: 'can not be 0', param: 'OilRate', mainParam: 'GOR' } }; }
 
-            return { response: gorGasRate / gorOilRate }
+            return { response: gorGasRate / gorOilRate };
         }
         else if (prmId === 'OilCum' || prmId === 'WaterCum' || prmId === 'LiquidCum' || prmId === 'GasCum') {
             var accordRateId = prmId.replace("Cum", "Rate");
             var accordRateValue = ko.unwrap(prfItem[accordRateId]);
             if ($.isNumeric(accordRateValue) === false) { return { error: { msg: 'required as a number', param: accordRateId, mainParam: prmId } }; }
 
-            var arr = ko.unwrap(prfItem.getWell().hstProductionDataSet);
+            var arr = ko.unwrap(prfItem.getWell().perfomancePartial.hstProductionDataSet);
 
             var cumSum = 0;
             for (var i = 0, imax = arr.length; i < imax; i += 1) {
@@ -70,7 +70,7 @@
 
         self.isSelectedPrfYear = ko.computed({
             read: function () {
-                return ko.unwrap(self.getWell().selectedPrfTableYear) === self.prfYear;
+                return ko.unwrap(self.getWell().perfomancePartial.selectedPrfTableYear) === self.prfYear;
             },
             deferEvaluation: true
         });
@@ -96,7 +96,7 @@
                 read: function () {
                     //if (self.isForecast) { return; }
                     // Find from all params:
-                    var needGroupParam = $.grep(self.getWell().getWellGroup().wellGroupWfmParameterList(), function (arrElem) {
+                    var needGroupParam = $.grep(ko.unwrap(self.getWell().getWellGroup().wellGroupWfmParameterList), function (arrElem) {
                         return arrElem.wfmParameterId === prmId;
                     })[0];
 
@@ -130,82 +130,6 @@
                 deferEvaluation: true
             });
         });
-
-
-        ////self.WaterRate = ko.computed(function () {
-        ////    if (self.LiquidRate === null) { return null; }
-        ////    if (self.WaterCut === null) { return null; }
-        ////    return parseFloat(self.LiquidRate) * (parseFloat(self.WaterCut) / 100);
-        ////});
-
-        ////self.CalcWaterRate = ko.computed(function () {
-        ////    if (self.LiquidRate === null) { return null; }
-        ////    if (self.WaterCut === null) { return null; }
-        ////    return parseFloat(self.LiquidRate) * (parseFloat(self.WaterCut) / 100);
-        ////});
-
-        ////self.CalcGOR = ko.computed(function () {
-        ////    if (self.GasRate === null) { return null; }
-        ////    if (self.OilRate === null) { return null; }
-        ////    if (self.OilRate === 0 || self.OilRate === '0') { return 0; }
-        ////    return parseFloat(self.GasRate) / parseFloat(self.OilRate);
-        ////});
-
-        ////self.CalcOilCum = ko.computed(function () {
-        ////    if (self.OilRate === null) { return null; }
-
-        ////    var arr = self.getWell().hstProductionDataSet();
-        ////    var cumSum = 0;
-        ////    for (var i = 0, imax = arr.length; i < imax; i++) {
-        ////        if (arr[i].Id <= self.Id) {
-        ////            cumSum += parseInt(arr[i].ProdDays, 10) * parseFloat(arr[i].OilRate);
-        ////        }
-        ////    }
-        ////    return cumSum;
-        ////    // TODO: set self.getWell() (well) for production data from group total
-        ////});
-
-        ////self.CalcWaterCum = function () {
-        ////    if (self.isForecast === true) { return null; }
-        ////    if (self.WaterRate === null) { return null; }
-
-        ////    var arr = self.getWell().hstProductionDataSet();
-        ////    var cumSum = 0;
-        ////    for (var i = 0, imax = arr.length; i < imax; i++) {
-        ////        if (arr[i].Id <= self.Id) {
-        ////            cumSum += parseInt(arr[i].ProdDays, 10) * parseFloat(arr[i].WaterRate);
-        ////        }
-        ////    }
-        ////    return cumSum;
-        ////};
-
-        ////self.CalcGasCum = function () {
-        ////    if (self.isForecast === true) { return null; }
-        ////    if (self.GasRate === null) { return null; }
-
-        ////    var arr = self.getWell().hstProductionDataSet();
-        ////    var cumSum = 0;
-        ////    for (var i = 0, imax = arr.length; i < imax; i++) {
-        ////        if (arr[i].Id <= self.Id) {
-        ////            cumSum += parseInt(arr[i].ProdDays, 10) * parseFloat(arr[i].GasRate);
-        ////        }
-        ////    }
-        ////    return cumSum;
-        ////};
-
-        ////self.CalcLiquidCum = function () {
-        ////    if (self.isForecast === true) { return null; }
-        ////    if (self.CalcLiquidRate() === null) { return null; }
-
-        ////    var arr = self.getWell().hstProductionDataSet();
-        ////    var cumSum = 0;
-        ////    for (var i = 0, imax = arr.length; i < imax; i++) {
-        ////        if (arr[i].Id <= self.Id) {
-        ////            cumSum += parseInt(arr[i].ProdDays, 10) * parseFloat(arr[i].CalcLiquidRate());
-        ////        }
-        ////    }
-        ////    return cumSum;
-        ////};
 
         self.toPlainJson = function () { return ko.toJS(self); };
     }

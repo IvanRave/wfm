@@ -34,17 +34,17 @@ layout: false
                 </label>
                 <!-- /ko -->
                 <div>
-                    <select data-bind="options: $parent.joinedYearList, value: $parent.WPDDateStartYear" class="input-sm"></select>
-                    <select data-bind="options: $parent.monthList, value: $parent.WPDDateStartMonth" class="input-mini"></select>
+                    <select data-bind="options: $parent.joinedYearList, value: $parent.perfomancePartial.WPDDateStartYear" class="input-sm"></select>
+                    <select data-bind="options: $parent.perfomancePartial.monthList, value: $parent.perfomancePartial.WPDDateStartMonth" class="input-mini"></select>
                     <span>&nbsp;-&nbsp;</span>
-                    <select data-bind="options: $parent.joinedYearList, value: $parent.WPDDateEndYear" class="input-sm"></select>
-                    <select data-bind="options: $parent.monthList, value: $parent.WPDDateEndMonth" class="input-mini"></select>
-                    <span>Record count: </span><span data-bind="text: $parent.filteredByDateProductionDataSet().length"></span>
+                    <select data-bind="options: $parent.joinedYearList, value: $parent.perfomancePartial.WPDDateEndYear" class="input-sm"></select>
+                    <select data-bind="options: $parent.perfomancePartial.monthList, value: $parent.perfomancePartial.WPDDateEndMonth" class="input-mini"></select>
+                    <span>Record count: </span><span data-bind="text: $parent.perfomancePartial.filteredByDateProductionDataSet().length"></span>
                 </div>
                 <div>
                     <!-- ko if: $parent.isForecastPossible -->
                     <label class="checkbox-inline">
-                        <input type="checkbox" data-bind="checked: $parent.isVisibleForecastData" />Show forecast data
+                        <input type="checkbox" data-bind="checked: $parent.perfomancePartial.isVisibleForecastData" />Show forecast data
                     </label>
                     <!-- /ko -->
                 </div>

@@ -2,6 +2,6 @@
 /// <reference path="require.js" />
 /// <reference path="angular.js" />
 /// <reference path="angular-resource.js" />
-/// <reference path="knockout-2.3.0.debug.js" />
+/// <reference path="knockout-3.0.0.js" />
 /// <reference path="bootstrap.js" />
 /// <reference path="moment.js" />

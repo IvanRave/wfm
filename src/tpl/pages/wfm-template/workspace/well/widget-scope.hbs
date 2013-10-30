@@ -1,0 +1,55 @@
+﻿---
+layout: false
+---
+<div>
+    <script type="text/html" id="summary-tpl">
+        <div>
+            <input type="text" data-bind="value: widget.title" />
+            <input type="checkbox" data-bind="checked: widget.optns.isVisibleDescription" /> is vis desc
+            <input type="checkbox" data-bind="checked: widget.optns.isVisibleProductionHistory" /> is vis prod history
+            <button type="button" data-bind="click: widget.saveWidget">Save</button>
+        </div>
+        <div data-bind="with: $parents[2]">
+            <h6 data-bind="text: Name"></h6>
+            <div data-bind="if: widget.optns.isVisibleDescription">
+                <span data-bind="text: Description"></span>
+            </div>
+            <div data-bind="if: widget.optns.isVisibleProductionHistory">
+                <span data-bind="text: ProductionHistory"></span>
+            </div>
+        </div>
+    </script>
+    <script type="text/html" id="perfomance-tpl">
+        <div>
+            <input type="text" data-bind="value: widget.title" />
+            <input type="checkbox" data-bind="checked: widget.optns.isVisibleGraph" /> is vis graph
+            <button type="button" data-bind="click: widget.saveWidget">Save</button>
+        </div>
+        <div data-bind="with: $parents[2]">
+            <h6 data-bind="text: Name"></h6>
+            <div data-bind="if: widget.optns.isVisibleGraph">
+				Graph
+            </div>
+        </div>
+    </script>
+    <div class="row" data-bind="foreach: dashBoardLayout">
+        <div data-bind="css: 'col-md-'+ col">
+            <div data-bind="foreach: widgets">
+                <div class="tile-bg">
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            <b data-bind="text: title"></b>
+                        </div>
+                        <div class="pull-right">
+                            <span>edit</span>
+                        </div>
+                    </div>
+                    <div data-bind="template: { name: tplId, data: $data, as: 'widget' }"></div>
+                </div>
+            </div>
+            <div class="tile-bg">
+                <button type="button" class="btn btn-inverse btn-xs">Add widget</button>
+            </div>
+        </div>
+    </div>
+</div>

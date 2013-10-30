@@ -76,7 +76,7 @@ define(['jquery', 'angular', 'app/datacontext', 'angular-route', 'app/app-resour
         angScope.setFileUpload = function () {
             require(['app/file-helper'], function (fileHelper) {
                 var fileUploadInput = document.getElementById('company-logo-file-upload');
-                fileHelper.initFileUpload(fileUploadInput, '/api/company?id=' + angRouteParams.id, ['image/png', 'image/jpeg', 'image/gif'], function (respImg) {
+                fileHelper.initFileUpload(fileUploadInput, '{{conf.requrl}}/api/company?id=' + angRouteParams.id, ['image/png', 'image/jpeg', 'image/gif'], function (respImg) {
                     angScope.$apply(function () {
                         // apply logo from response: plus unique hash for update img in html
                         angScope.company.LogoUrl = respImg.LogoUrl + "?" + new Date().getTime();

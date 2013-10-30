@@ -146,14 +146,6 @@ footer {
         color: #78C1DD;
     }
 
-/*.tab-pane {
-    padding-bottom: 200px;
-}*/
-
-.tab-pane {
-    padding-bottom: 2px;
-}
-
 .width-rate {
     width: 20%;
 }
@@ -351,6 +343,10 @@ footer {
         padding: 4px 16px 0 16px;
     }
 
+.well-content-pad {
+    padding: 8px 15px 0 0;
+}
+
 @font-face {
     font-family: 'WfmIconFont';
     src: url('fonts/wfmicons-regular.eot');
@@ -443,6 +439,12 @@ footer {
         background-color: #444;
     }
 
+    .btn-inverse:focus{
+        border: 1px solid #888;
+        color: #fff;
+        background-color: #444;
+    }
+
 /*calculator page*/
 .slider-wrap {
     padding-top: 7px;
@@ -509,4 +511,8 @@ footer {
 
 .pre-wrap-text {
     white-space: pre-wrap;
+}
+
+.tile-bg {
+    border:3px solid #ccc;
 }

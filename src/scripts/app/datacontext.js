@@ -2,85 +2,85 @@
     'use strict';
 
     function wellRegionUrl(uqp) {
-        return "/api/wellregion/" + (uqp ? ("?" + $.param(uqp)) : "");
+        return '{{conf.requrl}}/api/wellregion/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wellFieldUrl(uqp) {
-        return "/api/wellfield/" + (uqp ? ("?" + $.param(uqp)) : "");
+        return '{{conf.requrl}}/api/wellfield/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
-    function wellGroupUrl(id) {
-        return "/api/wellgroup/" + (id ? ("?" + $.param({ id: id })) : "");
+    function wellGroupUrl(uqp) {
+        return '{{conf.requrl}}/api/wellgroup/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
-    function wellUrl(id) {
-        return "/api/well/" + (id ? ("?" + $.param({ id: id })) : "");
+    function wellUrl(uqp) {
+        return '{{conf.requrl}}/api/well/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wellFileUrl(uqp) {
-        return "/api/wellfile/" + (uqp ? ("?" + $.param(uqp)) : "");
+        return '{{conf.requrl}}/api/wellfile/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function columnAttributeUrl(uqp) {
-        return "/api/columnattribute/" + (uqp ? ("?" + $.param(uqp)) : "");
+        return '{{conf.requrl}}/api/columnattribute/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wellHistoryUrl(uqp) {
-        return '/api/wellhistory/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wellhistory/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wfmImageUrl(uqp) {
-        return '/api/wfmimage/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wfmimage/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wellFieldMapUrl(uqp) {
-        return '/api/wellfieldmap/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wellfieldmap/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wellFieldMapAreaUrl(uqp) {
-        return '/api/wellfieldmaparea/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wellfieldmaparea/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wellInWellFieldMapUrl(uqp) {
-        return '/api/wellinwellfieldmap/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wellinwellfieldmap/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wellHistoryFileUrl(uqp) {
-        return '/api/wellhistoryfile/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wellhistoryfile/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function fileManagerUrl() {
         return '/wfm-template/workspace/file-manager.html';
     }
     function userProfileUrl(uqp) {
-        return '/api/userprofile/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/userprofile/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function productionDataUrl(uqp) {
-        return "/api/productiondata/" + (uqp ? ("?" + $.param(uqp)) : "");
+        return '{{conf.requrl}}/api/productiondata/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function testScopeUrl(uqp) {
-        return '/api/testscope/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/testscope/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function testDataUrl(uqp) {
-        return '/api/testdata/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/testdata/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wfmParameterUrl(uqp) {
-        return '/api/wfmparameter/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wfmparameter/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wellGroupWfmParameterUrl(uqp) {
-        return '/api/wellgroupwfmparameter/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wellgroupwfmparameter/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function wfmParamSquadUrl(uqp) {
-        return '/api/wfmparamsquad/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/wfmparamsquad/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function forecastEvolutionUrl(uqp) {
-        return '/api/forecastevolution/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/forecastevolution/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function accountLogoffUrl(uqp) {
-        return '/api/account/logoff/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/account/logoff/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function accountLogonUrl(uqp) {
-        return '/api/account/logon/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/account/logon/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function accountRegisterUrl(uqp) {
-        return '/api/account/register/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/account/register/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function accountRegisterConfirmationUrl(uqp) {
-        return '/api/account/register/confirmation/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/account/register/confirmation/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function companyUserUrl(uqp) {
-        return '/api/companyuser/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/companyuser/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
     function companyUrl(uqp) {
-        return '/api/company/' + (uqp ? ('?' + $.param(uqp)) : '');
+        return '{{conf.requrl}}/api/company/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
 
     // TODO: move to apphelper.js
@@ -234,13 +234,13 @@
         }
 
         appHelper.toggleLoadingState(true);
-        return $.ajax('{{conf.requrl}}' + url, options)
+        return $.ajax(url, options)
             .fail(function (jqXHR, textStatus, errorThrown) {
                 // TODO: include notification system: https://github.com/Nijikokun/bootstrap-notify
                 console.log(jqXHR);
                 switch (jqXHR.status) {
                     case 401:
-                        window.location.href = '{{syst.logon_url}}';
+                        window.location.href = '{{syst.logonUrl}}{{conf.defPage}}';
                         break;
                     case 404:
                         alert('Data is not found');
@@ -324,11 +324,11 @@
     }
 
     function deleteWellGroup(item) {
-        return ajaxRequest("delete", wellGroupUrl(item.Id));
+        return ajaxRequest("delete", wellGroupUrl({ id: item.Id }));
     }
 
     function saveChangedWellGroup(item) {
-        return ajaxRequest("put", wellGroupUrl(item.Id), item);
+        return ajaxRequest("put", wellGroupUrl({ id: item.Id }), item);
     }
 
     function saveNewWell(item) {
@@ -336,11 +336,11 @@
     }
 
     function deleteWell(item) {
-        return ajaxRequest("delete", wellUrl(item.Id));
+        return ajaxRequest("delete", wellUrl({ id: item.Id }));
     }
 
     function saveChangedWell(item) {
-        return ajaxRequest("put", wellUrl(item.Id), item);
+        return ajaxRequest("put", wellUrl({ id: item.Id }), item);
     }
 
     // get list

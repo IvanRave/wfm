@@ -20,7 +20,7 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
         scp.tryAuth = function () {
             scp.isProcessBtnEnabled = false;
             appDatacontext.accountLogon({}, scp.usver).done(function () {
-                cookieHelper.createCookie('{{syst.cookie_is_auth}}', 'true');
+                cookieHelper.createCookie('{{syst.cookieIsAuth}}', 'true');
                 // Navigate to company list
                 angWindow.location.href = '/company/{{conf.defPage}}';
             })
@@ -53,9 +53,9 @@ define(['angular', 'app/datacontext', 'app/cookie-helper'], function (angular, a
                 "Email": "wfm@example.com",
                 "Password": "123321"
             }).done(function () {
-                cookieHelper.createCookie('{{syst.cookie_is_auth}}', 'true');
+                cookieHelper.createCookie('{{syst.cookieIsAuth}}', 'true');
                 // Navigate to company list
-                window.location.href = '/company/';
+                window.location.href = '/company/{{conf.defPage}}';
             });
         };
     }]);

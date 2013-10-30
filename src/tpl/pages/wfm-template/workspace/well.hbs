@@ -3,6 +3,9 @@ layout: false
 ---
 <div class="wfm-workspace-well-tab clearfix">
     <div class="pull-left">
+		<button type="button" class="btn btn-default" data-bind="click: function(){ selectedSectionId(null); }">Dashboard</button>
+    </div>
+    <div class="pull-left">
         <ul class="nav nav-pills" data-bind="template: {foreach: sectionList, as: 'section'}">
             <!-- ko if: (section.id !== 'volume' && section.id !== 'sketch' && section.id !== 'pd') -->
             <li data-bind="css: {'active': section.id === $parent.selectedSectionId() }">
@@ -43,10 +46,11 @@ layout: false
     </div>
 </div>
 
-<div data-bind="if: selectedSectionId">
-    <div class="tab-content" style="padding:8px 15px 0 0">
-        <div class="tab-pane active">
-            <div data-bind="template: { name: selectedSectionId, templateUrl: '/wfm-template/workspace/well/', afterRender: function(){ afterRenderSectionList(selectedSectionId()); }}"></div>
-        </div>
+<div class="well-content-pad">
+    <div data-bind="if: selectedSectionId">
+        <div data-bind="template: { name: selectedSectionId, templateUrl: '/wfm-template/workspace/well/' }"></div>
     </div>
+	<div data-bind="ifnot: selectedSectionId">
+		<div data-bind="template: { name: 'widget-scope', templateUrl: '/wfm-template/workspace/well/' }"></div>
+	</div>
 </div>
