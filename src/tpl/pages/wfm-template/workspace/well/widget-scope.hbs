@@ -26,17 +26,20 @@ layout: false
             <button type="button" data-bind="click: widget.saveWidget">Save</button>
         </div>
         <div data-bind="with: $parents[2]">
-            <h6 data-bind="text: Name"></h6>
             <div data-bind="if: widget.optns.isVisibleGraph">
-				Graph
+                <div data-bind="with: perfomancePartial">
+                    <div data-bind="if: selectedAttrGroup">
+                        {{> well-pd-graph }}
+                    </div>
+                </div>
             </div>
         </div>
     </script>
     <div class="row" data-bind="foreach: dashBoardLayout">
         <div data-bind="css: 'col-md-'+ col">
             <div data-bind="foreach: widgets">
-                <div class="tile-bg">
-                    <div class="clearfix">
+                <div class="widget-tile">
+                    <div class="clearfix widget-tile-header">
                         <div class="pull-left">
                             <b data-bind="text: title"></b>
                         </div>
@@ -44,10 +47,12 @@ layout: false
                             <span>edit</span>
                         </div>
                     </div>
-                    <div data-bind="template: { name: tplId, data: $data, as: 'widget' }"></div>
+                    <div class="widget-tile-content">
+                        <div data-bind="template: { name: tplId, data: $data, as: 'widget', afterRender: processWidget }"></div>
+                    </div>
                 </div>
             </div>
-            <div class="tile-bg">
+            <div class="widget-tile">
                 <button type="button" class="btn btn-inverse btn-xs">Add widget</button>
             </div>
         </div>

@@ -493,7 +493,7 @@
 
                                 if ($.inArray('pd', self.reportSectionIdList()) >= 0) {
                                     var arrPd = ko.unwrap(self.perfomancePartial.filteredByDateProductionDataSet);
-                                    $.each(self.selectedWfmParamSquadList(), function (elemIndex, elemValue) {
+                                    $.each(ko.unwrap(self.selectedWfmParamSquadList), function (elemIndex, elemValue) {
                                         var headerList = $.grep(ko.unwrap(self.perfomancePartial.prdColumnAttributeList), function (pdElem) {
                                             return pdElem.Group === elemValue;
                                         });
@@ -1096,7 +1096,7 @@
                 }
             }
         });
-        
+
         // ============================= Dashboard ==============
         self.dashBoardLayout = [
             {
@@ -1112,6 +1112,9 @@
                         },
                         saveWidget: function (widgetItem) {
                             console.log(widgetItem);
+                        },
+                        processWidget: function () {
+                            console.log('asdf');
                         }
                     }
                 ]
@@ -1128,10 +1131,16 @@
                         widgetId: 12312,
                         title: ko.observable('Graph'),
                         optns: {
-                            isVisibleGraph: ko.observable(true)
+                            isVisibleGraph: ko.observable(true),
+                            startYear: 2001,
+                            endYear: 2008
                         },
                         saveWidget: function (widgetItem) {
                             console.log(widgetItem);
+                        },
+                        processWidget: function () {
+                            self.perfomancePartial.getHstProductionDataSet();
+                            ////self.perfomancePartial.selectAttrGroup('Rate');
                         }
                     }
                 ]

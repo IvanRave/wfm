@@ -1,0 +1,26 @@
+﻿<div class="clearfix pd-graph-wrap">
+  <div class="pull-right pd-graph-vscale">
+    <svg version="1.1" width="60px" data-bind="svgAxisValue: {valueBorder: filteredByDateProductionDataSetValueBorder}, attr:{ height: prfGraphHeight }">
+      <g class="axis"></g>
+    </svg>
+  </div>
+  <div class="pd-graph-grid">
+    <div>
+      <svg version="1.1" width="100%" data-bind="attr: { height: prfGraphHeight }, svgResponsive: { ratio: prfGraph.viewBox.ratio, tmpPrfGraphHeight: prfGraphHeight }" viewbox="0 0 1200 400">
+        <g class="svg-prf-graph-g" data-bind="foreach: {data: selectedWellGroupWfmParameterList, as: 'groupParam'}">
+          <!-- ko with: $parent.productionDataSetSvgPath -->
+          <!-- ko if: $data[groupParam.wfmParameterId] -->
+          <path d="M0 0" data-bind="attr:{d: $data[groupParam.wfmParameterId], stroke: groupParam.color }" style="stroke-width:1; fill: none"></path>
+          <!-- /ko -->
+          <!-- /ko -->
+        </g>
+      </svg>
+    </div>
+    <div>
+      <!--svg-path-line-->
+      <svg version="1.1" width="100%" height="20px" data-bind="svgAxisTime: {timeBorder: filteredByDateProductionDataSetTimeBorder, windowSize: $root.windowWidth }">
+        <g class="axis"></g>
+      </svg>
+    </div>
+  </div>
+</div>

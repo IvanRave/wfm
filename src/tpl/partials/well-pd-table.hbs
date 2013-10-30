@@ -1,0 +1,56 @@
+﻿<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Time</th>
+      <!-- ko foreach: {data: selectedWellGroupWfmParameterList, as: 'groupParam'} -->
+      <th>
+        <div>
+          <small>
+            <i class="glyphicon glyphicon-bookmark" data-bind="style: { color: color }"></i>
+          </small>
+          <span data-bind="text: groupParam.wfmParameterId"></span>
+        </div>
+        <div>
+          <label class="checkbox-inline">
+            <input type="checkbox" title="show/hide" data-bind="checked: isVisible" />Show
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" title="usual/calc" data-bind="checked: isCalc" />Calc
+          </label>
+        </div>
+        <div data-bind="foreach: { data: groupParam.wfmParameter().uomMatrix(), as: 'mtrx' }" class="clearfix">
+          <div data-bind="foreach: {data: mtrx, as: 'uomItem' }" class="pull-left">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+                <span data-bind="text: uomItem"></span>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" data-bind="foreach: {data: groupParam.wfmParameter().getPossibleUomListForSelectedUom(uomItem), as: 'possibleUom'}">
+                <li>
+                  <a href="#" data-bind="text: possibleUom, click: function(){ groupParam.wfmParameter().changeSelectedUom(possibleUom, $parentContext.$parentContext.$index(), $parentContext.$index()); }"></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </th>
+      <!-- /ko -->
+    </tr>
+  </thead>
+  <tbody>
+    <!-- ko foreach: { data: filteredByDateProductionDataSet, as: 'wpd' } -->
+    <!-- ko if: isSelectedPrfYear -->
+    <tr>
+      <td>
+        (<span title="Production days" data-bind="text: wpd.ProdDays"></span>)&nbsp;<span data-bind="text: wpd.prfYear + '-' + wpd.prfMonthStr"></span>
+      </td>
+      <!-- ko foreach: {data: $parent.selectedWellGroupWfmParameterList, as: 'groupParam'} -->
+      <td>
+        <span data-bind="visible: isVisible, prec: {value: wpd[groupParam.wfmParameterId], coef: groupParam.wfmParameter().uomCoef}"></span>
+      </td>
+      <!-- /ko -->
+    </tr>
+    <!-- /ko -->
+    <!-- /ko -->
+  </tbody>
+</table>

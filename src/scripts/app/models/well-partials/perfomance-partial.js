@@ -56,23 +56,27 @@
         // Well group parameters for selected squad
         prtl.selectedWellGroupWfmParameterList = ko.computed({
             read: function () {
-                if (!ko.unwrap(prtl.selectedAttrGroup)) { return []; }
+                var resultArr = [];
+                var tmpSelectedAttrGroup = ko.unwrap(prtl.selectedAttrGroup);
+                if (tmpSelectedAttrGroup) {
+                    // list of wg parameters for this well group
+                    var tmpWellGroupWfmParameterList = ko.unwrap(wellObj.getWellGroup().wellGroupWfmParameterList);
 
-                // list of wg parameters for this well group
-                var tmpWellGroupWfmParameterList = ko.unwrap(wellObj.getWellGroup().wellGroupWfmParameterList);
+                    // list of parameter for selected squad
+                    var tmpSelectedWfmParameterList = ko.unwrap(tmpSelectedAttrGroup.wfmParameterList);
 
-                // list of parameter for selected squad
-                var tmpSelectedWfmParameterList = ko.unwrap(ko.unwrap(prtl.selectedAttrGroup).wfmParameterList);
+                    // Select only parameter ids
+                    var tmpSelectedWfmParameterIdList = $.map(tmpSelectedWfmParameterList, function (ssgElem) {
+                        return ssgElem.id;
+                    });
 
-                // Select only parameter ids
-                var tmpSelectedWfmParameterIdList = $.map(tmpSelectedWfmParameterList, function (ssgElem) {
-                    return ssgElem.id;
-                });
+                    // return only well group wfm parameters in selected squad
+                    resultArr = $.grep(tmpWellGroupWfmParameterList, function (wgpElem) {
+                        return $.inArray(wgpElem.wfmParameterId, tmpSelectedWfmParameterIdList) >= 0;
+                    });
+                }
 
-                // return only well group wfm parameters in selected squad
-                return $.grep(tmpWellGroupWfmParameterList, function (wgpElem) {
-                    return $.inArray(wgpElem.wfmParameterId, tmpSelectedWfmParameterIdList) >= 0;
-                });
+                return resultArr;
             },
             deferEvaluation: true
         });
@@ -165,13 +169,16 @@
             var tmpSelectedWellGroupWfmParameterList = ko.unwrap(prtl.selectedWellGroupWfmParameterList),
                 tmpFilteredByDateProductionDataSet = ko.unwrap(prtl.filteredByDateProductionDataSet);
 
+            var tmpFilteredByDateProductionDataSetValueBorder = ko.unwrap(prtl.filteredByDateProductionDataSetValueBorder),
+                tmpFilteredByDateProductionDataSetTimeBorder = ko.unwrap(prtl.filteredByDateProductionDataSetTimeBorder);
+
             // Check parameter and data existence
             if (tmpSelectedWellGroupWfmParameterList.length > 0 &&
                 tmpFilteredByDateProductionDataSet.length > 0 &&
-                $.isNumeric(ko.unwrap(prtl.filteredByDateProductionDataSetValueBorder)[0]) &&
-                $.isNumeric(ko.unwrap(prtl.filteredByDateProductionDataSetValueBorder)[1]) &&
-                $.isNumeric(ko.unwrap(prtl.filteredByDateProductionDataSetTimeBorder)[0]) &&
-                $.isNumeric(ko.unwrap(prtl.filteredByDateProductionDataSetTimeBorder)[1])) {
+                $.isNumeric(tmpFilteredByDateProductionDataSetValueBorder[0]) &&
+                $.isNumeric(tmpFilteredByDateProductionDataSetValueBorder[1]) &&
+                $.isNumeric(tmpFilteredByDateProductionDataSetTimeBorder[0]) &&
+                $.isNumeric(tmpFilteredByDateProductionDataSetTimeBorder[1])) {
 
                 //require(['d3'], function (d3) {
                 var x = d3.time.scale().range([0, prtl.prfGraph.viewBox.width]),
@@ -182,8 +189,8 @@
                     ////monotone
                     .x(function (d) { return x(new Date(d.unixTime * 1000)); });
 
-                x.domain([new Date(ko.unwrap(prtl.filteredByDateProductionDataSetTimeBorder)[0] * 1000), new Date(ko.unwrap(prtl.filteredByDateProductionDataSetTimeBorder)[1] * 1000)]);
-                y.domain(ko.unwrap(prtl.filteredByDateProductionDataSetValueBorder));
+                x.domain([new Date(tmpFilteredByDateProductionDataSetTimeBorder[0] * 1000), new Date(tmpFilteredByDateProductionDataSetTimeBorder[1] * 1000)]);
+                y.domain(tmpFilteredByDateProductionDataSetValueBorder);
 
                 $.each(tmpSelectedWellGroupWfmParameterList, function (paramIndex, paramElem) {
                     if (ko.unwrap(paramElem.isVisible) === true) {

@@ -439,7 +439,7 @@ footer {
         background-color: #444;
     }
 
-    .btn-inverse:focus{
+    .btn-inverse:focus {
         border: 1px solid #888;
         color: #fff;
         background-color: #444;
@@ -513,6 +513,32 @@ footer {
     white-space: pre-wrap;
 }
 
-.tile-bg {
-    border:3px solid #ccc;
+.widget-tile {
+    margin-bottom: 4px;
 }
+
+    .widget-tile .widget-tile-header {
+        padding: 4px;
+        background-color: #efefef;
+        border: 2px solid #444;
+        cursor: move;
+    }
+
+    .widget-tile .widget-tile-content {
+        border: 2px solid #444;
+        border-top: 0;
+        padding: 4px;
+    }
+
+/* workspace/well/pd/graph */
+.pd-graph-wrap {
+    line-height: 0;
+}
+
+    .pd-graph-wrap .pd-graph-vscale {
+        width: 60px;
+    }
+
+    .pd-graph-wrap .pd-graph-grid {
+        margin-right: 60px;
+    }
