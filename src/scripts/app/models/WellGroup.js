@@ -47,9 +47,9 @@
         self.unselectedWfmParameterList = ko.computed({
             read: function () {
                 // two arrays
-                return $.grep(appViewModel.wfmParameterList(), function (prmElem) {
+                return $.grep(ko.unwrap(appViewModel.wfmParameterList), function (prmElem) {
                     var isParamExist = false;
-                    $.each(self.wellGroupWfmParameterList(), function (wlgIndex, wlgElem) {
+                    $.each(ko.unwrap(self.wellGroupWfmParameterList), function (wlgIndex, wlgElem) {
                         if (wlgElem.wfmParameterId === prmElem.id) {
                             isParamExist = true;
                             // break from arr
@@ -244,7 +244,7 @@
             var parentWellRegion = self.getWellField().getWellRegion();
             parentWellRegion.clearSetSelectedWellRegion();
             parentWellRegion.selectedWellField(self.getWellField());
-            parentWellRegion.selectedWellField().selectedWellGroup(self);
+            parentWellRegion.selectedWellField().selectedWellGroup(self);            
         };
 
         self.toPlainJson = function () {

@@ -34,7 +34,7 @@ layout: false
                 </a>
                 <ul class="dropdown-menu" data-bind="foreach: $root.wfmParamSquadList">
                     <li>
-                        <a href="#" data-bind="click: function() { $parents[1].selectSection(section.id); $parents[1].mainPerfomanceView.selectAttrGroup($data); return true; }, attr: {href: $parents[1].getHashPath()  + '/section/' + section.id}">
+                        <a href="#" data-bind="click: function() { $parents[1].selectSection(section.id); $parents[1].mainPerfomanceView.selectAttrGroupId($data.id); return true; }, attr: {href: $parents[1].getHashPath()  + '/section/' + section.id}">
 							<span data-bind="text: id"></span>
 						</a>
                     </li>

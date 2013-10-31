@@ -37,7 +37,9 @@
             require(['app/models/WfmParamSquad'], function () {
                 // WfmParamSquadList (convert data objects into array)
                 function importWfmParamSquadList(data) {
-                    return $.map(data || [], function (item) { return datacontext.createWfmParamSquad(item); });
+                    return $.map(data || [], function (item) {
+                        return datacontext.createWfmParamSquad(item);
+                    });
                 }
 
                 self.wfmParamSquadList(importWfmParamSquadList(r));
@@ -48,31 +50,17 @@
     self.wfmParamSquadList = ko.lazyObservableArray(getWfmParamSquadList, self);
 
     // Get all parameters from all groups as one dimensional array
-    self.wfmParameterList = ko.computed(function () {
-        return $.map(self.wfmParamSquadList(), function (sqdElem) {
-            return $.map(sqdElem.wfmParameterList(), function (prmElem) {
-                return prmElem;
+    self.wfmParameterList = ko.computed({
+        read: function () {
+            return $.map(ko.unwrap(self.wfmParamSquadList), function (sqdElem) {
+                return $.map(ko.unwrap(sqdElem.wfmParameterList), function (prmElem) {
+                    return prmElem;
+                });
             });
-        });
+        },
+        deferEvaluation: true
     });
     // =====================================Wfm parameters end==========================================================
-
-    ////// ==========Wfm parameter group list begin================
-    ////self.wfmParamSquadList = ko.observableArray();
-
-    ////self.isLoadedWfmParamSquadList = ko.observable(false);
-
-    ////self.getWfmParamSquadList = function () {
-    ////    if (self.isLoadedWfmParamSquadList() === false) {
-    ////        datacontext.getWfmParamSquadList().done(function (r) {
-    ////            self.isLoadedWfmParamSquadList(true);
-    ////            self.wfmParamSquadList(importWfmParamSquadList(r));
-    ////        });
-    ////    }
-    ////};
-
-    ////self.selectedWfmParamSquadList = ko.observableArray(self.wfmParamSquadList);
-    ////// =============Wfm parameter group list end ===========
 
     self.addWellRegion = function () {
         var self = this;
@@ -114,23 +102,9 @@
         }
     };
 
-    // in view: <!-- ko template: { foreach: wellRegionList, afterRender: afterAddCallback } -->
-    ////var ij = 0;
-    ////afterAddCallback: function () {
-    ////    ij += 1;
-    ////    if (self.wellRegionList().length === ij) {
-    ////        $('a[href="#well' + selected well id + '"]').click();
-    ////    }
-    ////}
-
-    ////function getUserProfile() {
-    ////    datacontext.getUserProfile().done(function (response) {
-    ////        self.curUserProfile(datacontext.createUserProfile(response));
-    ////    });
-    ////};
-
-    // todo: back after repair
-    ////getUserProfile();    
+    // TODO: back after repair getUserProfile();    
+    // TODO: move selectItem() logic to parent objects:
+    // well.selectWell() => wellGroup.selectWell()
 
     // load list of well region, well field...
     function loadStructure() {
@@ -144,19 +118,19 @@
             // route region/id/field/id/group/id/well/id
             var choosedObj = datacontext.getChoosedIdFromHash();
             console.log(choosedObj);
-            var tmpRegion = datacontext.getElementByPropertyValue(self.wellRegionList(), "Id", choosedObj.regionId);
+            var tmpRegion = datacontext.getElementByPropertyValue(self.wellRegionList(), 'Id', choosedObj.regionId);
             if (tmpRegion) {
                 self.selectedWellRegion(tmpRegion);
                 tmpRegion.isOpenItem(true);
-                var tmpField = datacontext.getElementByPropertyValue(self.selectedWellRegion().WellFields(), "Id", choosedObj.fieldId);
+                var tmpField = datacontext.getElementByPropertyValue(self.selectedWellRegion().WellFields(), 'Id', choosedObj.fieldId);
                 if (tmpField) {
                     self.selectedWellRegion().selectedWellField(tmpField);
                     tmpField.isOpenItem(true);
-                    var tmpGroup = datacontext.getElementByPropertyValue(self.selectedWellRegion().selectedWellField().WellGroups(), "Id", choosedObj.groupId);
+                    var tmpGroup = datacontext.getElementByPropertyValue(self.selectedWellRegion().selectedWellField().WellGroups(), 'Id', choosedObj.groupId);
                     if (tmpGroup) {
                         self.selectedWellRegion().selectedWellField().selectedWellGroup(tmpGroup);
                         tmpGroup.isOpenItem(true);
-                        var tmpWell = datacontext.getElementByPropertyValue(self.selectedWellRegion().selectedWellField().selectedWellGroup().Wells(), "Id", choosedObj.wellId);
+                        var tmpWell = datacontext.getElementByPropertyValue(self.selectedWellRegion().selectedWellField().selectedWellGroup().Wells(), 'Id', choosedObj.wellId);
                         if (tmpWell) {
                             self.selectedWellRegion().selectedWellField().selectedWellGroup().selectedWell(tmpWell);
                             tmpWell.isOpenItem(true);
@@ -180,10 +154,13 @@
         }
 
         function getFailed() {
-            self.viewModelError("Error retrieving lists.");
+            self.viewModelError('Error retrieving lists.');
         }
 
-        datacontext.getWellRegionList({ company_id: companyId, is_inclusive: true }).done(getSucceeded).fail(getFailed);
+        datacontext.getWellRegionList({
+            company_id: companyId,
+            is_inclusive: true
+        }).done(getSucceeded).fail(getFailed);
     }
 
     loadStructure();

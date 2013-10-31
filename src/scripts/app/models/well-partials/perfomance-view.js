@@ -18,10 +18,10 @@
 
         prfv.monthList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-        prfv.WPDDateStartYear = ko.observable();
-        prfv.WPDDateEndYear = ko.observable();
-        prfv.WPDDateStartMonth = ko.observable(1);
-        prfv.WPDDateEndMonth = ko.observable(12);
+        prfv.WPDDateStartYear = ko.observable(optns.startYear);
+        prfv.WPDDateEndYear = ko.observable(optns.endYear);
+        prfv.WPDDateStartMonth = ko.observable(optns.startMonth);
+        prfv.WPDDateEndMonth = ko.observable(optns.endMonth);
 
         function updateSelectedPrfTableYear() {
             var tmpWpdDateStartYear = ko.unwrap(prfv.WPDDateStartYear),
@@ -38,10 +38,27 @@
         prfv.WPDDateStartYear.subscribe(updateSelectedPrfTableYear);
         prfv.WPDDateEndYear.subscribe(updateSelectedPrfTableYear);
 
-        prfv.selectedAttrGroup = ko.observable();
+        // Id of group (squad) of wfm parameters
+        // Can be set through options (optns) or using any html view
+        prfv.selectedAttrGroupId = ko.observable(optns.selectedAttrGroupId);
 
-        prfv.selectAttrGroup = function (attrGroup) {
-            prfv.selectedAttrGroup(attrGroup);
+        prfv.selectedAttrGroup = ko.computed({
+            read: function () {
+                var tmpWfmParamSquadList = ko.unwrap(prfPartial.getWellObj().getWellGroup().getWellField().getWellRegion().getParentViewModel().wfmParamSquadList);
+
+                var tmpAttrGroup = $.grep(tmpWfmParamSquadList, function (elemValue) {
+                    return elemValue.id === ko.unwrap(prfv.selectedAttrGroupId);
+                });
+
+                if (tmpAttrGroup.length > 0) {
+                    return tmpAttrGroup[0];
+                }
+            },
+            deferEvaluation: true
+        });
+
+        prfv.selectAttrGroupId = function (attrGroupId) {
+            prfv.selectedAttrGroupId(attrGroupId);
         };
 
         // Well group parameters for selected squad
@@ -72,42 +89,65 @@
             deferEvaluation: true
         });
 
-        function filterDataByDate(startYear, endYear, startMonth, endMonth, hasForecast) {
-            var resultArr = [];
-            if (startYear && endYear) {
-                // Seconds from Unix Epoch
-                var startUnixTime = new Date(Date.UTC(startYear, startMonth - 1, 1)).getTime() / 1000;
-                var endUnixTime = new Date(Date.UTC(endYear, endMonth - 1, 1)).getTime() / 1000;
-
-                var prdArray;
-                if (hasForecast) {
-                    prdArray = ko.unwrap(prfPartial.dcaProductionDataSet).concat(ko.unwrap(prfPartial.hstProductionDataSet));
-                }
-                else {
-                    prdArray = ko.unwrap(prfPartial.hstProductionDataSet);
-                }
-
-                resultArr = ko.utils.arrayFilter(prdArray, function (r) {
-                    return ((r.unixTime >= startUnixTime) && (r.unixTime <= endUnixTime));
-                });
-            }
-
-            return resultArr;
-        }
-
         prfv.filteredByDateProductionDataSet = ko.computed({
             read: function () {
-                return filterDataByDate(
-                    ko.unwrap(prfv.WPDDateStartYear),
-                    ko.unwrap(prfv.WPDDateEndYear),
-                    ko.unwrap(prfv.WPDDateStartMonth),
-                    ko.unwrap(prfv.WPDDateEndMonth),
-                    ko.unwrap(prfv.isVisibleForecastData) ? true : false
-                    );
+                ////if (!ko.unwrap(prfv.WPDDateStartYear)) {
+
+                ////}
+                var resultArr = [];
+
+                var tmpHstProductionDataSet = ko.unwrap(prfPartial.hstProductionDataSet),
+                    tmpHistYearList = ko.unwrap(prfPartial.histYearList);
+
+                if (tmpHstProductionDataSet.length > 0 && tmpHistYearList.length > 0) {
+                    // Forecast tmp
+                    var tmpDcaProductionDataSet = ko.unwrap(prfPartial.dcaProductionDataSet),
+                        tmpIsVisibleForecastData = ko.unwrap(prfv.isVisibleForecastData) ? true : false;
+
+                    var prdArray;
+                    if (tmpIsVisibleForecastData) {
+                        prdArray = tmpDcaProductionDataSet.concat(tmpHstProductionDataSet);
+                    }
+                    else {
+                        prdArray = tmpHstProductionDataSet;
+                    }
+
+                    // Set bound dates if undefined
+                    if (!ko.unwrap(prfv.WPDDateStartYear)) {
+                        prfv.WPDDateStartYear(tmpHistYearList[0]);
+                    }
+
+                    if (!ko.unwrap(prfv.WPDDateEndYear)) {
+                        prfv.WPDDateEndYear(tmpHistYearList[0]);
+                    }
+
+                    if (!ko.unwrap(prfv.WPDDateStartMonth)) {
+                        prfv.WPDDateStartMonth(1);
+                    }
+
+                    if (!ko.unwrap(prfv.WPDDateEndMonth)) {
+                        prfv.WPDDateEndMonth(12);
+                    }
+                    // ----
+                    // TODO: change WPDDate to right names
+                    var tmpStartYear = ko.unwrap(prfv.WPDDateStartYear),
+                        tmpEndYear = ko.unwrap(prfv.WPDDateEndYear),
+                        tmpStartMonth = ko.unwrap(prfv.WPDDateStartMonth),
+                        tmpEndMonth = ko.unwrap(prfv.WPDDateEndMonth);
+
+                    // Seconds from Unix Epoch
+                    var startUnixTime = new Date(Date.UTC(tmpStartYear, tmpStartMonth - 1, 1)).getTime() / 1000;
+                    var endUnixTime = new Date(Date.UTC(tmpEndYear, tmpEndMonth - 1, 1)).getTime() / 1000;
+
+                    resultArr = ko.utils.arrayFilter(prdArray, function (r) {
+                        return ((r.unixTime >= startUnixTime) && (r.unixTime <= endUnixTime));
+                    });
+                }
+
+                return resultArr;
             },
             deferEvaluation: true
         });
-
 
         // Real time border: min and max values in unix time format
         // This time border other than WPDDateStartYear, EndYear (ant other selectable values)
@@ -204,7 +244,8 @@
         prfv.joinedYearList = ko.computed({
             read: function () {
                 if (ko.unwrap(prfv.isVisibleForecastData)) {
-                    return prfPartial.forecastYearList().concat(ko.unwrap(prfPartial.histYearList));
+                    console.log('fyear', ko.unwrap(prfPartial.forecastYearList));
+                    return ko.unwrap(prfPartial.forecastYearList).concat(ko.unwrap(prfPartial.histYearList));
                 }
                 else {
                     return ko.unwrap(prfPartial.histYearList);

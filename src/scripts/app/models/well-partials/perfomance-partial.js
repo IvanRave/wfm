@@ -309,13 +309,20 @@
             deferEvaluation: true
         });
 
-        // All history data; without any filters
+        // All history data: without any filters
+        // If need to update data then
+        // 1. Set loaded to off
+        // 2. Run method
+        // Caution: when import new data through FileManager:
+        // 1. set ProductionDataSet to []
+        // 2. set isLoaded to false
         prtl.getHstProductionDataSet = function () {
-            prtl.isLoadedHstProductionData(false);
-            datacontext.getProductionData({ well_id: wellObj.Id }).done(function (result) {
-                prtl.hstProductionDataSet(importProductionDataSetDto(result, wellObj));
-                prtl.isLoadedHstProductionData(true);
-            });
+            if (!ko.unwrap(prtl.isLoadedHstProductionData)) {
+                datacontext.getProductionData({ well_id: wellObj.Id }).done(function (result) {
+                    prtl.hstProductionDataSet(importProductionDataSetDto(result, wellObj));
+                    prtl.isLoadedHstProductionData(true);
+                });
+            }
         };
 
         prtl.isForecastPossible = ko.computed({

@@ -72,9 +72,9 @@ layout: false
             <div data-bind="ifnot: selectedAttrGroup">
                 Please choose perfomance group:
                 <ul data-bind="foreach: $root.wfmParamSquadList">
-                    <li>
-                        <a href="#" data-bind="click: $parent.selectAttrGroup">
-							<span data-bind="text: id"></span>
+                    <li data-bind="with: id">
+                        <a href="#" data-bind="click: $parent.selectAttrGroupId">
+							<span data-bind="text: $data"></span>
 						</a>
                     </li>
                 </ul>

@@ -49,6 +49,7 @@
             return wellGroup;
         };
 
+        // Do not include to self
         var appViewModel = self.getWellGroup().getWellField().getWellRegion().getParentViewModel();
 
         // Persisted properties
@@ -125,9 +126,9 @@
                             if (previousWell.selectedSectionId()) {
                                 previousSelectedSectionId = previousWell.selectedSectionId();
                             }
-                            var tmpSelectedAttrGroup = ko.unwrap(previousWell.mainPerfomanceView.selectedAttrGroup);
-                            if (tmpSelectedAttrGroup) {
-                                self.mainPerfomanceView.selectedAttrGroup(tmpSelectedAttrGroup);
+                            var tmpSelectedAttrGroupId = ko.unwrap(previousWell.mainPerfomanceView.selectedAttrGroupId);
+                            if (tmpSelectedAttrGroupId) {
+                                self.mainPerfomanceView.selectedAttrGroupId(tmpSelectedAttrGroupId);
                             }
                         }
                     }
@@ -155,6 +156,8 @@
             if (previousSelectedSectionId) {
                 self.selectedSectionId(previousSelectedSectionId);
             }
+
+            console.log('well selected');
         };
 
         // after render all sections
@@ -1006,7 +1009,8 @@
                     {
                         tplId: 'summary-tpl',
                         widgetId: 123,
-                        title: ko.observable('SuperWidget'),
+                        title: ko.observable('Summary widget'),
+                        isVisSettingPanel: ko.observable(false),
                         optns: {
                             isVisibleDescription: ko.observable(true),
                             isVisibleProductionHistory: ko.observable(true)
@@ -1015,14 +1019,28 @@
                             console.log(widgetItem);
                         },
                         processWidget: function () {
-                            console.log('asdf');
                         }
                     }
                 ]
             },
             {
                 col: 3,
-                widgets: []
+                widgets: [
+                    {
+                        tplId: 'sketch-tpl',
+                        widgetId: 323,
+                        title: ko.observable('Well sketch'),
+                        isVisSettingPanel: ko.observable(false),
+                        optns: {
+
+                        },
+                        saveWidget: function (widgetItem) {
+                            console.log(widgetItem);
+                        },
+                        processWidget: function () {
+                        }
+                    }
+                ]
             },
             {
                 col: 6,
@@ -1030,25 +1048,49 @@
                     {
                         tplId: 'perfomance-tpl',
                         widgetId: 12312,
-                        title: ko.observable('Graph'),
+                        title: ko.observable('Rate graphs'),
+                        isVisSettingPanel: ko.observable(false),
                         // Can be stored as a one json string, or xml
                         optns: {
-                            ////isVisibleGraph: ko.observable(true),
-                            ////startYear: ko.observable(),
-                            ////endYear: ko.observable(),
-                            ////startMonth: ko.observable(1),
-                            ////endMonth: ko.observable(12),
-                            ////hasForecast: ko.observable(false),
                             perfomanceView: self.perfomancePartial.createPerfomanceView({
-                                isVisibleForecastData: false
+                                isVisibleForecastData: true,
+                                selectedAttrGroupId: 'Rate',
+                                endYear: 2010,
+                                startYear: 2007
                             })
                         },
                         saveWidget: function (widgetItem) {
                             console.log(widgetItem);
                         },
                         processWidget: function () {
+                            self.getWellGroup().getWellGroupWfmParameterList();
+                            self.perfomancePartial.forecastEvolution.getDict();
                             self.perfomancePartial.getHstProductionDataSet();
-                            ////self.perfomancePartial.selectAttrGroup('Rate');
+                        }
+                    },
+                    {
+                        tplId: 'perfomance-tpl',
+                        widgetId: 12311,
+                        title: ko.observable('Other graphs'),
+                        isVisSettingPanel: ko.observable(false),
+                        // Can be stored as a one json string, or xml
+                        optns: {
+                            perfomanceView: self.perfomancePartial.createPerfomanceView({
+                                isVisibleForecastData: false,
+                                selectedAttrGroupId: 'Other'
+                                ////startYear: 2005,
+                                ////endYear: 2007,
+                                ////startMonth: 4,
+                                ////endMonth: 10
+                            })
+                        },
+                        saveWidget: function (widgetItem) {
+                            console.log(widgetItem);
+                        },
+                        processWidget: function () {
+                            self.getWellGroup().getWellGroupWfmParameterList();
+                            self.perfomancePartial.forecastEvolution.getDict();
+                            self.perfomancePartial.getHstProductionDataSet();
                         }
                     }
                 ]
@@ -1064,14 +1106,8 @@
                 }
                 case 'pd': {
                     self.getWellGroup().getWellGroupWfmParameterList();
-
                     self.perfomancePartial.forecastEvolution.getDict();
-
-                    // TODO: Caution: when import new data, set ProductionDataSet to [] (empty array) and isLoaded to false
-                    if (ko.unwrap(self.perfomancePartial.hstProductionDataSet).length === 0) {
-                        self.perfomancePartial.getHstProductionDataSet();
-                    }
-
+                    self.perfomancePartial.getHstProductionDataSet();
                     break;
                 }
                 case 'nodalanalysis': {

@@ -2,14 +2,26 @@
 layout: false
 ---
 <div>
-    <script type="text/html" id="summary-tpl">
-        <div>
-            <input type="text" data-bind="value: widget.title" />
-            <input type="checkbox" data-bind="checked: widget.optns.isVisibleDescription" /> is vis desc
-            <input type="checkbox" data-bind="checked: widget.optns.isVisibleProductionHistory" /> is vis prod history
-            <button type="button" data-bind="click: widget.saveWidget">Save</button>
+    <script type="text/html" id="sketch-tpl">
+        <div data-bind="if: widget.isVisSettingPanel">
+            <div class="widget-setting-panel">
+                setting panel
+            </div>
         </div>
-        <div data-bind="with: $parents[2]">
+        <div class="widget-content">
+            asfa
+        </div>
+    </script>
+    <script type="text/html" id="summary-tpl">
+        <div data-bind="if: widget.isVisSettingPanel">
+            <div class="widget-setting-panel">
+                <input type="text" data-bind="value: widget.title" />
+                <input type="checkbox" data-bind="checked: widget.optns.isVisibleDescription" /> is vis desc
+                <input type="checkbox" data-bind="checked: widget.optns.isVisibleProductionHistory" /> is vis prod history
+                <button type="button" data-bind="click: widget.saveWidget">Save</button>
+            </div>
+        </div>
+        <div class="widget-content" data-bind="with: $parents[2]">
             <h6 data-bind="text: Name"></h6>
             <div data-bind="if: widget.optns.isVisibleDescription">
                 <span data-bind="text: Description"></span>
@@ -20,37 +32,41 @@ layout: false
         </div>
     </script>
     <script type="text/html" id="perfomance-tpl">
-        <div>
-            <input type="text" data-bind="value: widget.title" />
+        <div data-bind="if: widget.isVisSettingPanel">
+            <div class="widget-setting-panel">
+                <input type="text" data-bind="value: widget.title" />
+                <div data-bind="with: widget.optns.perfomanceView">
+                    Perfomance group:
+                    <ul data-bind="foreach: $root.wfmParamSquadList">
+                        <li data-bind="with: id">
+                            <a href="#" data-bind="click: $parents[1].selectAttrGroupId">
+                                <span data-bind="text: $data"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="clearfix" style="margin-top:4px">
+                        <div class="text-center">
+                            <select data-bind="options: joinedYearList, value: WPDDateStartYear" class="input-sm"></select>
+                            <select data-bind="options: monthList, value: WPDDateStartMonth" class="input-sm"></select>
+                            <span>&nbsp;-&nbsp;</span>
+                            <select data-bind="options: joinedYearList, value: WPDDateEndYear" class="input-sm"></select>
+                            <select data-bind="options: monthList, value: WPDDateEndMonth" class="input-sm"></select>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" data-bind="checked: isVisibleForecastData, enable: prfPartial.isForecastPossible" />Show forecast
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="widget-content">
             <div data-bind="with: widget.optns.perfomanceView">
                 <div data-bind="ifnot: prfPartial.isLoadedHstProductionData">{{lang.loading}}...</div>
                 <div data-bind="if: prfPartial.isLoadedHstProductionData">
                     <div data-bind="if: prfPartial.hstProductionDataSet().length === 0">No data. Import files from "File manager" to view production data.</div>
                     <div data-bind="if: prfPartial.hstProductionDataSet().length > 0">
-                        <div data-bind="ifnot: selectedAttrGroup">
-                            Please choose perfomance group:
-                            <ul data-bind="foreach: $root.wfmParamSquadList">
-                                <li>
-                                    <a href="#" data-bind="click: $parent.selectAttrGroup">
-                                        <span data-bind="text: id"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
                         <div data-bind="if: selectedAttrGroup">
                             {{> well-pd-graph }}
-                            <div class="clearfix" style="margin-top:4px">
-                                <div class="text-center">
-                                    <select data-bind="options: joinedYearList, value: WPDDateStartYear" class="input-sm"></select>
-                                    <select data-bind="options: monthList, value: WPDDateStartMonth" class="input-sm"></select>
-                                    <span>&nbsp;-&nbsp;</span>
-                                    <select data-bind="options: joinedYearList, value: WPDDateEndYear" class="input-sm"></select>
-                                    <select data-bind="options: monthList, value: WPDDateEndMonth" class="input-sm"></select>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" data-bind="checked: isVisibleForecastData, enable: prfPartial.isForecastPossible" />Show forecast graph and data
-                                    </label>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -66,7 +82,9 @@ layout: false
                             <b data-bind="text: title"></b>
                         </div>
                         <div class="pull-right">
-                            <span>edit</span>
+                            <button type="button" class="btn btn-xs" data-bind="click: function(){ isVisSettingPanel(!isVisSettingPanel()) }">
+                                <i class="glyphicon glyphicon-cog"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="widget-tile-content">
@@ -74,8 +92,10 @@ layout: false
                     </div>
                 </div>
             </div>
-            <div class="widget-tile">
-                <button type="button" class="btn btn-inverse btn-xs">Add widget</button>
+            <div class="widget-tile text-center">
+                <button type="button" class="btn btn-default btn-xs">
+                    <i class="glyphicon glyphicon-plus"></i> Add widget
+                </button>
             </div>
         </div>
     </div>

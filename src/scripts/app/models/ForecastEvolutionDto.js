@@ -30,7 +30,7 @@
             GorEvolutionF: 'F * Ln(X) + G',
             GorEvolutionG: 'F * Ln(X) + G'
         }
-    }
+    };
 
     function ForecastEvolution(data, wellItem) {
         var self = this;
@@ -59,13 +59,19 @@
             ////self.Dict()[evoKey].subscribe(self.save);
         });
 
-        // load data to empty values
+        self.isLoadedDict = ko.observable(false);
+
+        // Load data to empty values
         self.getDict = function () {
-            datacontext.getForecastEvolution(self.WellId).done(function (response) {
-                $.each(self.EvoList, function (evoIndex, evoKey) {
-                    self.Dict()[evoKey](response.Dict[evoKey]);
+            if (!ko.unwrap(self.isLoadedDict)) {
+                datacontext.getForecastEvolution(self.WellId).done(function (response) {
+                    $.each(self.EvoList, function (evoIndex, evoKey) {
+                        ko.unwrap(self.Dict)[evoKey](response.Dict[evoKey]);
+                    });
+
+                    self.isLoadedDict(true);
                 });
-            });
+            }
         };
 
         // Not a number evolution parameter array
