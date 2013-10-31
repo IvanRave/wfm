@@ -514,30 +514,36 @@ footer {
 }
 
 .widget-tile {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
+    border: 2px solid #e5e5e5;
+    -webkit-box-shadow: 3px 4px 5px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 3px 4px 5px rgba(50, 50, 50, 0.75);
+    box-shadow: 3px 4px 5px rgba(50, 50, 50, 0.75);
 }
 
     .widget-tile .widget-tile-header {
         padding: 4px;
         background-color: #efefef;
-        border: 2px solid #efefef;
         cursor: move;
     }
 
     .widget-tile .widget-tile-content {
-        border: 2px solid #efefef;
         border-top: 0;
     }
 
         .widget-tile .widget-tile-content .widget-setting-panel {
-            background-color: #efefef;
             padding: 4px;
-            border: 1px dashed #777;
+            border-bottom: 1px dashed #ccc;
         }
 
         .widget-tile .widget-tile-content .widget-content {
             padding: 4px;
         }
+
+    .widget-tile .widget-empty {
+        padding: 4px;
+        text-align: left;
+    }
 
 /* workspace/well/pd/graph */
 .pd-graph-wrap {

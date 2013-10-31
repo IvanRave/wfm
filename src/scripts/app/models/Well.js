@@ -1012,8 +1012,9 @@
                         title: ko.observable('Summary widget'),
                         isVisSettingPanel: ko.observable(false),
                         optns: {
+                            isVisibleName: ko.observable(true),
                             isVisibleDescription: ko.observable(true),
-                            isVisibleProductionHistory: ko.observable(true)
+                            isVisibleProductionHistory: ko.observable(false),
                         },
                         saveWidget: function (widgetItem) {
                             console.log(widgetItem);
@@ -1032,7 +1033,8 @@
                         title: ko.observable('Well sketch'),
                         isVisSettingPanel: ko.observable(false),
                         optns: {
-
+                            isVisImg: ko.observable(true),
+                            isVisDesc: ko.observable(false)
                         },
                         saveWidget: function (widgetItem) {
                             console.log(widgetItem);
@@ -1054,9 +1056,9 @@
                         optns: {
                             perfomanceView: self.perfomancePartial.createPerfomanceView({
                                 isVisibleForecastData: true,
-                                selectedAttrGroupId: 'Rate',
-                                endYear: 2010,
-                                startYear: 2007
+                                selectedAttrGroupId: 'Rate'
+                                ////endYear: 2010,
+                                ////startYear: 2007
                             })
                         },
                         saveWidget: function (widgetItem) {

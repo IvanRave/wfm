@@ -5,24 +5,43 @@ layout: false
     <script type="text/html" id="sketch-tpl">
         <div data-bind="if: widget.isVisSettingPanel">
             <div class="widget-setting-panel">
-                setting panel
+                <label>
+                    <input type="checkbox" data-bind="checked: widget.optns.isVisImg" /> Image
+                </label>
+                <label>
+                    <input type="checkbox" data-bind="checked: widget.optns.isVisDesc" /> Description
+                </label>
             </div>
         </div>
         <div class="widget-content">
-            asfa
+            <div data-bind="with: $parents[2]">
+                <div data-bind="if: widget.optns.isVisImg">
+                    <img src="#" class="img-responsive" data-bind="attr: { src: MainSketchUrl }" alt="Sketch image" />
+                </div>
+                <div data-bind="if: widget.optns.isVisDesc">
+                    <div data-bind="html: SketchDesc" style="-ms-word-wrap: break-word; word-wrap: break-word; padding: 8px 2px;"></div>
+                </div>
+            </div>
         </div>
     </script>
     <script type="text/html" id="summary-tpl">
         <div data-bind="if: widget.isVisSettingPanel">
             <div class="widget-setting-panel">
-                <input type="text" data-bind="value: widget.title" />
-                <input type="checkbox" data-bind="checked: widget.optns.isVisibleDescription" /> is vis desc
-                <input type="checkbox" data-bind="checked: widget.optns.isVisibleProductionHistory" /> is vis prod history
-                <button type="button" data-bind="click: widget.saveWidget">Save</button>
+                <label>
+                    <input type="checkbox" data-bind="checked: widget.optns.isVisibleName" /> Name
+                </label>
+                <label>
+                    <input type="checkbox" data-bind="checked: widget.optns.isVisibleDescription" /> Description
+                </label>
+                <label>
+                    <input type="checkbox" data-bind="checked: widget.optns.isVisibleProductionHistory" /> Production history
+                </label>
             </div>
         </div>
         <div class="widget-content" data-bind="with: $parents[2]">
-            <h6 data-bind="text: Name"></h6>
+            <div data-bind="if: widget.optns.isVisibleName">
+                <h4 data-bind="text: Name"></h4>
+            </div>
             <div data-bind="if: widget.optns.isVisibleDescription">
                 <span data-bind="text: Description"></span>
             </div>
@@ -34,18 +53,16 @@ layout: false
     <script type="text/html" id="perfomance-tpl">
         <div data-bind="if: widget.isVisSettingPanel">
             <div class="widget-setting-panel">
-                <input type="text" data-bind="value: widget.title" />
                 <div data-bind="with: widget.optns.perfomanceView">
-                    Perfomance group:
-                    <ul data-bind="foreach: $root.wfmParamSquadList">
-                        <li data-bind="with: id">
-                            <a href="#" data-bind="click: $parents[1].selectAttrGroupId">
+                    <div class="text-center">
+                        <div data-bind="foreach: $root.wfmParamSquadList" class="btn-group">
+                            <!-- ko with: id -->
+                            <button type="button" class="btn btn-default btn-sm" data-bind="click: $parents[1].selectAttrGroupId, css: {'active': $parents[1].selectedAttrGroupId() === $data } ">
                                 <span data-bind="text: $data"></span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="clearfix" style="margin-top:4px">
-                        <div class="text-center">
+                            </button>
+                            <!-- /ko -->
+                        </div>
+                        <div style="margin-top:4px">
                             <select data-bind="options: joinedYearList, value: WPDDateStartYear" class="input-sm"></select>
                             <select data-bind="options: monthList, value: WPDDateStartMonth" class="input-sm"></select>
                             <span>&nbsp;-&nbsp;</span>
@@ -79,12 +96,24 @@ layout: false
                 <div class="widget-tile">
                     <div class="clearfix widget-tile-header">
                         <div class="pull-left">
-                            <b data-bind="text: title"></b>
+                            <div data-bind="ifnot: isVisSettingPanel">
+                                <b data-bind="text: title"></b>
+                            </div>
+                            <div data-bind="if: isVisSettingPanel">
+                                <input type="text" class="input-sm" data-bind="value: title" />
+                            </div>
                         </div>
                         <div class="pull-right">
-                            <button type="button" class="btn btn-xs" data-bind="click: function(){ isVisSettingPanel(!isVisSettingPanel()) }">
-                                <i class="glyphicon glyphicon-cog"></i>
-                            </button>
+                            <div data-bind="ifnot: isVisSettingPanel">
+                                <button type="button" class="btn btn-xs" data-bind="click: function(){ isVisSettingPanel(true); }">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                </button>
+                            </div>
+                            <div data-bind="if: isVisSettingPanel">
+                                <button type="button" class="btn btn-sm btn-success" data-bind="click: function(){ isVisSettingPanel(false); }">
+                                    Save
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="widget-tile-content">
@@ -92,10 +121,12 @@ layout: false
                     </div>
                 </div>
             </div>
-            <div class="widget-tile text-center">
-                <button type="button" class="btn btn-default btn-xs">
-                    <i class="glyphicon glyphicon-plus"></i> Add widget
-                </button>
+            <div class="widget-tile">
+                <div class="widget-empty">
+                    <button type="button" class="btn btn-default btn-xs">
+                        <i class="glyphicon glyphicon-plus"></i> Add widget
+                    </button>
+                </div>
             </div>
         </div>
     </div>
