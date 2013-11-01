@@ -1,4 +1,8 @@
-﻿define(['ko', 'app/models/widgets/widget-perfomance'], function (ko, WidgetPerfomance) {
+﻿define(['ko',
+    'app/models/widgets/widget-perfomance',
+    'app/models/widgets/widget-summary',
+    'app/models/widgets/widget-sketch'
+], function (ko, WidgetPerfomance, WidgetSummary, WidgetSketch) {
     'use strict';
 
     // Supertype
@@ -11,7 +15,7 @@
 
         self.widgetType = data.WidgetType;
 
-        self.widgetTpl = self.widgetType + '-tmpl';
+        self.widgetTpl = self.widgetType + '-widget-tpl';
 
         self.isVisSettingPanel = ko.observable(false);
 
@@ -31,6 +35,12 @@
         if (self.widgetType === 'perfomance') {
             WidgetPerfomance.call(self, data, widgockItem);
         }
+        else if (self.widgetType === 'summary') {
+            WidgetSummary.call(self, data);
+        }
+        else if (self.widgetType === 'sketch') {
+            WidgetSketch.call(self, data);
+        }
 
         ////self.save = function () {
 
@@ -42,24 +52,4 @@
     }
 
     return Widget;
-
-    ////// Subtype
-    ////function WidgetPerfomance(data) {
-    ////    var self = this;
-    ////    data = data || {};
-
-    ////    Widget.call(self, data);
-
-    ////    self.isVisGraph = ko.observable(data.IsVisGraph);
-    ////}
-
-    ////// Subtype
-    ////function WidgetSummary(data) {
-    ////    var self = this;
-    ////    data = data || {};
-
-    ////    Widget.call(self, data);
-
-    ////    self.isVisDescription = ko.observable(data.IsVisDescription);
-    ////}
 });

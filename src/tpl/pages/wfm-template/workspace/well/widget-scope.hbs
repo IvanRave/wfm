@@ -2,11 +2,7 @@
 layout: false
 ---
 
-<script type="text/html" id="summary-tmpl">
-    summary:
-</script>
-
-<script type="text/html" id="perfomance-tmpl">
+<script type="text/html" id="perfomance-widget-tpl">
     <div data-bind="if: widget.isVisSettingPanel">
         <div class="widget-setting-panel">
             <div data-bind="with: widget.perfomanceView">
@@ -47,102 +43,60 @@ layout: false
     </div>
 </script>
 
-
-
-<script type="text/html" id="sketch-tpl">
+<script type="text/html" id="sketch-widget-tpl">
     <div data-bind="if: widget.isVisSettingPanel">
         <div class="widget-setting-panel">
             <label>
-                <input type="checkbox" data-bind="checked: widget.optns.isVisImg" /> Image
+                <input type="checkbox" data-bind="checked: widget.isVisImg" /> Image
             </label>
             <label>
-                <input type="checkbox" data-bind="checked: widget.optns.isVisDesc" /> Description
+                <input type="checkbox" data-bind="checked: widget.isVisDescription" /> Description
             </label>
         </div>
     </div>
     <div class="widget-content">
-        <div data-bind="with: $parents[2]">
-            <div data-bind="if: widget.optns.isVisImg">
+        <div data-bind="with: $parents[3]">
+            <div data-bind="if: widget.isVisImg">
                 <img src="#" class="img-responsive" data-bind="attr: { src: MainSketchUrl }" alt="Sketch image" />
             </div>
-            <div data-bind="if: widget.optns.isVisDesc">
+            <div data-bind="if: widget.isVisDescription">
                 <div data-bind="html: SketchDesc" style="-ms-word-wrap: break-word; word-wrap: break-word; padding: 8px 2px;"></div>
             </div>
         </div>
     </div>
 </script>
-<script type="text/html" id="summary-tpl">
+<script type="text/html" id="summary-widget-tpl">
     <div data-bind="if: widget.isVisSettingPanel">
         <div class="widget-setting-panel">
             <label>
-                <input type="checkbox" data-bind="checked: widget.optns.isVisibleName" /> Name
+                <input type="checkbox" data-bind="checked: widget.isVisName" /> Name
             </label>
             <label>
-                <input type="checkbox" data-bind="checked: widget.optns.isVisibleDescription" /> Description
+                <input type="checkbox" data-bind="checked: widget.isVisDescription" /> Description
             </label>
             <label>
-                <input type="checkbox" data-bind="checked: widget.optns.isVisibleProductionHistory" /> Production history
+                <input type="checkbox" data-bind="checked: widget.isVisProductionHistory" /> Production history
             </label>
         </div>
     </div>
-    <div class="widget-content" data-bind="with: $parents[2]">
-        <div data-bind="if: widget.optns.isVisibleName">
+    <div class="widget-content" data-bind="with: $parents[3]">
+        <div data-bind="if: widget.isVisName">
             <h4 data-bind="text: Name"></h4>
         </div>
-        <div data-bind="if: widget.optns.isVisibleDescription">
+        <div data-bind="if: widget.isVisDescription">
             <span data-bind="text: Description"></span>
         </div>
-        <div data-bind="if: widget.optns.isVisibleProductionHistory">
+        <div data-bind="if: widget.isVisProductionHistory">
             <span data-bind="text: ProductionHistory"></span>
         </div>
     </div>
 </script>
-<script type="text/html" id="perfomance-tpl">
-    <div data-bind="if: widget.isVisSettingPanel">
-        <div class="widget-setting-panel">
-            <div data-bind="with: widget.optns.perfomanceView">
-                <div class="text-center">
-                    <div data-bind="foreach: $root.wfmParamSquadList" class="btn-group">
-                        <!-- ko with: id -->
-                        <button type="button" class="btn btn-default btn-sm" data-bind="click: $parents[1].selectAttrGroupId, css: {'active': $parents[1].selectedAttrGroupId() === $data } ">
-                            <span data-bind="text: $data"></span>
-                        </button>
-                        <!-- /ko -->
-                    </div>
-                    <div style="margin-top:4px">
-                        <select data-bind="options: joinedYearList, value: WPDDateStartYear" class="input-sm"></select>
-                        <select data-bind="options: monthList, value: WPDDateStartMonth" class="input-sm"></select>
-                        <span>&nbsp;-&nbsp;</span>
-                        <select data-bind="options: joinedYearList, value: WPDDateEndYear" class="input-sm"></select>
-                        <select data-bind="options: monthList, value: WPDDateEndMonth" class="input-sm"></select>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" data-bind="checked: isVisibleForecastData, enable: prfPartial.isForecastPossible" />Show forecast
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="widget-content">
-        <div data-bind="with: widget.optns.perfomanceView">
-            <div data-bind="ifnot: prfPartial.isLoadedHstProductionData">{{lang.loading}}...</div>
-            <div data-bind="if: prfPartial.isLoadedHstProductionData">
-                <div data-bind="if: prfPartial.hstProductionDataSet().length === 0">No data. Import files from "File manager" to view production data.</div>
-                <div data-bind="if: prfPartial.hstProductionDataSet().length > 0">
-                    <div data-bind="if: selectedAttrGroup">
-                        {{> well-pd-graph }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</script>
+
 <div data-bind="if: isLoadedWellWidgoutList">
-    <div>
+    <div class="text-right">
         <select data-bind="options: wellWidgoutList, optionsText: 'name', value: selectedWellWidgout"></select>
     </div>
     <div data-bind="with: selectedWellWidgout">
-        <h4 data-bind="text: name"></h4>
         <div class="row" data-bind="foreach: widgockList">
             <div data-bind="css: columnStyle">
                 <div data-bind="foreach: widgetList">
@@ -169,51 +123,17 @@ layout: false
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="widget-tile-content">
-                        <div data-bind="template: { name: widgetTpl, data: $data, as: 'widget', afterRender: processWidget }"></div>
+                        <div class="widget-tile-content">
+                            <div data-bind="template: { name: widgetTpl, data: $data, as: 'widget', afterRender: processWidget }"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row" data-bind="foreach: dashBoardLayout">
-        <div data-bind="css: 'col-md-'+ col">
-            <div data-bind="foreach: widgets">
                 <div class="widget-tile">
-                    <div class="clearfix widget-tile-header">
-                        <div class="pull-left">
-                            <div data-bind="ifnot: isVisSettingPanel">
-                                <b data-bind="text: title"></b>
-                            </div>
-                            <div data-bind="if: isVisSettingPanel">
-                                <input type="text" class="input-sm" data-bind="value: title" />
-                            </div>
-                        </div>
-                        <div class="pull-right">
-                            <div data-bind="ifnot: isVisSettingPanel">
-                                <button type="button" class="btn btn-xs" data-bind="click: function(){ isVisSettingPanel(true); }">
-                                    <i class="glyphicon glyphicon-cog"></i>
-                                </button>
-                            </div>
-                            <div data-bind="if: isVisSettingPanel">
-                                <button type="button" class="btn btn-sm btn-success" data-bind="click: function(){ isVisSettingPanel(false); }">
-                                    Save
-                                </button>
-                            </div>
-                        </div>
+                    <div class="widget-empty">
+                        <button type="button" class="btn btn-default btn-xs">
+                            <i class="glyphicon glyphicon-plus"></i> Add widget
+                        </button>
                     </div>
-                    <div class="widget-tile-content">
-                        <div data-bind="template: { name: tplId, data: $data, as: 'widget', afterRender: processWidget }"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="widget-tile">
-                <div class="widget-empty">
-                    <button type="button" class="btn btn-default btn-xs">
-                        <i class="glyphicon glyphicon-plus"></i> Add widget
-                    </button>
                 </div>
             </div>
         </div>

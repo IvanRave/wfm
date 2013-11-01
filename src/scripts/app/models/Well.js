@@ -1030,103 +1030,13 @@
             }
         };
 
-        // ============================= Dashboard ==============
-        self.dashBoardLayout = [
-            {
-                col: 3,
-                widgets: [
-                    {
-                        tplId: 'summary-tpl',
-                        widgetId: 123,
-                        title: ko.observable('Summary widget'),
-                        isVisSettingPanel: ko.observable(false),
-                        optns: {
-                            isVisibleName: ko.observable(true),
-                            isVisibleDescription: ko.observable(true),
-                            isVisibleProductionHistory: ko.observable(false),
-                        },
-                        saveWidget: function (widgetItem) {
-                            console.log(widgetItem);
-                        },
-                        processWidget: function () {
-                        }
-                    }
-                ]
-            },
-            {
-                col: 3,
-                widgets: [
-                    {
-                        tplId: 'sketch-tpl',
-                        widgetId: 323,
-                        title: ko.observable('Well sketch'),
-                        isVisSettingPanel: ko.observable(false),
-                        optns: {
-                            isVisImg: ko.observable(true),
-                            isVisDesc: ko.observable(false)
-                        },
-                        saveWidget: function (widgetItem) {
-                            console.log(widgetItem);
-                        },
-                        processWidget: function () {
-                        }
-                    }
-                ]
-            },
-            {
-                col: 6,
-                widgets: [
-                    {
-                        tplId: 'perfomance-tpl',
-                        widgetId: 12312,
-                        title: ko.observable('Rate graphs'),
-                        isVisSettingPanel: ko.observable(false),
-                        // Can be stored as a one json string, or xml
-                        optns: {
-                            perfomanceView: self.perfomancePartial.createPerfomanceView({
-                                isVisibleForecastData: true,
-                                selectedAttrGroupId: 'Rate'
-                                ////endYear: 2010,
-                                ////startYear: 2007
-                            })
-                        },
-                        saveWidget: function (widgetItem) {
-                            console.log(widgetItem);
-                        },
-                        processWidget: function () {
-                            self.getWellGroup().getWellGroupWfmParameterList();
-                            self.perfomancePartial.forecastEvolution.getDict();
-                            self.perfomancePartial.getHstProductionDataSet();
-                        }
-                    },
-                    {
-                        tplId: 'perfomance-tpl',
-                        widgetId: 12311,
-                        title: ko.observable('Other graphs'),
-                        isVisSettingPanel: ko.observable(false),
-                        // Can be stored as a one json string, or xml
-                        optns: {
-                            perfomanceView: self.perfomancePartial.createPerfomanceView({
-                                isVisibleForecastData: false,
-                                selectedAttrGroupId: 'Other'
-                                ////startYear: 2005,
-                                ////endYear: 2007,
-                                ////startMonth: 4,
-                                ////endMonth: 10
-                            })
-                        },
-                        saveWidget: function (widgetItem) {
-                            console.log(widgetItem);
-                        },
-                        processWidget: function () {
-                            self.getWellGroup().getWellGroupWfmParameterList();
-                            self.perfomancePartial.forecastEvolution.getDict();
-                            self.perfomancePartial.getHstProductionDataSet();
-                        }
-                    }
-                ]
-            }
-        ];
+        self.afterRenderWidgetScope = function () {
+            self.getWellWidgoutList();
+            // TODO: load data only if there is one or more perfomance widgets (only once) for entire well
+            self.getWellGroup().getWellGroupWfmParameterList();
+            self.perfomancePartial.forecastEvolution.getDict();
+            self.perfomancePartial.getHstProductionDataSet();
+        };
 
         // ============================================================ Change tab section =========================================================
         self.selectedSectionId.subscribe(function (sectionId) {

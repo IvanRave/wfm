@@ -1,4 +1,4 @@
-﻿define(['ko', 'app/models/widget'], function (ko, widget) {
+﻿define(['ko'], function (ko) {
     'use strict';
 
     // Subtype
@@ -6,8 +6,10 @@
         var self = this;
         data = data || {};
 
-        widget.call(self, data);
-
+        self.isVisName = ko.observable(data.IsVisName);
         self.isVisDescription = ko.observable(data.IsVisDescription);
+        self.isVisProductionHistory = ko.observable(data.IsVisProductionHistory);
     }
+
+    return WidgetSummary;
 });

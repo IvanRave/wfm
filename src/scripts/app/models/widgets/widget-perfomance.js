@@ -6,11 +6,9 @@
         var self = this;
         data = data || {};
 
-        self.isVisGraph = ko.observable(data.IsVisGraph);
-
         self.perfomanceView = widgockItem.getWidgout().getWell().perfomancePartial.createPerfomanceView({
-            isVisibleForecastData: true,
-            selectedAttrGroupId: 'Rate'
+            isVisibleForecastData: false,
+            selectedAttrGroupId: data.SelectedAttrGroupId
             ////endYear: 2010,
             ////startYear: 2007
         });
