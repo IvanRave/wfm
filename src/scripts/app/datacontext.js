@@ -82,6 +82,9 @@
     function companyUrl(uqp) {
         return '{{conf.requrl}}/api/company/' + (uqp ? ('?' + $.param(uqp)) : '');
     }
+    function wellWidgoutUrl(wellId, widgetId) {
+        return '{{conf.requrl}}/api/wells/' + wellId + '/widgouts' + (widgetId ? ('/' + widgetId) : '');
+    }
 
     // TODO: move to apphelper.js
     var UrlParameter = (function () {
@@ -770,6 +773,16 @@
     // api/companyuser/
     datacontext.getCompanyUserList = function (uqp) {
         return ajaxRequest('GET', companyUserUrl(uqp));
+    };
+
+    // Widget layouts for well
+    datacontext.getWellWidgoutList = function (wellId) {
+        return ajaxRequest('GET', wellWidgoutUrl(wellId));
+    };
+
+    // Widget layout for well
+    datacontext.getWellWidgout = function (wellId, widgoutId) {
+        return ajaxRequest('GET', wellWidgoutUrl(wellId, widgoutId));
     };
 
     return datacontext;

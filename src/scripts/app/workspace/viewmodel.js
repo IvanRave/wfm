@@ -34,7 +34,7 @@
     // =====================================Wfm parameters begin==========================================================
     function getWfmParamSquadList() {
         datacontext.getWfmParamSquadList({ is_inclusive: true }).done(function (r) {
-            require(['app/models/WfmParamSquad'], function () {
+            require(['app/models/wfm-param-squad'], function () {
                 // WfmParamSquadList (convert data objects into array)
                 function importWfmParamSquadList(data) {
                     return $.map(data || [], function (item) {

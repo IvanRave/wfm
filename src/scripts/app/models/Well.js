@@ -6,11 +6,12 @@
     'bootstrap-modal.min',
     'app/app-helper',
     'app/models/well-partials/perfomance-partial',
+    'app/models/widgouts/well-widgout',
     'app/models/WellFile',
     'app/models/ColumnAttribute',
     'app/models/WellHistory',
     'app/models/TestScope'
-], function ($, ko, datacontext, fileHelper, bootstrapModal, appHelper, wellPerfomancePartial) {
+], function ($, ko, datacontext, fileHelper, bootstrapModal, appHelper, wellPerfomancePartial, WellWidgout) {
     'use strict';
 
     // WellFiles (convert data objects into array)
@@ -22,8 +23,13 @@
     // 8. WellHistory (convert data objects into array)
     function importWellHistoryDto(data, parent) { return $.map(data || [], function (item) { return datacontext.createWellHistory(item, parent); }); }
 
-    // 15. Test scope
+    // Test scope
     function importTestScopeDtoList(data, wellItem) { return $.map(data || [], function (item) { return datacontext.createTestScope(item, wellItem); }); }
+
+    // Well widget layout list
+    function importWellWidgoutList(data, wellId) {
+        return $.map(data || [], function (item) { return new WellWidgout(item, wellId); });
+    }
 
     var wellPropertyList = [
         { id: 'Name', ttl: 'Name', tpe: 'SingleLine' },
@@ -1001,6 +1007,29 @@
             isVisibleForecastData: false
         });
 
+        // Well widget layouts
+        // Well widget layout -> widget block -> widget
+        self.wellWidgoutList = ko.observableArray();
+
+        self.selectedWellWidgout = ko.observable();
+
+        self.isLoadedWellWidgoutList = ko.observable(false);
+
+        self.getWellWidgoutList = function () {
+            if (!ko.unwrap(self.isLoadedWellWidgoutList)) {
+                datacontext.getWellWidgoutList(self.Id).done(function (response) {
+                    console.log('response');
+                    console.log(response);
+                    
+                    self.wellWidgoutList(importWellWidgoutList(response, self));
+                    self.isLoadedWellWidgoutList(true);
+
+                    console.log('wList');
+                    console.log(ko.unwrap(self.wellWidgoutList));
+                });
+            }
+        };
+
         // ============================= Dashboard ==============
         self.dashBoardLayout = [
             {
@@ -1101,6 +1130,7 @@
 
         // ============================================================ Change tab section =========================================================
         self.selectedSectionId.subscribe(function (sectionId) {
+            console.log(sectionId);
             switch (sectionId) {
                 case 'history': {
                     self.getHistoryList();
@@ -1220,5 +1250,7 @@
         };
     }
 
-    datacontext.createWell = function (data, parent) { return new Well(data, parent); };
+    datacontext.createWell = function (data, parent) {
+        return new Well(data, parent);
+    };
 });

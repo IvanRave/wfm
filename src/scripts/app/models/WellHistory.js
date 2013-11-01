@@ -1,4 +1,4 @@
-﻿define(['jquery', 'ko', 'app/datacontext', 'bootstrap-modal.min', 'moment', 'app/app-helper', 'app/models/WellHistoryFile', 'app/models/WfmImage'], function ($, ko, datacontext, bootstrapModal, moment, appHelper) {
+﻿define(['jquery', 'ko', 'app/datacontext', 'bootstrap-modal.min', 'moment', 'app/app-helper', 'app/models/WellHistoryFile', 'app/models/wfm-image'], function ($, ko, datacontext, bootstrapModal, moment, appHelper) {
     'use strict';
 
     // convert data objects into array

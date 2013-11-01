@@ -53,6 +53,6 @@ layout: false
         <div data-bind="template: { name: selectedSectionId, templateUrl: '/wfm-template/workspace/well/' }"></div>
     </div>
 	<div data-bind="ifnot: selectedSectionId">
-		<div data-bind="template: { name: 'widget-scope', templateUrl: '/wfm-template/workspace/well/' }"></div>
+		<div data-bind="template: { name: 'widget-scope', templateUrl: '/wfm-template/workspace/well/', afterRender: getWellWidgoutList }"></div>
 	</div>
 </div>

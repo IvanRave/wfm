@@ -1,4 +1,4 @@
-﻿define(['ko', 'app/datacontext', 'app/models/WfmParameter'], function (ko, datacontext) {
+﻿define(['ko', 'app/datacontext', 'app/models/wfm-parameter'], function (ko, datacontext) {
     'use strict';
 
     // Every well group has own array of wfm parameters
