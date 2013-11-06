@@ -1,35 +1,38 @@
 ﻿---
-page_title: 'Workspace'
-head_styles:
-  - /css/jquery.fileupload-ui.css
-  - /css/bootstrap-wysihtml5.css
-  - /css/bootstrap/datepicker.min.css
-  - /css/jquery.Jcrop.min.css
+pageTitle: <%= _.capitalize(lang.workspace) %>
+rootUrl: '../../'
+rqrId: 'workspace-company'
+headStyles:
+  - <%= rootUrl %>css/jquery.fileupload-ui.css
+  - <%= rootUrl %>css/bootstrap-datepicker.css
+  - <%= rootUrl %>css/jquery.jcrop.css
 ---
 
-<div data-bind="if: isStructureLoaded() === false" class="text-center"><span>{{lang.loading}}...</span></div>
+<div data-bind="ifnot: isStructureLoaded" class="text-center">
+    <span>{{lang.loading}}...</span>
+</div>
 
 <div style="display:none" data-bind="visible: isStructureLoaded">
     <div class="clearfix">
         <div class="col-md-2" style="padding-left: 0">
-            <div data-bind="template: { name: 'menu', templateUrl: '/wfm-template/workspace/'}"></div>
+            <div data-bind="template: { name: 'menu', templateUrl: '{{rootUrl}}wfm-template/workspace/'}"></div>
         </div>
         <div class="col-md-10">
             <div class="workspace-container">
                 <div data-bind="with: selectedWellRegion">
                     <div data-bind="ifnot: selectedWellField">
-                        <div data-bind="template: { name: 'well-region', templateUrl: '/wfm-template/workspace/'}"></div>
+                        <div data-bind="template: { name: 'well-region', templateUrl: '{{rootUrl}}wfm-template/workspace/'}"></div>
                     </div>
                     <div data-bind="with: selectedWellField">
                         <div data-bind="ifnot: selectedWellGroup">
-                            <div data-bind="template: { name: 'well-field', templateUrl: '/wfm-template/workspace/', afterRender: afterRenderPartial}"></div>
+                            <div data-bind="template: { name: 'well-field', templateUrl: '{{rootUrl}}wfm-template/workspace/', afterRender: afterRenderPartial}"></div>
                         </div>
                         <div data-bind="template: {if: selectedWellGroup, data: selectedWellGroup}">
                             <div data-bind="ifnot: selectedWell">
-                                <div data-bind="template: { name: 'well-group', templateUrl: '/wfm-template/workspace/', afterRender: afterRenderPartial}"></div>
+                                <div data-bind="template: { name: 'well-group', templateUrl: '{{rootUrl}}wfm-template/workspace/', afterRender: afterRenderPartial}"></div>
                             </div>
                             <div data-bind="template: {if: selectedWell, data: selectedWell }">
-                                <div data-bind="template: { name: 'well', templateUrl: '/wfm-template/workspace/'}"></div>
+                                <div data-bind="template: { name: 'well', templateUrl: '{{rootUrl}}wfm-template/workspace/'}"></div>
                             </div>
                         </div>
                     </div>

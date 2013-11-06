@@ -1,8 +1,10 @@
 ﻿---
-page_title: <%= _.capitalize(lang.emailConfirmation) %>
+pageTitle: '<%= _.capitalize(lang.emailConfirmation) %>'
+rqrId: 'account-register-confirmation'
+rootUrl: '../../../'
 ---
 <div class="wfm-content-pad">
-    <h4 class="text-center">{{page_title}}</h4>
-	<div class="text-center hide" id="confirmation-success">{{lang.success}} - <a href="{{syst.logonUrl}}{{conf.defPage}}">{{lang.signIn}}</a></div>
+    <h4 class="text-center">{{pageTitle}}</h4>
+	<div class="text-center hide" id="confirmation-success">{{lang.success}} - <a href="{{rootUrl}}{{syst.logonUrl}}{{conf.defPage}}">{{lang.signIn}}</a></div>
 	<div class="text-center hide" id="confirmation-failure">{{lang.emailConfirmationIsUnsuccessful}}</div>
 </div>

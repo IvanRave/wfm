@@ -1,10 +1,12 @@
 ﻿---
-page_title: <%= _.capitalize(lang.registration) %>
+pageTitle: '<%= _.capitalize(lang.registration) %>'
+rqrId: 'account-registration'
+rootUrl: '../../'
 ---
 <div class="wfm-content-pad hide" id="register-project-wrap">
     <div class="clearfix" ng-controller="RegisterCtrl">
         <div class="col-md-6 col-md-offset-1">
-            <h3>{{page_title}}:</h3>
+            <h3>{{pageTitle}}:</h3>
             <form class="form-horizontal" name="accountForm">
                 <div class="form-group" ng-class="{'has-error': accountForm.Email.$invalid}">
                     <label class="control-label col-sm-2">{{capitalizeFirst lang.email}}</label>
@@ -54,15 +56,15 @@ page_title: <%= _.capitalize(lang.registration) %>
 			<h3>{{capitalizeFirst lang.steps}}:</h3>
             <ul class="list-unstyled text-center">
                 <li class="well well-sm text-center">
-                    <div><img src="/img/orderedList1.png" /></div>
+                    <div class="step-1"></div>
                     <div>{{capitalizeFirst lang.emailConfirmation}}</div>
                 </li>
                 <li class="well well-sm text-center">
-                    <div><img src="/img/orderedList2.png" /></div>
+                    <div class="step-2"></div>
                     <div>{{capitalizeFirst lang.companyInfo}}</div>
                 </li>
                 <li class="well well-sm text-center">
-                    <div><img src="/img/orderedList3.png" /></div>
+                    <div class="step-3"></div>
                     <div>{{capitalizeFirst lang.toUse}} {{lang.wellFileManager}}</div>
                 </li>
             </ul>

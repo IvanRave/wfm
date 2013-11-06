@@ -32,6 +32,13 @@ footer {
     z-index: 1030;
 }
 
+    footer .footer-logo {
+        margin: 12px;
+        background: url(../img/logo-footer.png) no-repeat;
+        height: 24px;
+        width: 100px;
+    }
+
 @media (max-width: 992px) {
     /* for small screen no fixed footer */
     footer {
@@ -349,8 +356,8 @@ footer {
 
 @font-face {
     font-family: 'WfmIconFont';
-    src: url('fonts/wfmicons-regular.eot');
-    src: url('fonts/wfmicons-regular.eot?#iefix') format('embedded-opentype'),url('fonts/wfmicons-regular.woff') format('woff'), url('fonts/wfmicons-regular.ttf') format('truetype'), url('fonts/wfmicons-regular.svg#glyphicons_halflingsregular') format('svg');
+    src: url('../fonts/wfmicons-regular.eot');
+    src: url('../fonts/wfmicons-regular.eot?#iefix') format('embedded-opentype'),url('../fonts/wfmicons-regular.woff') format('woff'), url('../fonts/wfmicons-regular.ttf') format('truetype'), url('../fonts/wfmicons-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
 .wfm-icon-home-list > i {
@@ -557,3 +564,18 @@ footer {
     .pd-graph-wrap .pd-graph-grid {
         margin-right: 60px;
     }
+
+.step-1 {
+    background: url(../img/orderedList1.png) no-repeat center;
+    height: 30px;
+}
+
+.step-2 {
+    background: url(../img/orderedList2.png) no-repeat center;
+    height: 30px;
+}
+
+.step-3 {
+    background: url(../img/orderedList3.png) no-repeat center;
+    height: 30px;
+}

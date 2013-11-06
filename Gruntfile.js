@@ -10,7 +10,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('assemble');
     grunt.loadNpmTasks('grunt-requirejs');
 
-
     // By default = devSite
     var isProd = grunt.option('prod') ? true : false,
         isIpad = grunt.option('ipad') ? true : false,
@@ -37,6 +36,7 @@ module.exports = function (grunt) {
     grunt.config.init({
         // Metadata
         pkg: grunt.file.readJSON('package.json'),
+        src: 'src',
         // Use for <% template in JSON keys
         trgt: trgt,
         lang: lang,
@@ -46,9 +46,6 @@ module.exports = function (grunt) {
           '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
           ' Licensed <%= pkg.license %> */\n',
         uniqueString: '<%= pkg.version %>',
-        folder: {
-            src: 'src' // Source
-        },
         connect: {
             main: {
                 options: {
@@ -68,15 +65,13 @@ module.exports = function (grunt) {
             },
             app: {
                 options: {
-                    jshintrc: '<%= folder.src %>/scripts/app/.jshintrc'
+                    jshintrc: '<%= src %>/js/.jshintrc'
                 },
-                // all js files in js folder
-                ////src: ['<%= folder.src %>/scripts/app/**/*.js']
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '<%= folder.src %>/scripts/app/',
-                    src: ['**/*.js']
+                    cwd: '<%= src %>/js/',
+                    src: ['app/**/*.js', 'rqr-*.js']
                 }]
             }
         },
@@ -88,10 +83,10 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '<%= folder.src %>/',
+                    cwd: '<%= src %>/',
                     dest: '<%= trgt %>/',
-                    // Copy all files besides templates
-                    src: ['**/*', '!tpl/**/*', '!scripts/app/**/*']
+                    // Copy all files besides templates and app scripts (which assembled separately)
+                    src: ['**/*', '!tpl/**/*', '!js/app/**/*', '!js/rqr-*.js']
                 }]
             }
         },
@@ -100,7 +95,7 @@ module.exports = function (grunt) {
                 engine: 'handlebars',
                 // Main properties
                 // TODO: Change "en" to <%= lang %> parameters - it doesn't work yet for second time of using
-                data: ['<%= folder.src %>/tpl/data/syst.json', '<%= folder.src %>/tpl/data/lang/en/lang.json', 'package.json'],
+                data: ['<%= src %>/tpl/data/syst.json', '<%= src %>/tpl/data/lang/en/lang.json', 'package.json'],
                 // Build configuration properties
                 conf: {
                     // Request url (begin of the path)
@@ -111,17 +106,17 @@ module.exports = function (grunt) {
                     isProd: isProd,
                     isIpad: isIpad,
                     isMetro: isMetro,
-                    defPage: isMetro ? 'index.html' : ''
+                    defPage: isMetro ? 'index.html' : 'index.html'
                 }
             },
             html: {
                 options: {
-                    layout: '<%= folder.src %>/tpl/layouts/default.hbs',
-                    partials: ['<%= folder.src %>/tpl/partials/*.hbs']
+                    layout: '<%= src %>/tpl/layouts/default.hbs',
+                    partials: ['<%= src %>/tpl/partials/*.hbs']
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%= folder.src %>/tpl/pages/',
+                    cwd: '<%= src %>/tpl/pages/',
                     src: '**/*.hbs',
                     dest: '<%= trgt %>'
                 }]
@@ -141,19 +136,19 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%= folder.src %>/scripts/app/',
-                    src: '**/*.js',
-                    dest: '<%= trgt %>/scripts/app/'
+                    cwd: '<%= src %>/js/',
+                    src: ['app/**/*.js', 'rqr-*.js'],
+                    dest: '<%= trgt %>/js/'
                 }]
             }
         },
         requirejs: {
             workspace: {
                 options: {
-                    baseUrl: '<%= trgt %>/scripts/',
+                    baseUrl: '<%= trgt %>/js/',
                     name: 'app/workspace/project',
-                    out: '<%= trgt %>/scripts/app/workspace/project-bundle-<%= pkg.version %>.min.js',
-                    mainConfigFile: '<%= trgt %>/scripts/require-config.js',
+                    out: '<%= trgt %>/js/app/workspace/project-bundle-<%= pkg.version %>.min.js',
+                    mainConfigFile: '<%= trgt %>/js/require-config.js',
                     optimize: 'uglify2',
                     // http://requirejs.org/docs/optimization.html#sourcemaps
                     generateSourceMaps: true,
@@ -175,20 +170,20 @@ module.exports = function (grunt) {
                 options: {
                     spawn: false
                 },
-                files: ['<%= folder.src %>/scripts/app/**/*.js'],
+                files: ['<%= src %>/js/app/**/*.js', '<%= src %>/js/rqr-*.js'],
                 tasks: ['jshint:app']
             },
             copy_main: {
                 options: {
-                    cwd: '<%= folder.src %>/',
+                    cwd: '<%= src %>/',
                     spawn: false
                 },
-                files: ['**/*', '!tpl/**/*', '!scripts/app/**/*'],
+                files: ['**/*', '!tpl/**/*', '!js/app/**/*', '!js/rqr-*.js'],
                 tasks: ['copy:main']
             },
             // Update all template pages when change template data
             assemble_data: {
-                files: ['<%= folder.src %>/tpl/data/syst.json', '<%= folder.src %>/tpl/data/lang/en/lang.json', 'package.json'],
+                files: ['<%= src %>/tpl/data/syst.json', '<%= src %>/tpl/data/lang/en/lang.json', 'package.json'],
                 tasks: ['assemble:html', 'assemble:js']
             },
             assebmle_readme: {
@@ -196,17 +191,16 @@ module.exports = function (grunt) {
                 tasks: ['assemble:readme']
             },
             assemble_html: {
-                files: ['<%= folder.src %>/tpl/**/*.hbs'],
+                files: ['<%= src %>/tpl/**/*.hbs'],
                 tasks: ['assemble:html']
             },
             assemble_js: {
                 options: {
                     spawn: false
                 },
-                files: ['<%= folder.src %>/scripts/app/**/*.js'],
+                files: ['<%= src %>/js/app/**/*.js', '<%= src %>/js/rqr-*.js'],
                 tasks: ['assemble:js']
             }
-
 
             // livereload server: http://127.0.0.1:35729/livereload.js
             ////livereload: {
@@ -221,7 +215,7 @@ module.exports = function (grunt) {
     var tasks = [
       // 1. Check and test
      'jshint:gruntfile',
-      ////'jshint: app', // TODO: fix jshint errors
+     'jshint:app',
 
       // 2. Clean
      'clean:main',

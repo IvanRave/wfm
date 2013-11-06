@@ -1,5 +1,7 @@
 ﻿---
-page_title: <%= _.capitalize(lang.wellFileManager) %>
+pageTitle: <%= _.capitalize(lang.wellFileManager) %>
+rqrId: 'home'
+rootUrl: ''
 ---
 <div class="wfm-content-pad">
     <div class="row">
@@ -31,13 +33,13 @@ page_title: <%= _.capitalize(lang.wellFileManager) %>
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active">
-                            <img src="/img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
+                            <img src="{{rootUrl}}img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
                         </div>
                         <div class="item">
-                            <img src="/img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
+                            <img src="{{rootUrl}}img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
                         </div>
                         <div class="item">
-                            <img src="/img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
+                            <img src="{{rootUrl}}img/carousel-wfm-empty.jpg" alt="" class="img-responsive">
                         </div>
                     </div>
                     <!-- Controls -->
@@ -52,17 +54,17 @@ page_title: <%= _.capitalize(lang.wellFileManager) %>
             <div class="row" style="margin-top:4px">
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logonUrl}}{{conf.defPage}}">{{capitalizeFirst lang.signIn}}</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{rootUrl}}{{syst.logonUrl}}{{conf.defPage}}">{{capitalizeFirst lang.signIn}}</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.registerUrl}}{{conf.defPage}}">{{capitalizeFirst lang.toRegister}}</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{rootUrl}}{{syst.registerUrl}}{{conf.defPage}}">{{capitalizeFirst lang.toRegister}}</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p>
-                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.logonUrl}}{{conf.defPage}}">{{capitalizeFirst lang.demo}} {{lang.wfm}}</a>
+                        <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{rootUrl}}{{syst.logonUrl}}{{conf.defPage}}">{{capitalizeFirst lang.demo}} {{lang.wfm}}</a>
                     </p>
                 </div>
             </div>

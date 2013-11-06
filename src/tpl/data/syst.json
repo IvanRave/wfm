@@ -1,7 +1,9 @@
 ﻿{
   "cookieIsAuth": "is_auth",
-  "logonUrl": "/account/logon/",
-  "logoffUrl": "/account/logoff/",
-  "registerUrl": "/account/register/",
-  "registerConfirmationUrl": "/account/register/confirmation/"
+  "logonUrl": "account/logon/",
+  "logoffUrl": "account/logoff/",
+  "registerUrl": "account/register/",
+  "registerConfirmationUrl": "account/register/confirmation/",
+  "companyUrl": "company/",
+  "aboutUrl": "about/"
 }

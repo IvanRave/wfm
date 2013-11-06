@@ -1,7 +1,9 @@
 ﻿---
-page_title: '<%= _.capitalize(lang.companyList) %>'
-head_styles:
-  - /css/jquery.fileupload-ui.css
+pageTitle: '<%= _.capitalize(lang.companyList) %>'
+rqrId: 'company'
+rootUrl: '../'
+headStyles:
+  - <%= rootUrl %>css/jquery.fileupload-ui.css
 ---
 <div class="wfm-content-pad" id="cabinet-project-wrap">
     <div ng-view></div>
