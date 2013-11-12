@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/datacontext', 'bootstrap-modal.min',
+﻿define(['jquery', 'knockout', 'app/datacontext', 'bootstrap-modal',
     'app/workspace/viewmodel',
     'app/models/Well', 'app/models/WellGroupWfmParameter'
 ], function ($, ko, datacontext, bootstrapModal) {

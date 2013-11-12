@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/datacontext', 'bootstrap-modal.min', 'moment', 'app/app-helper', 'app/models/WellHistoryFile', 'app/models/wfm-image'],
+﻿define(['jquery', 'knockout', 'app/datacontext', 'bootstrap-modal', 'moment', 'app/app-helper', 'app/models/WellHistoryFile', 'app/models/wfm-image'],
     function ($, ko, datacontext, bootstrapModal, appMoment, appHelper) {
         'use strict';
 

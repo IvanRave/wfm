@@ -8,30 +8,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('assemble');
-    grunt.loadNpmTasks('grunt-requirejs');
 
     // By default = devSite
     var isProd = grunt.option('prod') ? true : false,
-        isIpad = grunt.option('ipad') ? true : false,
-		isMetro = grunt.option('metro') ? true : false,
         // Request url
-        requrl = grunt.option('requrl') || 'http://wfm.azurewebsites.net',
+        requrl = grunt.option('requrl') || 'http://wfm-client.azurewebsites.net',
         // Build language: en, ru, es etc.
         lang = grunt.option('lang') || 'en';
 
-    // Target - destination folder plus config, for example: 
-    // dev (development)
-    // dst (main distribution)
-    // devipad (dev for IPad)
-    // dstipad (distrib for IPad)
     var trgt = isProd ? 'dst' : 'dev';
-    if (isIpad) {
-        trgt += 'ipad';
-    }
-    else if (isMetro) {
-        trgt += 'metro';
-    }
-
+        
     // Project configuration
     grunt.config.init({
         // Metadata
@@ -40,6 +26,7 @@ module.exports = function (grunt) {
         // Use for <% template in JSON keys
         trgt: trgt,
         lang: lang,
+        bowerFolder: 'bower_components',
         // Banner for scripts comments: author, licence etc.
         banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -51,7 +38,7 @@ module.exports = function (grunt) {
                 options: {
                     open: true, // Or need url string
                     keepalive: true,
-                    port: 12345,
+                    port: 43212,
                     base: '<%= trgt %>'
                 }
             }
@@ -88,6 +75,37 @@ module.exports = function (grunt) {
                     // Copy all files besides templates and app scripts (which assembled separately)
                     src: ['**/*', '!tpl/**/*', '!js/app/**/*', '!js/rqr-*.js']
                 }]
+            },
+            bower_js: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    flatten: true,
+                    cwd: '<%= bowerFolder %>/',
+                    dest: '<%= trgt %>/js/',
+                    src: ['jquery/jquery.js', 'moment/moment.js', 'angular/angular.js', 
+                        'bootstrap/dist/js/bootstrap.js', 'requirejs/require.js']
+                }]
+            },
+            bower_css: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    flatten: true,
+                    cwd: '<%= bowerFolder %>/',
+                    dest: '<%= trgt %>/css/',
+                    src: ['bootstrap/dist/css/bootstrap.css', 'bootstrap/dist/css/bootstrap-theme.css']
+                }]
+            },
+            bower_fonts: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                        flatten: true,
+                    cwd: '<%= bowerFolder %>/',
+                    dest: '<%= trgt %>/fonts/',
+                    src: ['bootstrap/dist/fonts/*']
+                }]
             }
         },
         assemble: {
@@ -104,9 +122,7 @@ module.exports = function (grunt) {
                     // Example {{requrl}}/api/values
                     requrl: requrl,
                     isProd: isProd,
-                    isIpad: isIpad,
-                    isMetro: isMetro,
-                    defPage: isMetro ? 'index.html' : 'index.html'
+                    defPage: 'index.html'
                 }
             },
             html: {
@@ -219,9 +235,12 @@ module.exports = function (grunt) {
 
       // 2. Clean
      'clean:main',
-
+     
       // 3. Copy plain and assembled files
      'copy:main', // Copy main files
+     'copy:bower_js',
+     'copy:bower_css',
+     'copy:bower_fonts',
      'assemble:js', // After copy all files to destination - replace all {{value}} - rewrite the same files
      'assemble:html', // Copy other files: Assemble and copy templates files
      'assemble:readme' // Use main data to build readme for project description

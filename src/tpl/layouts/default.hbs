@@ -8,22 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{rootUrl}}css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="{{rootUrl}}css/bootstrap-theme.css" rel="stylesheet" media="screen">
-    <link href="{{rootUrl}}css/lightbox.css" rel="stylesheet" />
     <link href="{{rootUrl}}css/main.css" rel="stylesheet" />
     {{#headStyles }}
     <link href="{{.}}" rel="stylesheet" />
     {{/headStyles}}
-    {{#headScripts }}
-    <script src="{{.}}"></script>
-    {{/headScripts}}
 </head>
 <body>
     <!--[if lt IE 9]><p class="chromeframe">You are using an <strong>outdated</strong> browser. Please upgrade your browser.</p><![endif]-->
     <div class="spinner"></div>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Navigation</span>
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Nav</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -37,18 +33,20 @@
                 <li><a href="{{rootUrl}}about/{{conf.defPage}}">{{capitalizeFirst lang.aboutWfm}}</a></li>
                 <li><a href="{{rootUrl}}contacts/{{conf.defPage}}">{{capitalizeFirst lang.contacts}}</a></li>
             </ul>
-            {{> auth-logon-block }}
-            {{> auth-logoff-block }}
+			<ul class="nav navbar-nav pull-right">
+				<li><a href="{{syst.cabinetUrl}}">Cabinet</a></li>
+			</ul>
         </div>
     </nav>
     <div class="wfm-content-wrap">
         <div>
-            {{> modal-standard }}
             {{> body }}
         </div>
     </div>
     <footer class="navbar-fixed-bottom navbar-inverse">
-        <div class="footer-logo"></div>
+        <div class="footer-logo-wrap">
+            <div class="footer-logo"></div>
+        </div>
     </footer>
     <!-- Load main script file for page or default (with auth logic only) -->
     <script data-main="{{rootUrl}}js/rqr-{{default rqrId 'default'}}" src="{{rootUrl}}js/require.js"></script>

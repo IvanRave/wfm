@@ -144,10 +144,12 @@
             .fail(function (jqXHR, textStatus, errorThrown) {
                 // TODO: include notification system: https://github.com/Nijikokun/bootstrap-notify
                 console.log(jqXHR);
+                console.log('WFM jqXHR: ' + JSON.stringify(jqXHR));
                 switch (jqXHR.status) {
                     case 401:
-                        window.location.href = '{{syst.logonUrl}}{{conf.defPage}}';
-                        break;
+                        ////window.location.href = '{{syst.logonUrl}}{{conf.defPage}}';
+                        alert('Access is denied. Please login with right credentials.');
+                        throw new Error('Access is denied');
                     case 404:
                         alert('Data is not found');
                         break;

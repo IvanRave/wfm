@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'app/datacontext', 'bootstrap-modal.min', 'app/app-helper', 'moment', 'app/models/ColumnAttribute'
+﻿define(['jquery', 'knockout', 'app/datacontext', 'bootstrap-modal', 'app/app-helper', 'moment', 'app/models/ColumnAttribute'
 ], function ($, ko, datacontext, bootstrapModal, appHelper, appMoment) {
     'use strict';
 

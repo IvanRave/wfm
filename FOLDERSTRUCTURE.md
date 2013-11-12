@@ -1,6 +1,0 @@
-﻿- src [website source files]
-	+ tpl [site templates: generate html files for distrib and development, not used in dst/dev version]
-        - data [data in json format to build templates]
-		- layouts [stores layouts for template, use Handlebars syntax and Grunt-assemble package]
-		- pages [define html body for templates and other page-specific data]
-		- partials [define html partials for building templates]

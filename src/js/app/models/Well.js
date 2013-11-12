@@ -3,7 +3,7 @@
     'knockout',
     'app/datacontext',
     'app/file-helper',
-    'bootstrap-modal.min',
+    'bootstrap-modal',
     'app/app-helper',
     'moment',
     'app/models/well-partials/perfomance-partial',

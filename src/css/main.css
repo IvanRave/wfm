@@ -32,12 +32,15 @@ footer {
     z-index: 1030;
 }
 
-    footer .footer-logo {
-        margin: 12px;
-        background: url(../img/logo-footer.png) no-repeat;
-        height: 24px;
-        width: 100px;
+    footer .footer-logo-wrap {
+        padding: 12px;
     }
+
+        footer .footer-logo-wrap .footer-logo {
+            background: url(../img/logo-footer.png) no-repeat;
+            height: 24px;
+            width: 100px;
+        }
 
 @media (max-width: 992px) {
     /* for small screen no fixed footer */

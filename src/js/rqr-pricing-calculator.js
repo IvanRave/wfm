@@ -1,8 +1,5 @@
 ﻿require(['require-config'], function () {
-    'use strict';
+    require(['jquery', 'angular', 'jquery.bootstrap'], function () {
 
-    // Show or hide login info
-    require(['app/auth-logic']);
-
-    require(['jquery', 'jquery.bootstrap', 'app/calculator/project']);
+    });
 });

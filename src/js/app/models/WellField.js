@@ -2,7 +2,7 @@
     'knockout',
     'app/datacontext',
     'app/file-helper',
-    'bootstrap-modal.min',
+    'bootstrap-modal',
     'app/models/WellGroup',
     'app/models/WellFieldMap'
 ], function ($, ko, datacontext, fileHelper, bootstrapModal) {
