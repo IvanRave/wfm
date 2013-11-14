@@ -113,7 +113,7 @@ module.exports = function (grunt) {
                 engine: 'handlebars',
                 // Main properties
                 // TODO: Change "en" to <%= lang %> parameters - it doesn't work yet for second time of using
-                data: ['<%= src %>/tpl/data/syst.json', '<%= src %>/tpl/data/lang/en/lang.json', 'package.json'],
+                data: ['<%= src %>/tpl/data/syst.json', '<%= bowerFolder %>/wfm-dict/lang/en/lang.json', 'package.json'],
                 // Build configuration properties
                 conf: {
                     // Request url (begin of the path)
@@ -162,8 +162,8 @@ module.exports = function (grunt) {
             workspace: {
                 options: {
                     baseUrl: '<%= trgt %>/js/',
-                    name: 'app/workspace/project',
-                    out: '<%= trgt %>/js/app/workspace/project-bundle-<%= pkg.version %>.min.js',
+                    name: 'main',
+                    out: '<%= trgt %>/js/main-bundle-<%= pkg.version %>.min.js',
                     mainConfigFile: '<%= trgt %>/js/require-config.js',
                     optimize: 'uglify2',
                     // http://requirejs.org/docs/optimization.html#sourcemaps
@@ -199,7 +199,7 @@ module.exports = function (grunt) {
             },
             // Update all template pages when change template data
             assemble_data: {
-                files: ['<%= src %>/tpl/data/syst.json', '<%= src %>/tpl/data/lang/en/lang.json', 'package.json'],
+                files: ['<%= src %>/tpl/data/syst.json', '<%= bowerFolder %>/wfm-dict/lang/en/lang.json', 'package.json'],
                 tasks: ['assemble:html', 'assemble:js']
             },
             assebmle_readme: {
