@@ -8,6 +8,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('assemble');
+    grunt.loadNpmTasks('grunt-bump');
 
     // By default = devSite
     var isProd = grunt.option('prod') ? true : false,
@@ -175,6 +176,13 @@ module.exports = function (grunt) {
                     exclude: ['jquery']
                 }
             }
+        },
+        bump: {
+          options: {
+            files: ['package.json', 'bower.json'],
+            updateConfigs: ['pkg'],
+            commit: false
+          }
         },
         // For development: run tasks when change files
         watch: {
