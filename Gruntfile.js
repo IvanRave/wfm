@@ -187,7 +187,8 @@ module.exports = function (grunt) {
             createTag: true,
             tagName: 'v%VERSION%',
             tagMessage: 'Version %VERSION%',
-            push: false
+            push: true,
+            pushTo: 'origin'
           }
         },
         // For development: run tasks when change files
