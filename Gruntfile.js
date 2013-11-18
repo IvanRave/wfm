@@ -15,8 +15,9 @@ module.exports = function (grunt) {
         // Request url
         requrl = grunt.option('requrl') || 'http://wfm-client.azurewebsites.net',
         // Build language: en, ru, es etc.
-        lang = grunt.option('lang') || 'en';
-
+        lang = grunt.option('lang') || 'en',
+        cmtmsg = grunt.option('cmtmsg') || 'fix(project): optimize';
+        
     var trgt = isProd ? 'dst' : 'dev';
         
     // Project configuration
@@ -105,7 +106,7 @@ module.exports = function (grunt) {
                         flatten: true,
                     cwd: '<%= bowerFolder %>/',
                     dest: '<%= trgt %>/fonts/',
-                    src: ['bootstrap/dist/fonts/*']
+                    src: ['bootstrap/dist/fonts/*', 'wfm-fonts/fonts/*']
                 }]
             }
         },
@@ -182,7 +183,7 @@ module.exports = function (grunt) {
             files: ['package.json', 'bower.json'],
             updateConfigs: ['pkg'],
             commit: true,
-            commitMessage: 'Release v%VERSION%',
+            commitMessage: cmtmsg,
             commitFiles: ['-a'],
             createTag: true,
             tagName: 'v%VERSION%',

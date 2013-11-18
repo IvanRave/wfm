@@ -1,6 +1,6 @@
 {
   "name": "wfm",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "homepage": "https://github.com/IvanRave/wfm",
   "description": "Well file manager",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "angular": "~1.2.0",
     "moment": "~2.4.0",
     "requirejs": "~2.1.9",
-    "wfm-dict": "https://github.com/IvanRave/wfm-dict.git"
+    "wfm-dict": "https://github.com/IvanRave/wfm-dict.git",
+    "wfm-fonts": "https://github.com/IvanRave/wfm-fonts.git"
   }
 }
