@@ -124,13 +124,16 @@ module.exports = function (grunt) {
                     // Example {{requrl}}/api/values
                     requrl: requrl,
                     isProd: isProd,
-                    defPage: 'index.html'
+                    defPage: '' //index.html - for w8 app or other mobile
                 }
             },
             html: {
                 options: {
                     layout: '<%= src %>/tpl/layouts/default.hbs',
-                    partials: ['<%= src %>/tpl/partials/*.hbs']
+                    partials: ['<%= src %>/tpl/partials/*.hbs'],
+                    marked: {
+                        gfm: true
+                    }
                 },
                 files: [{
                     expand: true,
