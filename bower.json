@@ -12,12 +12,9 @@
     "tests"
   ],
   "devDependencies": {
-    "jquery": "~2.0.3",
-    "bootstrap": "~3.0.2",
-    "angular": "~1.2.0",
-    "moment": "~2.4.0",
-    "requirejs": "~2.1.9",
     "wfm-dict": "https://github.com/IvanRave/wfm-dict.git",
-    "wfm-fonts": "https://github.com/IvanRave/wfm-fonts.git"
+    "wfm-fonts": "https://github.com/IvanRave/wfm-fonts.git",
+    "jquery": "~2.1.0",
+    "bootstrap": "~3.1.1"
   }
 }

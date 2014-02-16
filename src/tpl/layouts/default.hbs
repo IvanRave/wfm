@@ -15,7 +15,6 @@
 </head>
 <body>
     <!--[if lt IE 9]><p class="chromeframe">You are using an <strong>outdated</strong> browser. Please upgrade your browser.</p><![endif]-->
-    <div class="spinner"></div>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -46,7 +45,8 @@
             <div class="footer-logo"></div>
         </div>
     </footer>
-    <!-- Load main script file for page or default (with auth logic only) -->
-    <script data-main="{{rootUrl}}js/rqr-{{default rqrId 'default'}}" src="{{rootUrl}}js/require.js"></script>
+    {{#footerScripts}}
+    <script src="{{.}}"></script>
+    {{/footerScripts}}
 </body>
 </html>

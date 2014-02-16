@@ -1,13 +1,21 @@
 ﻿---
 pageTitle: <%= _.capitalize(lang.wellFileManager) %>
-rqrId: 'home'
 rootUrl: ''
+footerScripts:
+  - <%= rootUrl %>js/jquery.js
+  - <%= rootUrl %>js/bootstrap.js
+  - <%= rootUrl %>js/pages/index.js
 ---
 <div class="wfm-content-pad">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="clearfix">
                 <h3 class="pull-left">{{capitalizeFirst lang.wellFileManager}}</h3>
+                <h4 class="pull-left min-left-margin">
+                  <a class="btn btn-lg btn-inverse" href="{{syst.cabinetUrl}}">
+                    Go to the cabinet <i class="glyphicon glyphicon-log-in"></i>
+                  </a>
+                </h4>
                 <h3 class="pull-right wfm-icon-home-list">
                     <i title="Well summary" class="wfmicon wfmicon-summary"></i>
                     <i title="Well sketch and volume" class="wfmicon wfmicon-sketch"></i>
@@ -51,7 +59,7 @@ rootUrl: ''
                     </a>
                 </div>
             </div>
-            <div class="row" style="margin-top:4px">
+            <!-- <div class="row" style="margin-top:4px">
                 <div class="col-md-4">
                     <p>
                         <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.cabinetUrl}}">{{capitalizeFirst lang.signIn}}</a>
@@ -67,7 +75,7 @@ rootUrl: ''
                         <a class="btn btn-primary btn-lg btn-block btn-tile" href="{{syst.cabinetUrl}}">{{capitalizeFirst lang.demo}} {{lang.wfm}}</a>
                     </p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

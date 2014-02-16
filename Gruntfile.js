@@ -12,8 +12,6 @@ module.exports = function (grunt) {
 
     // By default = devSite
     var isProd = grunt.option('prod') ? true : false,
-        // Request url
-        requrl = grunt.option('requrl') || 'http://wfm-client.azurewebsites.net',
         // Build language: en, ru, es etc.
         lang = grunt.option('lang') || 'en',
         cmtmsg = grunt.option('cmtmsg') || 'fix(project): optimize';
@@ -52,7 +50,7 @@ module.exports = function (grunt) {
                 },
                 src: 'Gruntfile.js'
             },
-            app: {
+            js: {
                 options: {
                     jshintrc: '<%= src %>/js/.jshintrc'
                 },
@@ -60,7 +58,7 @@ module.exports = function (grunt) {
                     expand: true,
                     dot: true,
                     cwd: '<%= src %>/js/',
-                    src: ['app/**/*.js', 'rqr-*.js']
+                    src: ['**/*.js']
                 }]
             }
         },
@@ -74,8 +72,8 @@ module.exports = function (grunt) {
                     dot: true,
                     cwd: '<%= src %>/',
                     dest: '<%= trgt %>/',
-                    // Copy all files besides templates and app scripts (which assembled separately)
-                    src: ['**/*', '!tpl/**/*', '!js/app/**/*', '!js/rqr-*.js']
+                    // Copy all files besides templates and scripts (which assembled separately)
+                    src: ['**/*', '!tpl/**/*', '!js/**/*']
                 }]
             },
             bower_js: {
@@ -85,8 +83,8 @@ module.exports = function (grunt) {
                     flatten: true,
                     cwd: '<%= bowerFolder %>/',
                     dest: '<%= trgt %>/js/',
-                    src: ['jquery/jquery.js', 'moment/moment.js', 'angular/angular.js', 
-                        'bootstrap/dist/js/bootstrap.js', 'requirejs/require.js']
+                    src: ['jquery/dist/jquery.js', 'bootstrap/dist/js/bootstrap.js']
+                    // 'moment/moment.js', 'angular/angular.js'
                 }]
             },
             bower_css: {
@@ -118,12 +116,6 @@ module.exports = function (grunt) {
                 data: ['<%= src %>/tpl/data/syst.json', '<%= bowerFolder %>/wfm-dict/lang/en/lang.json', 'package.json'],
                 // Build configuration properties
                 conf: {
-                    // Request url (begin of the path)
-                    // if exists - other domain (CORS requests - for local testing and side programs)
-                    // if empty - the same domain (simple requests)
-                    // Example {{requrl}}/api/values
-                    requrl: requrl,
-                    isProd: isProd,
                     defPage: '' //index.html - for w8 app or other mobile
                 }
             },
@@ -142,15 +134,7 @@ module.exports = function (grunt) {
                     dest: '<%= trgt %>'
                 }]
             },
-            readme: {
-                options: {
-                    ext: '.md'
-                },
-                files: {
-                    './README': 'README.md.hbs'
-                }
-            },
-            // Assemble js files after copy in dest directory
+            // Assemble js files
             js: {
                 options: {
                     ext: '.js'
@@ -158,27 +142,9 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= src %>/js/',
-                    src: ['app/**/*.js', 'rqr-*.js'],
+                    src: ['**/*.js'],
                     dest: '<%= trgt %>/js/'
                 }]
-            }
-        },
-        requirejs: {
-            workspace: {
-                options: {
-                    baseUrl: '<%= trgt %>/js/',
-                    name: 'main',
-                    out: '<%= trgt %>/js/main-bundle-<%= pkg.version %>.min.js',
-                    mainConfigFile: '<%= trgt %>/js/require-config.js',
-                    optimize: 'uglify2',
-                    // http://requirejs.org/docs/optimization.html#sourcemaps
-                    generateSourceMaps: true,
-                    preserveLicenseComments: false,
-                    ////useSourceUrl: true,
-                    //  wrap: true, // wrap in closure
-                    // jQuery automatically excluded if it's loaded from CDN
-                    exclude: ['jquery']
-                }
             }
         },
         bump: {
@@ -201,29 +167,25 @@ module.exports = function (grunt) {
                 files: ['<%= jshint.gruntfile.src %>'],
                 tasks: ['jshint:gruntfile']
             },
-            jshint_app: {
+            jshint_js: {
                 options: {
                     spawn: false
                 },
-                files: ['<%= src %>/js/app/**/*.js', '<%= src %>/js/rqr-*.js'],
-                tasks: ['jshint:app']
+                files: ['<%= src %>/js/**/*.js'],
+                tasks: ['jshint:js']
             },
             copy_main: {
                 options: {
                     cwd: '<%= src %>/',
                     spawn: false
                 },
-                files: ['**/*', '!tpl/**/*', '!js/app/**/*', '!js/rqr-*.js'],
+                files: ['**/*', '!tpl/**/*', '!js/**/*'],
                 tasks: ['copy:main']
             },
             // Update all template pages when change template data
             assemble_data: {
                 files: ['<%= src %>/tpl/data/syst.json', '<%= bowerFolder %>/wfm-dict/lang/en/lang.json', 'package.json'],
                 tasks: ['assemble:html', 'assemble:js']
-            },
-            assebmle_readme: {
-                files: ['README.md.hbs', 'package.json'],
-                tasks: ['assemble:readme']
             },
             assemble_html: {
                 files: ['<%= src %>/tpl/**/*.hbs'],
@@ -233,7 +195,7 @@ module.exports = function (grunt) {
                 options: {
                     spawn: false
                 },
-                files: ['<%= src %>/js/app/**/*.js', '<%= src %>/js/rqr-*.js'],
+                files: ['<%= src %>/js/**/*.js'],
                 tasks: ['assemble:js']
             }
 
@@ -250,7 +212,7 @@ module.exports = function (grunt) {
     var tasks = [
       // 1. Check and test
      'jshint:gruntfile',
-     'jshint:app',
+     'jshint:js',
 
       // 2. Clean
      'clean:main',
@@ -261,15 +223,10 @@ module.exports = function (grunt) {
      'copy:bower_css',
      'copy:bower_fonts',
      'assemble:js', // After copy all files to destination - replace all {{value}} - rewrite the same files
-     'assemble:html', // Copy other files: Assemble and copy templates files
-     'assemble:readme' // Use main data to build readme for project description
+     'assemble:html' // Copy other files: Assemble and copy templates files
     ];
 
-    // 4. Bundle and minify for production
-    if (isProd) {
-        // Bundle with r.js app/workspace/project.js
-        tasks.push('requirejs:workspace');
-    }
+    // TODO: Bundle and minify for production
 
     grunt.registerTask('default', tasks);
 
@@ -293,8 +250,8 @@ module.exports = function (grunt) {
         else if (targetEvent === 'assemble_js') {
             changeFileSrc(['assemble', 'js', 'files'], filepath);
         }
-        else if (targetEvent === 'jshint_app'){
-            changeFileSrc(['jshint', 'app', 'files'], filepath);
+        else if (targetEvent === 'jshint_js'){
+            changeFileSrc(['jshint', 'js', 'files'], filepath);
         }
         ////grunt.log.writeln(targetEvent + ': ' + filepath + ' has ' + action);
     });
