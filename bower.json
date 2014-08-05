@@ -14,7 +14,7 @@
   "devDependencies": {
     "wfm-dict": "https://github.com/IvanRave/wfm-dict.git",
     "wfm-fonts": "https://github.com/IvanRave/wfm-fonts.git",
-    "jquery": "~2.1.0",
-    "bootstrap": "~3.1.1"
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.2.0"
   }
 }
