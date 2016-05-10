@@ -9,20 +9,21 @@ Well file manager (WFM)
 ![WFMServicesStructure] (https://drive.google.com/uc?export=view&id=0B9c2LY35SH-cYk9POHE3UTM2Vjg "WFM services structure")
 
 ### WFM services
-* __WFM client__ https://ivanrave.github.io/wfm-client/
-protected cabinet: manage companies, wells etc.
-* __WFM info__ https://wfm.azurewebsites.net/
+* __WFM info__
 public site with info about WFM: pricing, docs, contacts etc.
-* __WFM admin__ http://wfm-admin.azurewebsites.net/ protected service for database administration
+* __WFM client__ https://github.com/IvanRave/wfm-client
+protected cabinet: manage companies, wells etc.
+* __WFM admin__ https://github.com/IvanRave/wfm-admin
+protected service for database administration
 (will be moved to Intranet access to protect requests)
-* __WFM mobile client__ https://build.phonegap.com/apps/628274/ 
+* __WFM mobile client__
 mobile application created from WFM client using Phonegap
-* __WFM API__ https://wfm-client.azurewebsites.net/api/
+* __WFM API__
 methods to manage WFM data. Methods are secured and required authorization. 
 After getting auth token (after registration ang authentication) you can make requests to API
-* __WFM Report__ https://wfm-report.herokuapp.com
+* __WFM Report__
 Generate a report for WFM clients
-* __Petrohelp auth__ https://petrohelp-auth.herokuapp.com
+* __Petrohelp auth__
 An OAUTH2 provider for Petrohelp services, like this WFM
 * __WFM API docs__ https://ivanrave.github.io/wfm-api-docs/
 Documentaion for API methods
